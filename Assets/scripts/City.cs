@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class City : MonoBehaviour {
 
+    string cityName;
+    int civilianCount;
+    
+
 	// Use this for initialization
 	void Start () {
 		
@@ -13,4 +17,21 @@ public class City : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void setCityName(string name)
+    {
+        cityName = name;
+    }
+    public string getCityName()
+    {
+        return cityName;
+    }
+    public void setCivilianCount(int count)
+    {
+        civilianCount = count;
+    }
+    public int getCivilianCount()
+    {
+        return civilianCount;
+    }
 }
