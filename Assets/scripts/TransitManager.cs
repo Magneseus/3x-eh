@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Security : MonoBehaviour {
+public class TransitManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

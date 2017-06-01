@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Education : Resource {
+public class Material : Resource {
 
 	// Use this for initialization
 	void Start () {
