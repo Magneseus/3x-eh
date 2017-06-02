@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class Person : MonoBehaviour, TurnUpdatable
 {
-    int age;
-    float happiness;
-    float thirst;
-    float hunger;
+    public enum PAge
+    {
+        Youth,
+        Adult,
+        Elder
+    };
+
+    public PAge  Age;
+    public float Happiness;
+    public float Hunger;
 
 
 	// Use this for initialization
