@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour {
+public class CountryViewMenu : MonoBehaviour {
 
+    
 	// Use this for initialization
 	void Start () {
 		
@@ -13,4 +15,9 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void LoadRegion(string regionName)
+    {
+        SceneManager.LoadScene(regionName);
+    }
 }
