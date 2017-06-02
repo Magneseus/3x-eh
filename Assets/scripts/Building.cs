@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class Building : MonoBehaviour, TurnUpdatable {
 
+    public List<Resource> ResourceInputPerTurn;
+    public List<Resource> ResourceOutputPerTurn;
     public List<Person> ListOfPersons;
 
+    // Don't think we need most of these except for civilCap
     private int storageCapacity;
     private int currentStorageCount;
     private int civilianCapacity;
     private int currentCivilianCount;
 
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
 
 	}
