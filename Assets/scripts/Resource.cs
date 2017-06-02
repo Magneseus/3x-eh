@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Resource : MonoBehaviour, TurnUpdatable
 {
+    public int    ID;
+    public string Name;
+    public float  Value;
 
 	// Use this for initialization
 	void Start () {
