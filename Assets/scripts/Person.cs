@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Person : MonoBehaviour {
+public class Person : MonoBehaviour, TurnUpdatable
+{
     int age;
     float happiness;
     float thirst;
@@ -13,9 +14,10 @@ public class Person : MonoBehaviour {
 	void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // TurnUpdate is called once per Turn
+    public void TurnUpdate(int numDaysPassed)
+    {
+
+    }
 }
