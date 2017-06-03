@@ -6,19 +6,38 @@ public class GameManager : MonoBehaviour
 {
     // Maybe we want this to be a reference to a Map?
     public List<City> ListOfCities;
+    public int DurationOfTurn = 7;
+    private int CurrentTurnNumber;
+    private int DaysTranspired;
 
     // Initialization
     void Start()
     {
-        
+        CurrentTurnNumber = 0;
+        DaysTranspired = 0;
     }
 
     // Turn Update
     void EndTurnUpdate()
     {
         // Here we will update everything (basically just updating the cities)
+        foreach (City c in ListOfCities)
+        {
+            c.TurnUpdate(DurationOfTurn);        
+        }
+        CurrentTurnNumber += 1;
+        DaysTranspired += DurationOfTurn;
+        Debug.Log("Turn ended, " + DurationOfTurn + " days passed.");
     }
 
+    //Updated per frame, use for UI.
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            EndTurnUpdate();
+        }
+    }
 
     //////////// Single Instance Assertion Stuff
     private static bool _isInstantiated = false;
