@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Event : MonoBehaviour {
+public class GameEvent : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
