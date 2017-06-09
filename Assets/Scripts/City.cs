@@ -2,54 +2,75 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class City : MonoBehaviour, TurnUpdatable {
+public class City : TurnUpdatable
+{
 
-    public List<Building> ListOfBuildings;
-    public List<Resource> ListOfResources;
-    public List<Person> ListOfPopulation;
+    List<Building> listOfBuildings = new List<Building>();
+    List<Resource> listOfResources = new List<Resource>();
+    List<Person> listOfPopulation = new List<Person>();
 
-    string cityName;
-    int civilianCount;
-    
+    string cityName = "NoCityName";
+    int cityAge = 0;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public City()
+    {
+
+    }
+
+
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
         // Here we're probably just going to call TurnUpdate on all the
         // buildings/people/resources
-        foreach (Building b in ListOfBuildings)
+        foreach (Building b in listOfBuildings)
         {
             b.TurnUpdate(numDaysPassed);
         }
-        foreach (Resource r in ListOfResources)
+        foreach (Resource r in listOfResources)
         {
             r.TurnUpdate(numDaysPassed);
         }
-        foreach (Person p in ListOfPopulation)
+        foreach (Person p in listOfPopulation)
         {
             p.TurnUpdate(numDaysPassed);
         }
+
+        cityAge += numDaysPassed;
     }
 
-    public void setCityName(string name)
+
+
+    public List<Building> Buildings
     {
-        cityName = name;
+        get { return listOfBuildings; }
     }
-    public string getCityName()
+
+    public List<Resource> Resources
     {
-        return cityName;
+        get { return listOfResources; }
     }
-    public void setCivilianCount(int count)
+
+    public List<Person> Population
     {
-        civilianCount = count;
+        get { return listOfPopulation; }
     }
-    public int getCivilianCount()
+
+    public string Name
     {
-        return civilianCount;
+        get { return cityName; }
+        set { cityName = value; }
     }
+
+    public int CivilianCount
+    {
+        get { return listOfPopulation.Count; }
+    }
+
+    public int Age
+    {
+        get { return cityAge; }
+    }
+
 }
