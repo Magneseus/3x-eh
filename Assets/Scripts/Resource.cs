@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : MonoBehaviour, TurnUpdatable
+public class Resource : TurnUpdatable
 {
     public int    ID;
     public string Name;
     public float  Value;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-
+    
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
