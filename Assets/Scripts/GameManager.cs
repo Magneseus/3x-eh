@@ -9,14 +9,9 @@ public class GameManager {
     // Maybe we want this to be a reference to a Map?
     public List<City> ListOfCities;
     public int DurationOfTurn = 7;
-    private int CurrentTurnNumber;
-    private int DaysTranspired;
+    public int CurrentTurnNumber = 0;
+    public int DaysTranspired = 0;
 
-    // Use this for initialization
-    void Start () {  
-        CurrentTurnNumber = 0;
-        DaysTranspired = 0;
-    }
 
     // Turn Update
     public void EndTurnUpdate()
