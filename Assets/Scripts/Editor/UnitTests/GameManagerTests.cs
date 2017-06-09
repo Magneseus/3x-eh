@@ -13,9 +13,9 @@ public class GameManagerTests  {
     public void InitializesDefaultValues()
     {
         GameManager gm = new GameManager();
-        Assert.That(gm.ListOfCities, Is.Not.Null);
-        Assert.That(gm.DurationOfTurn, Is.EqualTo(7));
-        Assert.That(gm.CurrentTurnNumber, Is.EqualTo(0));
+        Assert.That(gm.Cities, Is.Not.Null);
+        Assert.That(gm.TurnDuration, Is.EqualTo(7));
+        Assert.That(gm.TurnNumber, Is.EqualTo(0));
         Assert.That(gm.DaysTranspired, Is.EqualTo(7));
 
 
@@ -29,8 +29,8 @@ public class GameManagerTests  {
 
         for (var i = 0; i < 10; i++)
         {
-            Assert.That(gm.CurrentTurnNumber, Is.EqualTo(i));
-            Assert.That(gm.DaysTranspired, Is.EqualTo(i*gm.DurationOfTurn));
+            Assert.That(gm.TurnNumber, Is.EqualTo(i));
+            Assert.That(gm.DaysTranspired, Is.EqualTo(i*gm.TurnDuration));
             gm.EndTurnUpdate();
         }
 
@@ -42,10 +42,10 @@ public class GameManagerTests  {
         var city = GetCityMock();
         var gm = new GameManager();
 
-        Assert.That(gm.ListOfCities.Count, Is.EqualTo(0));
+        Assert.That(gm.Cities.Count, Is.EqualTo(0));
 
-        gm.ListOfCities.Add(city);
-        Assert.That(gm.ListOfCities.Count, Is.EqualTo(1));
+        gm.Cities.Add(city);
+        Assert.That(gm.Cities.Count, Is.EqualTo(1));
     }
 
 

@@ -7,24 +7,40 @@ using UnityEngine;
 public class GameManager {
 
     // Maybe we want this to be a reference to a Map?
-    public List<City> ListOfCities;
-    public int DurationOfTurn = 7;
-    public int CurrentTurnNumber = 0;
-    public int DaysTranspired = 0;
-
+    List<City> listOfCities = new List<City>();
+     int durationOfTurn = 7;
+     int currentTurnNumber = 0;
 
     // Turn Update
     public void EndTurnUpdate()
     {
         // Here we will update everything (basically just updating the cities)
-        foreach (City c in ListOfCities)
+        foreach (City c in listOfCities)
         {
-            c.TurnUpdate(DurationOfTurn);
+            c.TurnUpdate(durationOfTurn);
         }
 
-        CurrentTurnNumber += 1;
-        DaysTranspired += DurationOfTurn;
-        Debug.Log("Turn ended, " + DurationOfTurn + " more days passed. "+ DaysTranspired+" transpired.");
+        currentTurnNumber += 1;
+       // Debug.Log("Turn ended, " + durationOfTurn + " more days passed. "+ DaysTranspired+" transpired.");
     }
-    
+
+    public List<City> Cities
+    {
+        get { return listOfCities; }
+    }
+
+    public int TurnNumber
+    {
+        get { return currentTurnNumber; }
+        set { currentTurnNumber = value; }
+    }
+    public int TurnDuration
+    {
+        get { return durationOfTurn; }
+        set { durationOfTurn = value; }
+    }
+    public int DaysTranspired
+    {
+        get { return TurnDuration * TurnNumber; }
+    }
 }
