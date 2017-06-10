@@ -4,13 +4,41 @@ using UnityEngine;
 
 public class Resource : TurnUpdatable
 {
-    public int    ID;
-    public string Name;
-    public float  Value;
+    private static int resourceIdCounter = 0;
+    private int resourceId;
+    private string resourceName;
+    private int resourceAmount;
+
+
+    
+
+    public Resource(string name, int amount)
+    {
+        resourceId = resourceIdCounter++;
+        resourceName = name;
+        resourceAmount = amount;
+    }
     
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
 
     }
+
+    public int Id
+    {
+        get { return resourceId; }
+    }
+
+    public string Name
+    {
+        get { return resourceName; }
+    }
+
+    public int Amount
+    {
+        get { return resourceAmount; }
+        set { resourceAmount = value; }
+    }
+
 }

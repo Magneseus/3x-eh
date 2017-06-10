@@ -4,38 +4,64 @@ using UnityEngine;
 
 public class Building : TurnUpdatable {
 
-    public List<Resource> ResourceInputPerTurn;
-    public List<Resource> ResourceOutputPerTurn;
-    public List<Person> ListOfPersons;
+    private City city;
+    private Dictionary<int, int> resourceConsumptionPerTurn = new Dictionary<int, int>();
+    private Dictionary<int, int> resourceOutputPerTurn = new Dictionary<int, int>();
+    private List<Person> listOfPersons = new List<Person>();    
+    private int civilianCapacity = 0;
 
-    // Don't think we need most of these except for civilCap
-    private int storageCapacity;
-    private int currentStorageCount;
-    private int civilianCapacity;
-    private int currentCivilianCount;    
+    public Building(City city)
+    {
+        this.city = city;
+    }
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
-
+        
     }
 
+    public void AddResourceOutput(Resource resource)
+    {        
+        if (resourceOutputPerTurn.ContainsKey(resource.Id))
+        {
+            resourceOutputPerTurn[resource.Id] += resource.Amount;
+        } else
+        {
+            resourceOutputPerTurn.Add(resource.Id, resource.Amount);
+        }        
+    }
 
-    void setCivilianCapacity(int cap)
+    public void AddResourceConsumpTion(Resource resource)
     {
-        this.civilianCapacity = cap;
-    }
-    int getCivilianCapacity()
-    {
-        return civilianCapacity;
+        if (resourceConsumptionPerTurn.ContainsKey(resource.Id))
+        {
+            resourceConsumptionPerTurn[resource.Id] += resource.Amount;
+        }
+        else
+        {
+            resourceConsumptionPerTurn.Add(resource.Id, resource.Amount);
+        }
     }
 
-    void setStorageCapacity(int cap)
+    public Dictionary<int, int> ResourceConsumption
     {
-        this.storageCapacity = cap;
+        get { return resourceConsumptionPerTurn; }
     }
-    int getStorageCapacity()
+
+    public Dictionary<int, int> ResourceOutput
     {
-        return storageCapacity;
+        get { return resourceOutputPerTurn; }
+    }
+
+    public City City
+    {
+        get { return city; }
+    }
+
+    public int PopulationCapacity
+    {
+        get { return civilianCapacity; }
+        set { civilianCapacity = value; }
     }
 }
