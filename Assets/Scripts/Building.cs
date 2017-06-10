@@ -4,38 +4,76 @@ using UnityEngine;
 
 public class Building : TurnUpdatable {
 
-    public List<Resource> ResourceInputPerTurn;
-    public List<Resource> ResourceOutputPerTurn;
-    public List<Person> ListOfPersons;
+    private City city;
+    private Dictionary<int, Resource> resourceConsumptionPerTurn = new Dictionary<int, Resource>();
+    private Dictionary<int, Resource> resourceOutputPerTurn = new Dictionary<int, Resource>();
+    private List<Person> listOfPersons = new List<Person>();
 
-    // Don't think we need most of these except for civilCap
-    private int storageCapacity;
-    private int currentStorageCount;
-    private int civilianCapacity;
-    private int currentCivilianCount;    
+    public Building(City city)
+    {
+        this.city = city;
+    }
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
+        // Output before consuming
+        foreach (KeyValuePair<int, Resource> entry in resourceOutputPerTurn)
+        {
+            // Very basic, increase amount by number of population for all resources
+            var outputResource = Resource.Create(entry.Value, entry.Value.Amount);
+            outputResource.Amount += listOfPersons.Count;
+            city.AddResource(outputResource);
+        }
 
+        foreach (KeyValuePair<int, Resource> entry in resourceConsumptionPerTurn)
+        {
+            city.ConsumeResource(entry.Value);
+        }
+        
     }
 
+    public void AddResourceOutput(Resource resource)
+    {        
+        if (resourceOutputPerTurn.ContainsKey(resource.Id))
+        {
+            resourceOutputPerTurn[resource.Id].Amount += resource.Amount;
+        }
+        else
+        {
+            resourceOutputPerTurn.Add(resource.Id, Resource.Create(resource, resource.Amount));
+        }        
+    }
 
-    void setCivilianCapacity(int cap)
+    public void AddResourceConsumption(Resource resource)
     {
-        this.civilianCapacity = cap;
-    }
-    int getCivilianCapacity()
-    {
-        return civilianCapacity;
+        if (resourceConsumptionPerTurn.ContainsKey(resource.Id))
+        {
+            resourceConsumptionPerTurn[resource.Id].Amount += resource.Amount;
+        }
+        else
+        {
+            resourceConsumptionPerTurn.Add(resource.Id, Resource.Create(resource, resource.Amount));
+        }
     }
 
-    void setStorageCapacity(int cap)
+    public Dictionary<int, Resource> ResourceConsumption
     {
-        this.storageCapacity = cap;
+        get { return resourceConsumptionPerTurn; }
     }
-    int getStorageCapacity()
+
+    public Dictionary<int, Resource> ResourceOutput
     {
-        return storageCapacity;
+        get { return resourceOutputPerTurn; }
+    }
+
+    public City City
+    {
+        get { return city; }
+    }
+
+    public List<Person> Population
+    {
+        get { return listOfPersons; }
     }
 }
