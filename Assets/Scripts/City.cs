@@ -65,7 +65,17 @@ public class City : TurnUpdatable
 
     public Resource GetResource(string name)
     {
-        return resources[Resource.NameToId(name)];
+        int resourceId = Resource.NameToId(name);
+        if (resources.ContainsKey(resourceId))
+        {
+            return resources[resourceId];
+        }
+        else
+        {
+            AddResource(Resource.Create(name));
+            return resources[resourceId];
+        }
+        
     }
 
     public Dictionary<int, Resource> Resources
