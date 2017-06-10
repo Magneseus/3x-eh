@@ -26,16 +26,18 @@ public class CityTests
     public void NameTest()
     {
         var newName = "Test123";
-        var city = new City();
-        city.Name = newName;
+        var city = new City()
+        {
+            Name = newName
+        };
         Assert.That(city.Name, Is.EqualTo(newName));
     }
 
     [Test]
     public void AddBuildingTest()
-    {
-        var building = GetBuildingMock();
+    {        
         var city = new City();
+        var building = new Building(city);
 
         Assert.That(city.Buildings.Count, Is.EqualTo(0));
 
@@ -46,7 +48,7 @@ public class CityTests
     [Test]
     public void AddResourceTest()
     {
-        var resource = GetResourceMock();
+        var resource = new Resource();
         var city = new City();
 
         Assert.That(city.Resources.Count, Is.EqualTo(0));
@@ -58,7 +60,7 @@ public class CityTests
     [Test]
     public void AddPopulationTest()
     {
-        var person = GetPersonMock();
+        var person = new Person();
         var city = new City();
 
         Assert.That(city.Population.Count, Is.EqualTo(0));
@@ -70,10 +72,10 @@ public class CityTests
     [Test]
     public void CivilianCountTest()
     {
-        var mockPerson = GetPersonMock();
+        var person = new Person();
         var city = new City();
         Assert.That(city.CivilianCount, Is.EqualTo(0));
-        city.Population.Add(mockPerson);
+        city.Population.Add(person);
         Assert.That(city.CivilianCount, Is.EqualTo(1));
 
     }
@@ -92,20 +94,5 @@ public class CityTests
             city.TurnUpdate(numberOfDaysPassed);
         }
 
-    }
-
-    private Building GetBuildingMock()
-    {
-        return Substitute.For<Building>();
-    }
-
-    private Resource GetResourceMock()
-    {
-        return Substitute.For<Resource>();
-    }
-
-    private Person GetPersonMock()
-    {
-        return Substitute.For<Person>();
     }
 }

@@ -6,11 +6,14 @@ public class Resource : TurnUpdatable
 {
     private static int resourceIdCounter = 0;
     private int resourceId;
-    private string resourceName;
-    private int resourceAmount;
+    private string resourceName = "NameUndefined";
+    private int resourceAmount = 0;
 
 
-    
+    public Resource()
+    {
+        resourceId = resourceIdCounter++;        
+    }
 
     public Resource(string name, int amount)
     {
