@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,7 +47,19 @@ public class City : TurnUpdatable
         }
         else
         {
-            resources.Add(resource.Id, Resource.Create(resource));
+            resources.Add(resource.Id, Resource.Create(resource, resource.Amount));
+        }
+    }
+
+    public void ConsumeResource(Resource resource)
+    {
+        if (resources.ContainsKey(resource.Id) && resources[resource.Id].Amount >= resource.Amount)
+        {
+            resources[resource.Id].Amount -= resource.Amount;
+        }
+        else
+        {
+            throw new InsufficientResourceException(resource.Id.ToString());
         }
     }
 
@@ -86,4 +99,27 @@ public class City : TurnUpdatable
         get { return cityAge; }
     }
 
+}
+
+
+/*****************************
+ * 
+ *         Exceptions
+ *         
+ *****************************/
+public class InsufficientResourceException : Exception
+{
+    public InsufficientResourceException()
+    {
+    }
+
+    public InsufficientResourceException(string message)
+    : base(message)
+    {
+    }
+
+    public InsufficientResourceException(string message, Exception inner)
+    : base(message, inner)
+    {
+    }
 }

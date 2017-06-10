@@ -38,7 +38,7 @@ public class BuildingTests
         var consumptionAmount = 5;
         var consumption = Resource.Create(consumptionName, consumptionAmount);
 
-        building.AddResourceConsumpTion(consumption);
+        building.AddResourceConsumption(consumption);
 
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(1));
         Assert.That(building.ResourceConsumption[consumption.Id].Amount, Is.EqualTo(consumption.Amount));
@@ -57,7 +57,7 @@ public class BuildingTests
         var numberOfAdds = 5;
         for(var i=0; i<numberOfAdds; i++)
         {
-            building.AddResourceConsumpTion(consumption);
+            building.AddResourceConsumption(consumption);
         }        
 
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(1));
@@ -80,8 +80,8 @@ public class BuildingTests
         var consumptionTwo = Resource.Create(consumptionTwoName, consumptionTwoAmount);
 
         
-        building.AddResourceConsumpTion(consumptionOne);
-        building.AddResourceConsumpTion(consumptionTwo);
+        building.AddResourceConsumption(consumptionOne);
+        building.AddResourceConsumption(consumptionTwo);
 
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(2));
         Assert.That(building.ResourceConsumption[consumptionOne.Id].Amount, Is.EqualTo(consumptionOne.Amount));
@@ -105,14 +105,65 @@ public class BuildingTests
         var numberOfAdds = 5;
         for (var i = 0; i < numberOfAdds; i++)
         {
-            building.AddResourceConsumpTion(consumptionOne);
-            building.AddResourceConsumpTion(consumptionTwo);
+            building.AddResourceConsumption(consumptionOne);
+            building.AddResourceConsumption(consumptionTwo);
         }
 
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(2));
         Assert.That(building.ResourceConsumption[consumptionOne.Id].Amount, Is.EqualTo(consumptionOne.Amount * numberOfAdds));
         Assert.That(building.ResourceConsumption[consumptionTwo.Id].Amount, Is.EqualTo(consumptionTwo.Amount * numberOfAdds));
     }
+
+    [Test]
+    public void ConsumeResourcesSingleTurn()
+    {        
+        var resourceName = "Test";
+        var stockpileAmount = 10;
+        var stockpile = Resource.Create(resourceName, stockpileAmount);
+
+        var consumeAmount = 3;
+        var consume = Resource.Create(resourceName, consumeAmount);
+
+        var city = new City();
+        var building = new Building(city);
+
+        city.AddResource(stockpile);
+        building.AddResourceConsumption(consume);
+
+        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount));
+
+        building.TurnUpdate(1);
+
+        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount - consumeAmount));
+    }
+
+    [Test]
+    public void ConsumeResourcesMultipleTurns()
+    {
+        var numberOfTurns = 5;
+        var resourceName = "Test";
+
+        var consumeAmount = 3;
+        var stockpileAmount = consumeAmount * numberOfTurns;
+
+        var stockpile = Resource.Create(resourceName, stockpileAmount);        
+        var consume = Resource.Create(resourceName, consumeAmount);
+
+        var city = new City();
+        city.AddResource(stockpile);
+
+        var building = new Building(city);
+        building.AddResourceConsumption(consume);
+
+        
+        for (var i=0; i<numberOfTurns; i++)
+        {
+            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount - (consumeAmount * i)));
+            building.TurnUpdate(1);
+            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount - (consumeAmount * (i+1))));
+        }
+    }
+
 
     #endregion
 
@@ -207,6 +258,56 @@ public class BuildingTests
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(2));
         Assert.That(building.ResourceOutput[outputOne.Id].Amount, Is.EqualTo(outputOne.Amount * numberOfAdds));
         Assert.That(building.ResourceOutput[outputTwo.Id].Amount, Is.EqualTo(outputTwo.Amount * numberOfAdds));
+    }
+
+    [Test]
+    public void OutputResourcesSingleTurn()
+    {
+        var resourceName = "Test";
+        var stockpileAmount = 5;
+        var stockpile = Resource.Create(resourceName, stockpileAmount);
+
+        var outputAmount = 2;
+        var output = Resource.Create(resourceName, outputAmount);
+
+        var city = new City();
+        var building = new Building(city);
+
+        city.AddResource(stockpile);
+        building.AddResourceOutput(output);
+
+        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount));
+
+        building.TurnUpdate(1);
+
+        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount + outputAmount));
+    }
+
+    [Test]
+    public void OutputResourcesMultipleTurns()
+    {
+        var numberOfTurns = 5;
+        var resourceName = "Test";
+
+        var outputAmount = 3;
+        var stockpileAmount = 2;
+
+        var stockpile = Resource.Create(resourceName, stockpileAmount);
+        var output = Resource.Create(resourceName, outputAmount);
+
+        var city = new City();
+        city.AddResource(stockpile);
+
+        var building = new Building(city);
+        building.AddResourceOutput(output);
+
+
+        for (var i = 0; i < numberOfTurns; i++)
+        {
+            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount + (outputAmount * i)));
+            building.TurnUpdate(1);
+            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount + (outputAmount * (i + 1))));
+        }
     }
     #endregion    
 }

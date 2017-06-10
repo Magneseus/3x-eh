@@ -23,7 +23,7 @@ public class CityTests
     }
 
     [Test]
-    public void NameTest()
+    public void Name()
     {
         var newName = "Test123";
         var city = new City()
@@ -34,7 +34,7 @@ public class CityTests
     }
 
     [Test]
-    public void AddBuildingTest()
+    public void AddBuilding()
     {        
         var city = new City();
         var building = new Building(city);
@@ -46,7 +46,7 @@ public class CityTests
     }
 
     [Test]
-    public void AddResourceTest()
+    public void AddResource()
     {
         var resource = Resource.Create("Test", 0);
         var city = new City();
@@ -58,7 +58,7 @@ public class CityTests
     }
 
     [Test]
-    public void AddPopulationTest()
+    public void AddPopulation()
     {
         var person = new Person();
         var city = new City();
@@ -70,7 +70,7 @@ public class CityTests
     }
 
     [Test]
-    public void CivilianCountTest()
+    public void CivilianCount()
     {
         var person = new Person();
         var city = new City();
@@ -82,7 +82,7 @@ public class CityTests
 
 
     [Test]
-    public void CityTurnUpdateTest()
+    public void TurnUpdate()
     {
         var city = new City();
         var numberOfDaysPassed = 7;
@@ -94,5 +94,17 @@ public class CityTests
             city.TurnUpdate(numberOfDaysPassed);
         }
 
+    }
+
+    [Test]
+    public void TurnUpdateSufficientResource()
+    {
+        Assert.Fail();
+    }
+
+    [Test]
+    public void TurnUpdateInsufficientResource()
+    {
+        Assert.Fail();
     }
 }

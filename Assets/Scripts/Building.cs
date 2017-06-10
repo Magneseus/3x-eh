@@ -18,6 +18,16 @@ public class Building : TurnUpdatable {
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
+        // Output before consuming
+        foreach (KeyValuePair<int, Resource> entry in resourceOutputPerTurn)
+        {
+            city.AddResource(entry.Value);
+        }
+
+        foreach (KeyValuePair<int, Resource> entry in resourceConsumptionPerTurn)
+        {
+            city.ConsumeResource(entry.Value);
+        }
         
     }
 
@@ -33,7 +43,7 @@ public class Building : TurnUpdatable {
         }        
     }
 
-    public void AddResourceConsumpTion(Resource resource)
+    public void AddResourceConsumption(Resource resource)
     {
         if (resourceConsumptionPerTurn.ContainsKey(resource.Id))
         {
