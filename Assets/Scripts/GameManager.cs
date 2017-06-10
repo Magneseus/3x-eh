@@ -1,57 +1,46 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
-{
-    // Maybe we want this to be a reference to a Map?
-    public List<City> ListOfCities;
-    public int DurationOfTurn = 7;
-    private int CurrentTurnNumber;
-    private int DaysTranspired;
+[Serializable]
+public class GameManager {
 
-    // Initialization
-    void Start()
-    {
-        CurrentTurnNumber = 0;
-        DaysTranspired = 0;
-    }
+    // Maybe we want this to be a reference to a Map?
+    List<City> listOfCities = new List<City>();
+     int durationOfTurn = 7;
+     int currentTurnNumber = 0;
 
     // Turn Update
-    void EndTurnUpdate()
+    public void EndTurnUpdate()
     {
         // Here we will update everything (basically just updating the cities)
-        foreach (City c in ListOfCities)
+        foreach (City c in listOfCities)
         {
-            c.TurnUpdate(DurationOfTurn);        
+            c.TurnUpdate(durationOfTurn);
         }
-        CurrentTurnNumber += 1;
-        DaysTranspired += DurationOfTurn;
-        Debug.Log("Turn ended, " + DurationOfTurn + " days passed.");
+
+        currentTurnNumber += 1;
+       // Debug.Log("Turn ended, " + durationOfTurn + " more days passed. "+ DaysTranspired+" transpired.");
     }
 
-    //Updated per frame, use for UI.
-    void Update()
+    public List<City> Cities
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            EndTurnUpdate();
-        }
+        get { return listOfCities; }
     }
 
-    //////////// Single Instance Assertion Stuff
-    private static bool _isInstantiated = false;
-
-    private void Awake()
+    public int TurnNumber
     {
-        // IF THIS FAILS, we've instantiated another GameManager somewhere!!
-        Debug.Assert(!_isInstantiated);
-        _isInstantiated = true;
+        get { return currentTurnNumber; }
+        set { currentTurnNumber = value; }
     }
-
-    private void OnDestroy()
+    public int TurnDuration
     {
-        _isInstantiated = false;
+        get { return durationOfTurn; }
+        set { durationOfTurn = value; }
     }
-    ///// End of Single Instance Assertion Stuff
+    public int DaysTranspired
+    {
+        get { return TurnDuration * TurnNumber; }
+    }
 }
