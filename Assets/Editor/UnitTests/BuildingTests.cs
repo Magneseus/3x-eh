@@ -41,7 +41,7 @@ public class BuildingTests
         building.AddResourceConsumpTion(consumption);
 
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(1));
-        Assert.That(building.ResourceConsumption[consumption.Id], Is.EqualTo(consumption.Amount));
+        Assert.That(building.ResourceConsumption[consumption.Id].Amount, Is.EqualTo(consumption.Amount));
     }
 
     [Test]
@@ -61,7 +61,7 @@ public class BuildingTests
         }        
 
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(1));
-        Assert.That(building.ResourceConsumption[consumption.Id], Is.EqualTo(consumption.Amount * numberOfAdds));
+        Assert.That(building.ResourceConsumption[consumption.Id].Amount, Is.EqualTo(consumption.Amount * numberOfAdds));
     }
 
 
@@ -84,8 +84,8 @@ public class BuildingTests
         building.AddResourceConsumpTion(consumptionTwo);
 
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(2));
-        Assert.That(building.ResourceConsumption[consumptionOne.Id], Is.EqualTo(consumptionOne.Amount));
-        Assert.That(building.ResourceConsumption[consumptionTwo.Id], Is.EqualTo(consumptionTwo.Amount));
+        Assert.That(building.ResourceConsumption[consumptionOne.Id].Amount, Is.EqualTo(consumptionOne.Amount));
+        Assert.That(building.ResourceConsumption[consumptionTwo.Id].Amount, Is.EqualTo(consumptionTwo.Amount));
     }    
 
     [Test]
@@ -110,26 +110,10 @@ public class BuildingTests
         }
 
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(2));
-        Assert.That(building.ResourceConsumption[consumptionOne.Id], Is.EqualTo(consumptionOne.Amount * numberOfAdds));
-        Assert.That(building.ResourceConsumption[consumptionTwo.Id], Is.EqualTo(consumptionTwo.Amount * numberOfAdds));
+        Assert.That(building.ResourceConsumption[consumptionOne.Id].Amount, Is.EqualTo(consumptionOne.Amount * numberOfAdds));
+        Assert.That(building.ResourceConsumption[consumptionTwo.Id].Amount, Is.EqualTo(consumptionTwo.Amount * numberOfAdds));
     }
 
-    //[Test]
-    //public void ConsumeOnSingleTurnUpdate()
-    //{
-    //    var city = new City();
-    //    var building = new Building(city);
-
-    //    var consumptionOneName = "Test";
-    //    var consumptionOneAmount = 5;
-    //    var consumptionOne = Resource.Create(consumptionOneName, consumptionOneAmount);
-
-    //    Assert.Fail();
-
-
-
-
-    //}
     #endregion
 
 
@@ -152,7 +136,7 @@ public class BuildingTests
         building.AddResourceOutput(output);
 
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(1));
-        Assert.That(building.ResourceOutput[output.Id], Is.EqualTo(output.Amount));
+        Assert.That(building.ResourceOutput[output.Id].Amount, Is.EqualTo(output.Amount));
     }
 
     [Test]
@@ -172,7 +156,7 @@ public class BuildingTests
         }
 
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(1));
-        Assert.That(building.ResourceOutput[output.Id], Is.EqualTo(output.Amount * numberOfAdds));
+        Assert.That(building.ResourceOutput[output.Id].Amount, Is.EqualTo(output.Amount * numberOfAdds));
     }
 
 
@@ -195,8 +179,8 @@ public class BuildingTests
         building.AddResourceOutput(outputTwo);
 
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(2));
-        Assert.That(building.ResourceOutput[outputOne.Id], Is.EqualTo(outputOne.Amount));
-        Assert.That(building.ResourceOutput[outputTwo.Id], Is.EqualTo(outputTwo.Amount));
+        Assert.That(building.ResourceOutput[outputOne.Id].Amount, Is.EqualTo(outputOne.Amount));
+        Assert.That(building.ResourceOutput[outputTwo.Id].Amount, Is.EqualTo(outputTwo.Amount));
     }
 
     [Test]
@@ -213,7 +197,7 @@ public class BuildingTests
         var outputTwoAmount = 3;
         var outputTwo = Resource.Create(outputTwoName, outputTwoAmount);
 
-        var numberOfAdds = 5;
+        var numberOfAdds = 5;        
         for (var i = 0; i < numberOfAdds; i++)
         {
             building.AddResourceOutput(outputOne);
@@ -221,8 +205,8 @@ public class BuildingTests
         }
 
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(2));
-        Assert.That(building.ResourceOutput[outputOne.Id], Is.EqualTo(outputOne.Amount * numberOfAdds));
-        Assert.That(building.ResourceOutput[outputTwo.Id], Is.EqualTo(outputTwo.Amount * numberOfAdds));
+        Assert.That(building.ResourceOutput[outputOne.Id].Amount, Is.EqualTo(outputOne.Amount * numberOfAdds));
+        Assert.That(building.ResourceOutput[outputTwo.Id].Amount, Is.EqualTo(outputTwo.Amount * numberOfAdds));
     }
     #endregion    
 }

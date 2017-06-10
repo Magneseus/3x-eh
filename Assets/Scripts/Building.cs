@@ -5,8 +5,8 @@ using UnityEngine;
 public class Building : TurnUpdatable {
 
     private City city;
-    private Dictionary<int, int> resourceConsumptionPerTurn = new Dictionary<int, int>();
-    private Dictionary<int, int> resourceOutputPerTurn = new Dictionary<int, int>();
+    private Dictionary<int, Resource> resourceConsumptionPerTurn = new Dictionary<int, Resource>();
+    private Dictionary<int, Resource> resourceOutputPerTurn = new Dictionary<int, Resource>();
     private List<Person> listOfPersons = new List<Person>();    
     private int civilianCapacity = 0;
 
@@ -25,10 +25,10 @@ public class Building : TurnUpdatable {
     {        
         if (resourceOutputPerTurn.ContainsKey(resource.Id))
         {
-            resourceOutputPerTurn[resource.Id] += resource.Amount;
+            resourceOutputPerTurn[resource.Id].Amount += resource.Amount;
         } else
         {
-            resourceOutputPerTurn.Add(resource.Id, resource.Amount);
+            resourceOutputPerTurn.Add(resource.Id, Resource.Create(resource));
         }        
     }
 
@@ -36,20 +36,20 @@ public class Building : TurnUpdatable {
     {
         if (resourceConsumptionPerTurn.ContainsKey(resource.Id))
         {
-            resourceConsumptionPerTurn[resource.Id] += resource.Amount;
+            resourceConsumptionPerTurn[resource.Id].Amount += resource.Amount;
         }
         else
         {
-            resourceConsumptionPerTurn.Add(resource.Id, resource.Amount);
+            resourceConsumptionPerTurn.Add(resource.Id, Resource.Create(resource));
         }
     }
 
-    public Dictionary<int, int> ResourceConsumption
+    public Dictionary<int, Resource> ResourceConsumption
     {
         get { return resourceConsumptionPerTurn; }
     }
 
-    public Dictionary<int, int> ResourceOutput
+    public Dictionary<int, Resource> ResourceOutput
     {
         get { return resourceOutputPerTurn; }
     }

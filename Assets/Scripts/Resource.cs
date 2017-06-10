@@ -23,6 +23,11 @@ public class Resource : TurnUpdatable
         }
     }
 
+    public static Resource Create(Resource resource)
+    {
+        return Create(resource.Name, resource.Amount);
+    }
+
     private Resource(int id, string name, int amount)
     {
         resourceId = id;
@@ -38,6 +43,8 @@ public class Resource : TurnUpdatable
         resourceName = name;
         resourceAmount = amount;
     }
+
+    
     
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
