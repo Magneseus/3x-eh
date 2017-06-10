@@ -48,7 +48,7 @@ public class CityTests
     [Test]
     public void AddResourceTest()
     {
-        var resource = new Resource();
+        var resource = Resource.Create("Test", 0);
         var city = new City();
 
         Assert.That(city.Resources.Count, Is.EqualTo(0));

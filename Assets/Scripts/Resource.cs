@@ -5,19 +5,36 @@ using UnityEngine;
 public class Resource : TurnUpdatable
 {
     private static int resourceIdCounter = 0;
+    private static Dictionary<string, int> resourceNameToIdMap = new Dictionary<string, int>();
+
     private int resourceId;
     private string resourceName = "NameUndefined";
     private int resourceAmount = 0;
 
-
-    public Resource()
+    public static Resource Create(string name, int amount)
     {
-        resourceId = resourceIdCounter++;        
+        if (resourceNameToIdMap.ContainsKey(name))
+        {
+            return new Resource(resourceNameToIdMap[name], name, amount);
+        }
+        else
+        {
+            return new Resource(name, amount);
+        }
     }
 
-    public Resource(string name, int amount)
+    private Resource(int id, string name, int amount)
     {
+        resourceId = id;
+        resourceName = name;
+        resourceAmount = amount;
+    }
+
+    private Resource(string name, int amount)
+    {
+
         resourceId = resourceIdCounter++;
+        resourceNameToIdMap.Add(name, resourceId);
         resourceName = name;
         resourceAmount = amount;
     }

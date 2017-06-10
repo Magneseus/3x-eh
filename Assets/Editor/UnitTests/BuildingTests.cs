@@ -23,6 +23,11 @@ public class BuildingTests
     }
 
     #region Consumption Tests
+    /*****************************
+     * 
+     *      Consumption Tests
+     *         
+     *****************************/
     [Test]
     public void AddSingleConsumption()
     {
@@ -31,7 +36,7 @@ public class BuildingTests
 
         var consumptionName = "Test";
         var consumptionAmount = 5;
-        var consumption = new Resource(consumptionName, consumptionAmount);
+        var consumption = Resource.Create(consumptionName, consumptionAmount);
 
         building.AddResourceConsumpTion(consumption);
 
@@ -47,7 +52,7 @@ public class BuildingTests
 
         var consumptionName = "Test";
         var consumptionAmount = 5;
-        var consumption = new Resource(consumptionName, consumptionAmount);
+        var consumption = Resource.Create(consumptionName, consumptionAmount);
 
         var numberOfAdds = 5;
         for(var i=0; i<numberOfAdds; i++)
@@ -68,11 +73,11 @@ public class BuildingTests
 
         var consumptionOneName = "Test";
         var consumptionOneAmount = 5;
-        var consumptionOne = new Resource(consumptionOneName, consumptionOneAmount);
+        var consumptionOne = Resource.Create(consumptionOneName, consumptionOneAmount);
 
         var consumptionTwoName = "Other Test";
         var consumptionTwoAmount = 3;
-        var consumptionTwo = new Resource(consumptionTwoName, consumptionTwoAmount);
+        var consumptionTwo = Resource.Create(consumptionTwoName, consumptionTwoAmount);
 
         
         building.AddResourceConsumpTion(consumptionOne);
@@ -91,11 +96,11 @@ public class BuildingTests
 
         var consumptionOneName = "Test";
         var consumptionOneAmount = 5;
-        var consumptionOne = new Resource(consumptionOneName, consumptionOneAmount);
+        var consumptionOne = Resource.Create(consumptionOneName, consumptionOneAmount);
 
         var consumptionTwoName = "Other Test";
         var consumptionTwoAmount = 3;
-        var consumptionTwo = new Resource(consumptionTwoName, consumptionTwoAmount);
+        var consumptionTwo = Resource.Create(consumptionTwoName, consumptionTwoAmount);
 
         var numberOfAdds = 5;
         for (var i = 0; i < numberOfAdds; i++)
@@ -108,9 +113,32 @@ public class BuildingTests
         Assert.That(building.ResourceConsumption[consumptionOne.Id], Is.EqualTo(consumptionOne.Amount * numberOfAdds));
         Assert.That(building.ResourceConsumption[consumptionTwo.Id], Is.EqualTo(consumptionTwo.Amount * numberOfAdds));
     }
+
+    //[Test]
+    //public void ConsumeOnSingleTurnUpdate()
+    //{
+    //    var city = new City();
+    //    var building = new Building(city);
+
+    //    var consumptionOneName = "Test";
+    //    var consumptionOneAmount = 5;
+    //    var consumptionOne = Resource.Create(consumptionOneName, consumptionOneAmount);
+
+    //    Assert.Fail();
+
+
+
+
+    //}
     #endregion
 
+
     #region Output Tests
+    /*****************************
+     * 
+     *         Output Tests
+     *         
+     *****************************/
     [Test]
     public void AddSingleOutput()
     {
@@ -119,7 +147,7 @@ public class BuildingTests
 
         var outputName = "Test";
         var outputAmount = 5;
-        var output = new Resource(outputName, outputAmount);
+        var output = Resource.Create(outputName, outputAmount);
 
         building.AddResourceOutput(output);
 
@@ -135,7 +163,7 @@ public class BuildingTests
 
         var outputName = "Test";
         var outputAmount = 5;
-        var output = new Resource(outputName, outputAmount);
+        var output = Resource.Create(outputName, outputAmount);
 
         var numberOfAdds = 5;
         for (var i = 0; i < numberOfAdds; i++)
@@ -156,11 +184,11 @@ public class BuildingTests
 
         var outputOneName = "Test";
         var outputOneAmount = 5;
-        var outputOne = new Resource(outputOneName, outputOneAmount);
+        var outputOne = Resource.Create(outputOneName, outputOneAmount);
 
         var outputTwoName = "Other Test";
         var outputTwoAmount = 3;
-        var outputTwo = new Resource(outputTwoName, outputTwoAmount);
+        var outputTwo = Resource.Create(outputTwoName, outputTwoAmount);
 
 
         building.AddResourceOutput(outputOne);
@@ -179,11 +207,11 @@ public class BuildingTests
 
         var outputOneName = "Test";
         var outputOneAmount = 5;
-        var outputOne = new Resource(outputOneName, outputOneAmount);
+        var outputOne = Resource.Create(outputOneName, outputOneAmount);
 
         var outputTwoName = "Other Test";
         var outputTwoAmount = 3;
-        var outputTwo = new Resource(outputTwoName, outputTwoAmount);
+        var outputTwo = Resource.Create(outputTwoName, outputTwoAmount);
 
         var numberOfAdds = 5;
         for (var i = 0; i < numberOfAdds; i++)
@@ -196,5 +224,5 @@ public class BuildingTests
         Assert.That(building.ResourceOutput[outputOne.Id], Is.EqualTo(outputOne.Amount * numberOfAdds));
         Assert.That(building.ResourceOutput[outputTwo.Id], Is.EqualTo(outputTwo.Amount * numberOfAdds));
     }
-    #endregion
+    #endregion    
 }
