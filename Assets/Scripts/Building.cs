@@ -26,9 +26,10 @@ public class Building : TurnUpdatable {
         if (resourceOutputPerTurn.ContainsKey(resource.Id))
         {
             resourceOutputPerTurn[resource.Id].Amount += resource.Amount;
-        } else
+        }
+        else
         {
-            resourceOutputPerTurn.Add(resource.Id, Resource.Create(resource));
+            resourceOutputPerTurn.Add(resource.Id, Resource.Create(resource, resource.Amount));
         }        
     }
 
@@ -40,7 +41,7 @@ public class Building : TurnUpdatable {
         }
         else
         {
-            resourceConsumptionPerTurn.Add(resource.Id, Resource.Create(resource));
+            resourceConsumptionPerTurn.Add(resource.Id, Resource.Create(resource, resource.Amount));
         }
     }
 

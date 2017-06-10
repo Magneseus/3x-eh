@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,8 @@ public class Resource : TurnUpdatable
     private int resourceId;
     private string resourceName = "NameUndefined";
     private int resourceAmount = 0;
-
+        
+    // Primary Factory
     public static Resource Create(string name, int amount)
     {
         if (resourceNameToIdMap.ContainsKey(name))
@@ -23,9 +25,19 @@ public class Resource : TurnUpdatable
         }
     }
 
+    public static Resource Create(string name)
+    {
+        return Create(name, 0);
+    }
+
     public static Resource Create(Resource resource)
     {
-        return Create(resource.Name, resource.Amount);
+        return Create(resource.Name);
+    }
+
+    public static Resource Create(Resource resource, int amount)
+    {
+        return Create(resource.Name, amount);
     }
 
     private Resource(int id, string name, int amount)
@@ -44,6 +56,17 @@ public class Resource : TurnUpdatable
         resourceAmount = amount;
     }
 
+    public static int NameToId(string name)
+    {
+        if (resourceNameToIdMap.ContainsKey(name))
+        {
+            return resourceNameToIdMap[name];
+        }
+        else
+        {
+            throw new ResourceNameNotFoundException("Resource name does not exist: " + name);
+        }
+    }
     
     
     // TurnUpdate is called once per Turn
@@ -65,7 +88,28 @@ public class Resource : TurnUpdatable
     public int Amount
     {
         get { return resourceAmount; }
-        set { resourceAmount = value; }
+        set { resourceAmount = Math.Max(0, value); }
+    }
+}
+
+/*****************************
+ * 
+ *         Exceptions
+ *         
+ *****************************/
+public class ResourceNameNotFoundException : Exception
+{
+    public ResourceNameNotFoundException()
+    {
     }
 
+    public ResourceNameNotFoundException(string message)
+    : base(message)
+    {
+    }
+
+    public ResourceNameNotFoundException(string message, Exception inner)
+    : base(message, inner)
+    {
+    }
 }

@@ -53,7 +53,7 @@ public class CityTests
 
         Assert.That(city.Resources.Count, Is.EqualTo(0));
 
-        city.Resources.Add(resource);
+        city.AddResource(resource);
         Assert.That(city.Resources.Count, Is.EqualTo(1));
     }
 

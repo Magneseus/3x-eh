@@ -5,19 +5,17 @@ using UnityEngine;
 public class City : TurnUpdatable
 {
 
-    List<Building> listOfBuildings = new List<Building>();
-    List<Resource> listOfResources = new List<Resource>();
-    List<Person> listOfPopulation = new List<Person>();
+    private List<Building> listOfBuildings = new List<Building>();
+    private Dictionary<int, Resource> resources = new Dictionary<int, Resource>();    
+    private List<Person> listOfPopulation = new List<Person>();
 
-    string cityName = "NoCityName";
-    int cityAge = 0;
+    private string cityName = "NoCityName";
+    private int cityAge = 0;
 
     public City()
     {
 
     }
-
-
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
@@ -28,9 +26,9 @@ public class City : TurnUpdatable
         {
             b.TurnUpdate(numDaysPassed);
         }
-        foreach (Resource r in listOfResources)
+        foreach (KeyValuePair<int, Resource> entry in resources)
         {
-            r.TurnUpdate(numDaysPassed);
+            entry.Value.TurnUpdate(numDaysPassed);
         }
         foreach (Person p in listOfPopulation)
         {
@@ -40,17 +38,32 @@ public class City : TurnUpdatable
         cityAge += numDaysPassed;
     }
 
+    public void AddResource(Resource resource)
+    {
+        if (resources.ContainsKey(resource.Id))
+        {
+            resources[resource.Id].Amount += resource.Amount;
+        }
+        else
+        {
+            resources.Add(resource.Id, Resource.Create(resource));
+        }
+    }
 
+    public Resource GetResource(string name)
+    {
+        return resources[Resource.NameToId(name)];
+    }
+
+    public Dictionary<int, Resource> Resources
+    {
+        get { return resources; }
+    }
 
     public List<Building> Buildings
     {
         get { return listOfBuildings; }
-    }
-
-    public List<Resource> Resources
-    {
-        get { return listOfResources; }
-    }
+    }    
 
     public List<Person> Population
     {
