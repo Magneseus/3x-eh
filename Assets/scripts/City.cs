@@ -6,6 +6,7 @@ public class City : MonoBehaviour, TurnUpdatable {
 
     public List<Building> ListOfBuildings;
     public List<Resource> ListOfResources;
+    public List<Person> ListOfPopulation;
 
     string cityName;
     int civilianCount;
@@ -15,12 +16,24 @@ public class City : MonoBehaviour, TurnUpdatable {
 	void Start () {
 		
 	}
-	
-	// TurnUpdate is called once per Turn
-	public void TurnUpdate(int numDaysPassed)
+
+    // TurnUpdate is called once per Turn
+    public void TurnUpdate(int numDaysPassed)
     {
         // Here we're probably just going to call TurnUpdate on all the
         // buildings/people/resources
+        foreach (Building b in ListOfBuildings)
+        {
+            b.TurnUpdate(numDaysPassed);
+        }
+        foreach (Resource r in ListOfResources)
+        {
+            r.TurnUpdate(numDaysPassed);
+        }
+        foreach (Person p in ListOfPopulation)
+        {
+            p.TurnUpdate(numDaysPassed);
+        }
     }
 
     public void setCityName(string name)
