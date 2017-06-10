@@ -19,7 +19,7 @@ public class BuildingTests
         Assert.That(building.City.Name, Is.EqualTo(city.Name));
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(0));
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(0));
-        Assert.That(building.PopulationCapacity, Is.EqualTo(0));
+        Assert.That(building.Population.Count, Is.EqualTo(0));
     }
 
     #region Consumption Tests
@@ -309,5 +309,44 @@ public class BuildingTests
             Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount + (outputAmount * (i + 1))));
         }
     }
-    #endregion    
+    #endregion
+
+
+    #region Population Modifiers
+    [Test]
+    public void AddPopulation()
+    {
+        var city = new City();
+        var building = new Building(city);
+        var person = new Person();
+
+        Assert.That(building.Population.Count, Is.EqualTo(0));
+
+        building.Population.Add(person);
+
+        Assert.That(building.Population.Count, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void PopulationIncreasesResourceGeneration()
+    {
+        var city = new City();
+        var building = new Building(city);
+
+        var resourceName = "Test";
+        var outputAmount = 3;
+        var output = Resource.Create(resourceName, outputAmount);
+
+        building.AddResourceOutput(output);
+
+        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(0));
+        building.TurnUpdate(1);
+        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount));
+
+
+        building.Population.Add(new Person());
+        building.TurnUpdate(1);
+        Assert.That(city.GetResource(resourceName).Amount, Is.GreaterThan(outputAmount * 2));
+    }
+    #endregion
 }
