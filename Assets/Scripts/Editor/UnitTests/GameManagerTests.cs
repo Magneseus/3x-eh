@@ -16,7 +16,7 @@ public class GameManagerTests  {
         Assert.That(gm.Cities, Is.Not.Null);
         Assert.That(gm.TurnDuration, Is.EqualTo(7));
         Assert.That(gm.TurnNumber, Is.EqualTo(0));
-        Assert.That(gm.DaysTranspired, Is.EqualTo(7));
+        Assert.That(gm.DaysTranspired, Is.EqualTo(0));
 
 
     }

@@ -8,8 +8,8 @@ public class GameManager {
 
     // Maybe we want this to be a reference to a Map?
     List<City> listOfCities = new List<City>();
-     int durationOfTurn = 7;
-     int currentTurnNumber = 0;
+    int durationOfTurn = 7;
+    int currentTurnNumber = 0;
 
     // Turn Update
     public void EndTurnUpdate()
