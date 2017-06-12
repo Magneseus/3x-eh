@@ -45,8 +45,6 @@ public class City : TurnUpdatable
         if (desinationBuilding.City != this)
             throw new BuildingNotInCityException(desinationBuilding.Name);
 
-        Console.Write("test\n");
-
         // Remove person from current building, if any
         if (person.Building != null)
         {
