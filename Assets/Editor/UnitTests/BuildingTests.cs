@@ -23,6 +23,19 @@ public class BuildingTests
         Assert.That(building.Name, Is.EqualTo(""));
     }
 
+    [Test]
+    public void Name()
+    {
+        var newName = "Test123";
+        var city = new City();
+        var building = new Building(city)
+        {
+           Name = newName
+        };
+
+        Assert.That(building.Name, Is.EqualTo(newName));
+    }
+
     #region Consumption Tests
     /*****************************
      * 
