@@ -39,4 +39,11 @@ public class Person : TurnUpdatable
     {
 
     }
+
+
+    public Building Building
+    {
+        get { return building; }
+        set { building = value; }
+    }
 }

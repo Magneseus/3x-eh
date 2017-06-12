@@ -33,6 +33,16 @@ public class Building : TurnUpdatable {
         
     }
 
+    public bool AddPerson(Person person)
+    {
+        // TODO: Check for building population cap (and return false)
+
+        listOfPersons.Add(person);
+        person.Building = this;
+
+        return true;
+    }
+
     public void AddResourceOutput(Resource resource)
     {        
         if (resourceOutputPerTurn.ContainsKey(resource.Id))

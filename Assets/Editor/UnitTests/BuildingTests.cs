@@ -319,12 +319,13 @@ public class BuildingTests
         var city = new City();
         var building = new Building(city);
         var person = new Person(building);
+        var personCount = building.Population.Count;
 
-        Assert.That(building.Population.Count, Is.EqualTo(0));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount));
 
-        building.Population.Add(person);
+        building.AddPerson(person);
 
-        Assert.That(building.Population.Count, Is.EqualTo(1));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount + 1));
     }
 
     [Test]
