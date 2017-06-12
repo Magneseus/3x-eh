@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using NSubstitute;
 
 public class CityTests
@@ -197,5 +198,29 @@ public class CityTests
         });
 
         Assert.That(int.Parse(missingResourceId.Message), Is.EqualTo(Resource.NameToId(resourceName)));
+    }
+
+    [Test]
+    public void MovePopulation()
+    {
+        var city = new City();
+        var building1 = new Building(city);
+        var building2 = new Building(city);
+        var person = new Person(building1);
+        building1.AddPerson(person);
+
+        city.MovePerson(person, building2);
+
+        Assert.That(building1.Population.Contains(person), Is.False);
+        Assert.That(building2.Population.Contains(person), Is.True);
+        Assert.That(person.Building, Is.EqualTo(building2));
+
+        building2.RemovePerson(person);
+        person = null;
+        person = new Person();
+        city.MovePerson(person, building1);
+
+        Assert.That(building1.Population.Contains(person), Is.True);
+        Assert.That(person.Building, Is.EqualTo(building1));
     }
 }

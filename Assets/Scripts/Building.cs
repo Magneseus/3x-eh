@@ -40,6 +40,9 @@ public class Building : TurnUpdatable {
     {
         // TODO: Check for building population cap or other limiting factors
 
+        if (listOfPersons.Contains(person))
+            return;
+
         listOfPersons.Add(person);
         person.Building = this;
     }

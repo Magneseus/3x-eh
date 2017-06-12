@@ -40,6 +40,18 @@ public class City : TurnUpdatable
         cityAge += numDaysPassed;
     }
 
+    public void MovePerson(Person person, Building desinationBuilding)
+    {
+        // Remove person from current building, if any
+        {
+            var oldBuilding = person.Building;
+            oldBuilding.RemovePerson(person);
+        }
+
+        // TODO: Catch exceptions like BuildingIsFull, when implemented
+        desinationBuilding.AddPerson(person);
+    }
+
     public void AddResource(Resource resource)
     {
         if (resources.ContainsKey(resource.Id))

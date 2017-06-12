@@ -332,11 +332,28 @@ public class BuildingTests
     }
 
     [Test]
-    public void RemovePopulation()
+    public void OverAddPopulation()
     {
         var city = new City();
         var building = new Building(city);
         var person = new Person(building);
+        var personCount = building.Population.Count;
+
+        Assert.That(person.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount));
+
+        building.AddPerson(person);
+
+        Assert.That(person.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount));
+    }
+
+    [Test]
+    public void RemovePopulation()
+    {
+        var city = new City();
+        var building = new Building(city);
+        var person = new Person();
 
         building.AddPerson(person);
         var personCount = building.Population.Count;

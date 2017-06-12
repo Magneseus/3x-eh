@@ -32,6 +32,7 @@ public class Person : TurnUpdatable
     public Person(Building building)
     {
         this.building = building;
+        building.AddPerson(this);
     }
        
     // TurnUpdate is called once per Turn

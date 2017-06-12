@@ -17,6 +17,7 @@ public class PersonTests
         var person = new Person(building);
 
         Assert.That(person.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Contains(person), Is.True);
 
         // Check 0 arg constructor as well
         person = null;
