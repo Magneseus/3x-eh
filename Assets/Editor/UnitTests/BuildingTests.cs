@@ -20,6 +20,20 @@ public class BuildingTests
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(0));
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(0));
         Assert.That(building.Population.Count, Is.EqualTo(0));
+        Assert.That(building.Name, Is.EqualTo(""));
+    }
+
+    [Test]
+    public void Name()
+    {
+        var newName = "Test123";
+        var city = new City();
+        var building = new Building(city)
+        {
+           Name = newName
+        };
+
+        Assert.That(building.Name, Is.EqualTo(newName));
     }
 
     #region Consumption Tests
@@ -319,12 +333,56 @@ public class BuildingTests
         var city = new City();
         var building = new Building(city);
         var person = new Person();
+        var personCount = building.Population.Count;
 
-        Assert.That(building.Population.Count, Is.EqualTo(0));
+        Assert.That(person.Building, Is.Null);
+        Assert.That(building.Population.Count, Is.EqualTo(personCount));
 
-        building.Population.Add(person);
+        building.AddPerson(person);
 
-        Assert.That(building.Population.Count, Is.EqualTo(1));
+        Assert.That(person.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount + 1));
+    }
+
+    [Test]
+    public void OverAddPopulation()
+    {
+        var city = new City();
+        var building = new Building(city);
+        var person = new Person(building);
+        var personCount = building.Population.Count;
+
+        Assert.That(person.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount));
+
+        building.AddPerson(person);
+
+        Assert.That(person.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount));
+    }
+
+    [Test]
+    public void RemovePopulation()
+    {
+        var city = new City();
+        var building = new Building(city);
+        var person = new Person();
+
+        building.AddPerson(person);
+        var personCount = building.Population.Count;
+
+        Assert.That(person.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount));
+
+        building.RemovePerson(person);
+
+        Assert.That(person.Building, Is.Null);
+        Assert.That(building.Population.Count, Is.EqualTo(personCount - 1));
+
+        Assert.Throws<PersonNotFoundException>(() =>
+        {
+            building.RemovePerson(person);
+        });
     }
 
     [Test]
@@ -344,7 +402,7 @@ public class BuildingTests
         Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount));
 
 
-        building.Population.Add(new Person());
+        building.Population.Add(new Person(building));
         building.TurnUpdate(1);
         Assert.That(city.GetResource(resourceName).Amount, Is.GreaterThan(outputAmount * 2));
     }

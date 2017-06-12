@@ -24,6 +24,14 @@ public class GameManager {
        // Debug.Log("Turn ended, " + durationOfTurn + " more days passed. "+ DaysTranspired+" transpired.");
     }
 
+    public void MovePerson(Person person, Building destinationBuilding)
+    {
+        if (destinationBuilding.City == null)
+            throw new BuildingNotInCityException("City reference is null in building: " + destinationBuilding.Name);
+
+        destinationBuilding.City.MovePerson(person, destinationBuilding);
+    }
+
     public List<City> Cities
     {
         get { return listOfCities; }

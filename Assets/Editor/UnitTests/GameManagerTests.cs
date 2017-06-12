@@ -48,6 +48,32 @@ public class GameManagerTests  {
         Assert.That(gm.Cities.Count, Is.EqualTo(1));
     }
 
+    [Test]
+    public void MovePersonTest()
+    {
+        var city = GetCityMock();
+        var gm = new GameManager();
+        gm.Cities.Add(city);
+        var building1 = new Building(city);
+        var building2 = new Building(city);
+        var person = new Person(building1);
+        building1.AddPerson(person);
+
+        gm.MovePerson(person, building2);
+
+        Assert.That(building1.Population.Contains(person), Is.False);
+        Assert.That(building2.Population.Contains(person), Is.True);
+        Assert.That(person.Building, Is.EqualTo(building2));
+
+        building2.RemovePerson(person);
+        person = null;
+        person = new Person();
+        gm.MovePerson(person, building1);
+
+        Assert.That(building1.Population.Contains(person), Is.True);
+        Assert.That(person.Building, Is.EqualTo(building1));
+    }
+
 
     private City GetCityMock()
     {

@@ -6,16 +6,17 @@ using UnityEngine;
 public class City : TurnUpdatable
 {
 
+    private Building emptyBuilding;
     private List<Building> listOfBuildings = new List<Building>();
-    private Dictionary<int, Resource> resources = new Dictionary<int, Resource>();    
-    private List<Person> listOfPopulation = new List<Person>();
+    private Dictionary<int, Resource> resources = new Dictionary<int, Resource>();
 
     private string cityName = "NoCityName";
     private int cityAge = 0;
 
     public City()
     {
-
+        emptyBuilding = new Building(this);
+        listOfBuildings.Add(emptyBuilding);
     }
 
     // TurnUpdate is called once per Turn
@@ -31,12 +32,28 @@ public class City : TurnUpdatable
         {
             entry.Value.TurnUpdate(numDaysPassed);
         }
-        foreach (Person p in listOfPopulation)
+        foreach (Person p in emptyBuilding.Population)
         {
             p.TurnUpdate(numDaysPassed);
         }
 
         cityAge += numDaysPassed;
+    }
+
+    public void MovePerson(Person person, Building desinationBuilding)
+    {
+        if (desinationBuilding.City != this)
+            throw new BuildingNotInCityException(desinationBuilding.Name);
+
+        // Remove person from current building, if any
+        if (person.Building != null)
+        {
+            var oldBuilding = person.Building;
+            oldBuilding.RemovePerson(person);
+        }
+
+        // TODO: Catch exceptions like BuildingIsFull, when implemented
+        desinationBuilding.AddPerson(person);
     }
 
     public void AddResource(Resource resource)
@@ -88,9 +105,14 @@ public class City : TurnUpdatable
         get { return listOfBuildings; }
     }    
 
+    public Building EmptyBuilding
+    {
+        get { return emptyBuilding; }
+    }
+
     public List<Person> Population
     {
-        get { return listOfPopulation; }
+        get { return emptyBuilding.Population; }
     }
 
     public string Name
@@ -101,7 +123,7 @@ public class City : TurnUpdatable
 
     public int CivilianCount
     {
-        get { return listOfPopulation.Count; }
+        get { return emptyBuilding.Population.Count; }
     }
 
     public int Age
@@ -129,6 +151,23 @@ public class InsufficientResourceException : Exception
     }
 
     public InsufficientResourceException(string message, Exception inner)
+    : base(message, inner)
+    {
+    }
+}
+
+public class BuildingNotInCityException : Exception
+{
+    public BuildingNotInCityException()
+    {
+    }
+
+    public BuildingNotInCityException(string message)
+    : base(message)
+    {
+    }
+
+    public BuildingNotInCityException(string message, Exception inner)
     : base(message, inner)
     {
     }

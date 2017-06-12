@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using NSubstitute;
 
 public class CityTests
@@ -20,6 +21,7 @@ public class CityTests
         Assert.That(city.Name, Is.EqualTo("NoCityName"));
         Assert.That(city.CivilianCount, Is.EqualTo(0));
         Assert.That(city.Age, Is.EqualTo(0));
+        Assert.That(city.EmptyBuilding, Is.Not.Null);
     }
 
     [Test]
@@ -37,12 +39,13 @@ public class CityTests
     public void AddBuilding()
     {        
         var city = new City();
+        var startingBuildingCount = city.Buildings.Count;
         var building = new Building(city);
 
-        Assert.That(city.Buildings.Count, Is.EqualTo(0));
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
 
         city.Buildings.Add(building);
-        Assert.That(city.Buildings.Count, Is.EqualTo(1));
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 1));
     }
 
     [Test]
@@ -195,5 +198,37 @@ public class CityTests
         });
 
         Assert.That(int.Parse(missingResourceId.Message), Is.EqualTo(Resource.NameToId(resourceName)));
+    }
+
+    [Test]
+    public void MovePopulation()
+    {
+        var city = new City();
+        var building1 = new Building(city);
+        var building2 = new Building(city);
+        var person = new Person(building1);
+        building1.AddPerson(person);
+
+        city.MovePerson(person, building2);
+
+        Assert.That(building1.Population.Contains(person), Is.False);
+        Assert.That(building2.Population.Contains(person), Is.True);
+        Assert.That(person.Building, Is.EqualTo(building2));
+
+        building2.RemovePerson(person);
+        person = null;
+        person = new Person();
+        city.MovePerson(person, building1);
+
+        Assert.That(building1.Population.Contains(person), Is.True);
+        Assert.That(person.Building, Is.EqualTo(building1));
+
+        var city2 = new City();
+        var building3 = new Building(city2);
+
+        Assert.Throws<BuildingNotInCityException>(() =>
+        {
+            city.MovePerson(person, building3);
+        });
     }
 }

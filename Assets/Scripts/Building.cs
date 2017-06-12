@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,10 +9,12 @@ public class Building : TurnUpdatable {
     private Dictionary<int, Resource> resourceConsumptionPerTurn = new Dictionary<int, Resource>();
     private Dictionary<int, Resource> resourceOutputPerTurn = new Dictionary<int, Resource>();
     private List<Person> listOfPersons = new List<Person>();
+    private String name;
 
     public Building(City city)
     {
         this.city = city;
+        name = "";
     }
 
     // TurnUpdate is called once per Turn
@@ -31,6 +34,26 @@ public class Building : TurnUpdatable {
             city.ConsumeResource(entry.Value);
         }
         
+    }
+
+    public void AddPerson(Person person)
+    {
+        // TODO: Check for building population cap or other limiting factors
+
+        if (listOfPersons.Contains(person))
+            return;
+
+        listOfPersons.Add(person);
+        person.Building = this;
+    }
+
+    public void RemovePerson(Person person)
+    {
+        if (!listOfPersons.Contains(person))
+            throw new PersonNotFoundException("Person in building: " + (person.Building == null ? "null" : person.Building.Name));
+
+        listOfPersons.Remove(person);
+        person.Building = null;
     }
 
     public void AddResourceOutput(Resource resource)
@@ -75,5 +98,34 @@ public class Building : TurnUpdatable {
     public List<Person> Population
     {
         get { return listOfPersons; }
+    }
+
+    public String Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+}
+
+
+/*****************************
+ * 
+ *         Exceptions
+ *         
+ *****************************/
+public class PersonNotFoundException : Exception
+{
+    public PersonNotFoundException()
+    {
+    }
+
+    public PersonNotFoundException(string message)
+    : base(message)
+    {
+    }
+
+    public PersonNotFoundException(string message, Exception inner)
+    : base(message, inner)
+    {
     }
 }
