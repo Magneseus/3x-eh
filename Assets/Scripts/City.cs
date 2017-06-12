@@ -6,16 +6,17 @@ using UnityEngine;
 public class City : TurnUpdatable
 {
 
+    private Building emptyBuilding;
     private List<Building> listOfBuildings = new List<Building>();
-    private Dictionary<int, Resource> resources = new Dictionary<int, Resource>();    
-    private List<Person> listOfPopulation = new List<Person>();
+    private Dictionary<int, Resource> resources = new Dictionary<int, Resource>();
 
     private string cityName = "NoCityName";
     private int cityAge = 0;
 
     public City()
     {
-
+        emptyBuilding = new Building(this);
+        listOfBuildings.Add(emptyBuilding);
     }
 
     // TurnUpdate is called once per Turn
@@ -31,7 +32,7 @@ public class City : TurnUpdatable
         {
             entry.Value.TurnUpdate(numDaysPassed);
         }
-        foreach (Person p in listOfPopulation)
+        foreach (Person p in emptyBuilding.Population)
         {
             p.TurnUpdate(numDaysPassed);
         }
@@ -88,9 +89,14 @@ public class City : TurnUpdatable
         get { return listOfBuildings; }
     }    
 
+    public Building EmptyBuilding
+    {
+        get { return emptyBuilding; }
+    }
+
     public List<Person> Population
     {
-        get { return listOfPopulation; }
+        get { return emptyBuilding.Population; }
     }
 
     public string Name
@@ -101,7 +107,7 @@ public class City : TurnUpdatable
 
     public int CivilianCount
     {
-        get { return listOfPopulation.Count; }
+        get { return emptyBuilding.Population.Count; }
     }
 
     public int Age

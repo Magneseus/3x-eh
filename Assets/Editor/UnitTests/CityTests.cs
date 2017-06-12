@@ -20,6 +20,7 @@ public class CityTests
         Assert.That(city.Name, Is.EqualTo("NoCityName"));
         Assert.That(city.CivilianCount, Is.EqualTo(0));
         Assert.That(city.Age, Is.EqualTo(0));
+        Assert.That(city.EmptyBuilding, Is.Not.Null);
     }
 
     [Test]
@@ -37,12 +38,13 @@ public class CityTests
     public void AddBuilding()
     {        
         var city = new City();
+        var startingBuildingCount = city.Buildings.Count;
         var building = new Building(city);
 
-        Assert.That(city.Buildings.Count, Is.EqualTo(0));
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
 
         city.Buildings.Add(building);
-        Assert.That(city.Buildings.Count, Is.EqualTo(1));
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 1));
     }
 
     [Test]
