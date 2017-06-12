@@ -43,6 +43,7 @@ public class City : TurnUpdatable
     public void MovePerson(Person person, Building desinationBuilding)
     {
         // Remove person from current building, if any
+        if (person.Building != null)
         {
             var oldBuilding = person.Building;
             oldBuilding.RemovePerson(person);
