@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Person : TurnUpdatable
 {
+    /* TODO: 
+     * - rework Person variables
+     * - proper access modifiers
+     */
     public enum PAge
     {
         Youth,
@@ -14,6 +18,21 @@ public class Person : TurnUpdatable
     public PAge  Age;
     public float Happiness;
     public float Hunger;
+    // End of TODO
+
+
+
+    private Building building;
+
+    public Person()
+    {
+        this.building = null;
+    }
+
+    public Person(Building building)
+    {
+        this.building = building;
+    }
        
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)

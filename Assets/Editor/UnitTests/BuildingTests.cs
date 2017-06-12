@@ -318,7 +318,7 @@ public class BuildingTests
     {
         var city = new City();
         var building = new Building(city);
-        var person = new Person();
+        var person = new Person(building);
 
         Assert.That(building.Population.Count, Is.EqualTo(0));
 
@@ -344,7 +344,7 @@ public class BuildingTests
         Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount));
 
 
-        building.Population.Add(new Person());
+        building.Population.Add(new Person(building));
         building.TurnUpdate(1);
         Assert.That(city.GetResource(resourceName).Amount, Is.GreaterThan(outputAmount * 2));
     }
