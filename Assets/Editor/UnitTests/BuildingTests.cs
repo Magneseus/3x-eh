@@ -20,6 +20,7 @@ public class BuildingTests
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(0));
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(0));
         Assert.That(building.Population.Count, Is.EqualTo(0));
+        Assert.That(building.Name, Is.EqualTo(""));
     }
 
     #region Consumption Tests
@@ -318,14 +319,35 @@ public class BuildingTests
     {
         var city = new City();
         var building = new Building(city);
-        var person = new Person(building);
+        var person = new Person();
         var personCount = building.Population.Count;
 
+        Assert.That(person.Building, Is.Null);
         Assert.That(building.Population.Count, Is.EqualTo(personCount));
 
         building.AddPerson(person);
 
+        Assert.That(person.Building, Is.EqualTo(building));
         Assert.That(building.Population.Count, Is.EqualTo(personCount + 1));
+    }
+
+    [Test]
+    public void RemovePopulation()
+    {
+        var city = new City();
+        var building = new Building(city);
+        var person = new Person(building);
+
+        building.AddPerson(person);
+        var personCount = building.Population.Count;
+
+        Assert.That(person.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount));
+
+        building.RemovePerson(person);
+
+        Assert.That(person.Building, Is.Null);
+        Assert.That(building.Population.Count, Is.EqualTo(personCount - 1));
     }
 
     [Test]
