@@ -348,6 +348,11 @@ public class BuildingTests
 
         Assert.That(person.Building, Is.Null);
         Assert.That(building.Population.Count, Is.EqualTo(personCount - 1));
+
+        Assert.Throws<PersonNotFoundException>(() =>
+        {
+            building.RemovePerson(person);
+        });
     }
 
     [Test]

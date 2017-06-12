@@ -47,7 +47,7 @@ public class Building : TurnUpdatable {
     public void RemovePerson(Person person)
     {
         if (!listOfPersons.Contains(person))
-            throw new PersonNotFoundException("Person in building: " + person.Building.Name);
+            throw new PersonNotFoundException("Person in building: " + (person.Building == null ? "null" : person.Building.Name));
 
         listOfPersons.Remove(person);
         person.Building = null;
