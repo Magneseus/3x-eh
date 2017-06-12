@@ -42,6 +42,11 @@ public class City : TurnUpdatable
 
     public void MovePerson(Person person, Building desinationBuilding)
     {
+        if (desinationBuilding.City != this)
+            throw new BuildingNotInCityException(desinationBuilding.Name);
+
+        Console.Write("test\n");
+
         // Remove person from current building, if any
         if (person.Building != null)
         {
@@ -148,6 +153,23 @@ public class InsufficientResourceException : Exception
     }
 
     public InsufficientResourceException(string message, Exception inner)
+    : base(message, inner)
+    {
+    }
+}
+
+public class BuildingNotInCityException : Exception
+{
+    public BuildingNotInCityException()
+    {
+    }
+
+    public BuildingNotInCityException(string message)
+    : base(message)
+    {
+    }
+
+    public BuildingNotInCityException(string message, Exception inner)
     : base(message, inner)
     {
     }

@@ -222,5 +222,13 @@ public class CityTests
 
         Assert.That(building1.Population.Contains(person), Is.True);
         Assert.That(person.Building, Is.EqualTo(building1));
+
+        var city2 = new City();
+        var building3 = new Building(city2);
+
+        Assert.Throws<BuildingNotInCityException>(() =>
+        {
+            city.MovePerson(person, building3);
+        });
     }
 }
