@@ -10,11 +10,22 @@ public class Building : TurnUpdatable {
     private Dictionary<int, Resource> resourceOutputPerTurn = new Dictionary<int, Resource>();
     private List<Person> listOfPersons = new List<Person>();
     private String name;
+    public enum BuildingStatus { UNDISCOVERED, DISCOVERED, ASSESSED, RECLAIMED };
+    private BuildingStatus status;
+    private int levelAssessed;
+    private int levelReclaimed;
+    private int maxAssessment;
+    private int maxReclaimed;
 
     public Building(City city)
     {
         this.city = city;
         name = "";
+        status = BuildingStatus.UNDISCOVERED;
+        levelAssessed = 0;
+        levelReclaimed = 0;
+        maxAssessment = 5;  // temp default value until system further developed
+        maxReclaimed = 5;
     }
 
     // TurnUpdate is called once per Turn
@@ -79,7 +90,6 @@ public class Building : TurnUpdatable {
             resourceConsumptionPerTurn.Add(resource.Id, Resource.Create(resource, resource.Amount));
         }
     }
-
     public Dictionary<int, Resource> ResourceConsumption
     {
         get { return resourceConsumptionPerTurn; }
@@ -104,6 +114,112 @@ public class Building : TurnUpdatable {
     {
         get { return name; }
         set { name = value; }
+    }
+
+    public void Discover()
+    {
+        if (IsUndiscovered())
+            status = BuildingStatus.DISCOVERED;
+    }
+
+    public void Assess()
+    {
+        if (IsOnlyDiscovered())
+            status = BuildingStatus.ASSESSED;
+        if (IsDiscovered())
+            IncreaseAssessment();
+    }
+
+    private void IncreaseAssessment()
+    {
+        if (levelAssessed < maxAssessment)
+            levelAssessed++;
+    }
+
+    public void Reclaim()
+    {
+        if (IsOnlyAssessed())
+            status = BuildingStatus.RECLAIMED;
+        if (IsAssessed())
+            IncreaseReclaimed();
+    }
+
+    private void IncreaseReclaimed()
+    {
+        if (levelReclaimed < maxReclaimed)
+            levelReclaimed++;
+    }
+
+    public int LevelAssessed
+    {
+        get { return levelAssessed; }
+        set { levelAssessed = value; }      // should only be used for dev, increase with Assess()
+    }
+
+    public int LevelReclaimed
+    {
+        get { return levelReclaimed; }
+        set { levelReclaimed = value; }     // should only be used for dev, increase with Reclaim()
+    }
+
+    public int MaxAssessment
+    {
+        get { return maxAssessment; }
+        set { maxAssessment = value; }
+    }
+
+    public int MaxReclaimed
+    {
+        get { return maxReclaimed; }
+        set { maxReclaimed = value; }
+    }
+
+    public BuildingStatus Status
+    {
+        get { return status; }
+        set { status = value; }
+    }
+
+    public bool IsUndiscovered()
+    {
+        if (status == BuildingStatus.UNDISCOVERED)
+            return true;
+        return false;
+    }
+
+    public bool IsDiscovered()
+    {
+        if (!IsUndiscovered())
+            return true;
+        return false;
+    }
+
+    public bool IsOnlyDiscovered()
+    {
+        if (status == BuildingStatus.DISCOVERED)
+            return true;
+        return false;
+    }
+
+    public bool IsAssessed()
+    {
+        if (IsOnlyAssessed() || IsReclaimed())
+            return true;
+        return false;
+    }
+
+    public bool IsOnlyAssessed()
+    {
+        if (status == BuildingStatus.ASSESSED)
+            return true;
+        return false;
+    }
+
+    public bool IsReclaimed()
+    {
+        if (status == BuildingStatus.RECLAIMED)
+            return true;
+        return false;
     }
 }
 

@@ -407,4 +407,229 @@ public class BuildingTests
         Assert.That(city.GetResource(resourceName).Amount, Is.GreaterThan(outputAmount * 2));
     }
     #endregion
+
+    #region Status Tests
+    [Test]
+    public void Status()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.Status, Is.EqualTo(Building.BuildingStatus.UNDISCOVERED));
+
+        building.Status = Building.BuildingStatus.ASSESSED;
+        Assert.That(building.Status, Is.EqualTo(Building.BuildingStatus.ASSESSED));
+    }
+    
+    [Test]
+    public void BuildingStatusProgresses()
+    {
+        var city = new City();
+        var building = new Building(city);
+        
+
+        building.Discover();
+        Assert.That(building.Status, Is.EqualTo(Building.BuildingStatus.DISCOVERED));
+
+        building.Assess();
+        Assert.That(building.Status, Is.EqualTo(Building.BuildingStatus.ASSESSED));
+
+        building.Reclaim();
+        Assert.That(building.Status, Is.EqualTo(Building.BuildingStatus.RECLAIMED));
+        Assert.That(building.Status, Is.EqualTo(Building.BuildingStatus.ASSESSED));
+    }
+
+
+    #region Status Bool Tests
+    [Test]
+    public void IsUndiscovered()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(true));
+
+        building.Status = Building.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.ASSESSED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsDiscovered()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.IsDiscovered(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+
+        building.Status = Building.BuildingStatus.ASSESSED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+
+        building.Status = Building.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+    }
+
+    [Test]
+    public void IsOnlyDiscovered()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(true));
+
+        building.Status = Building.BuildingStatus.ASSESSED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsAssessed()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.IsAssessed(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.ASSESSED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(true));
+
+        building.Status = Building.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(true));
+    }
+
+    [Test]
+    public void IsOnlyAssessed()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.ASSESSED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(true));
+
+        building.Status = Building.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsReclaimed()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.ASSESSED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = Building.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(true));
+    }
+    #endregion
+
+    [Test]
+    public void MaxAssessmentLevel()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.MaxAssessment, Is.EqualTo(5));
+
+        int val = 3;
+        building.MaxAssessment = val;
+        Assert.That(building.MaxAssessment, Is.EqualTo(val));
+    }
+
+    [Test]
+    public void MaxReclaimedLevel()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.MaxReclaimed, Is.EqualTo(5));
+
+        int val = 3;
+        building.MaxReclaimed = val;
+        Assert.That(building.MaxReclaimed, Is.EqualTo(val));
+    }
+
+    [Test]
+    public void LevelAssessed()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.LevelAssessed, Is.EqualTo(0));
+
+        int val = 2;
+        building.LevelAssessed = val;
+        Assert.That(building.LevelAssessed, Is.EqualTo(val));
+    }
+
+    [Test]
+    public void LevelReclaimed()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.LevelReclaimed, Is.EqualTo(0));
+
+        int val = 2;
+        building.LevelReclaimed = val;
+        Assert.That(building.LevelReclaimed, Is.EqualTo(val));
+    }
+
+    [Test]
+    public void AssessmentLevelIncrementing()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.LevelAssessed, Is.EqualTo(0));
+
+        building.Discover();
+        building.Assess();
+        Assert.That(building.LevelAssessed, Is.EqualTo(1));
+
+        building.Assess();
+        Assert.That(building.LevelAssessed, Is.EqualTo(2));
+
+        int max = 2;
+        building.MaxAssessment = max;
+        building.Assess();
+        Assert.That(building.LevelAssessed, Is.EqualTo(max));
+    }
+
+    [Test]
+    public void ReclaimedLevelIncrementing()
+    {
+        var city = new City();
+        var building = new Building(city);
+        Assert.That(building.LevelReclaimed, Is.EqualTo(0));
+
+        building.Discover();
+        building.Assess();
+        building.Reclaim();
+        Assert.That(building.LevelReclaimed, Is.EqualTo(1));
+
+        building.Reclaim();
+        Assert.That(building.LevelReclaimed, Is.EqualTo(2));
+
+        int max = 2;
+        building.MaxReclaimed = max;
+        building.Reclaim();
+        Assert.That(building.LevelReclaimed, Is.EqualTo(max));
+    }
+    #endregion
 }
