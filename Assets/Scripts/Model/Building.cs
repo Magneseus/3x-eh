@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DBuilding : TurnUpdatable {
+public class Building : TurnUpdatable {
 
     private City city;
     private Dictionary<int, Resource> resourceConsumptionPerTurn = new Dictionary<int, Resource>();
