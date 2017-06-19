@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building : TurnUpdatable {
+public class DBuilding : TurnUpdatable {
 
     private City city;
     private Dictionary<int, Resource> resourceConsumptionPerTurn = new Dictionary<int, Resource>();
@@ -33,7 +33,7 @@ public class Building : TurnUpdatable {
         {
             city.ConsumeResource(entry.Value);
         }
-        
+
     }
 
     public void AddPerson(Person person)
@@ -57,7 +57,7 @@ public class Building : TurnUpdatable {
     }
 
     public void AddResourceOutput(Resource resource)
-    {        
+    {
         if (resourceOutputPerTurn.ContainsKey(resource.Id))
         {
             resourceOutputPerTurn[resource.Id].Amount += resource.Amount;
@@ -65,7 +65,7 @@ public class Building : TurnUpdatable {
         else
         {
             resourceOutputPerTurn.Add(resource.Id, Resource.Create(resource, resource.Amount));
-        }        
+        }
     }
 
     public void AddResourceConsumption(Resource resource)
@@ -109,9 +109,9 @@ public class Building : TurnUpdatable {
 
 
 /*****************************
- * 
+ *
  *         Exceptions
- *         
+ *
  *****************************/
 public class PersonNotFoundException : Exception
 {
