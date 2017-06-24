@@ -12,7 +12,7 @@ public class GameManagerTests  {
     [Test]
     public void InitializesDefaultValues()
     {
-        GameManager gm = new GameManager();
+        DGame gm = new DGame();
         Assert.That(gm.Cities, Is.Not.Null);
         Assert.That(gm.TurnDuration, Is.EqualTo(7));
         Assert.That(gm.TurnNumber, Is.EqualTo(0));
@@ -23,7 +23,7 @@ public class GameManagerTests  {
     [Test]
     public void CityTurnUpdateTest()
     {
-        var gm = new GameManager();
+        var gm = new DGame();
         
 
 
@@ -40,7 +40,7 @@ public class GameManagerTests  {
     public void AddCityTest()
     {
         var city = GetCityMock();
-        var gm = new GameManager();
+        var gm = new DGame();
 
         Assert.That(gm.Cities.Count, Is.EqualTo(0));
 
@@ -52,11 +52,11 @@ public class GameManagerTests  {
     public void MovePersonTest()
     {
         var city = GetCityMock();
-        var gm = new GameManager();
+        var gm = new DGame();
         gm.Cities.Add(city);
-        var building1 = new Building(city);
-        var building2 = new Building(city);
-        var person = new Person(building1);
+        var building1 = new DBuilding(city);
+        var building2 = new DBuilding(city);
+        var person = new DPerson(building1);
         building1.AddPerson(person);
 
         gm.MovePerson(person, building2);
@@ -67,7 +67,7 @@ public class GameManagerTests  {
 
         building2.RemovePerson(person);
         person = null;
-        person = new Person();
+        person = new DPerson();
         gm.MovePerson(person, building1);
 
         Assert.That(building1.Population.Contains(person), Is.True);
@@ -75,8 +75,8 @@ public class GameManagerTests  {
     }
 
 
-    private City GetCityMock()
+    private DCity GetCityMock()
     {
-        return Substitute.For<City>();
+        return Substitute.For<DCity>();
     }
 }

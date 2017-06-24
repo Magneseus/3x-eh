@@ -14,7 +14,7 @@ public class CityTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new City();
+        var city = new DCity();
         Assert.That(city.Buildings, Is.Not.Null);
         Assert.That(city.Resources, Is.Not.Null);
         Assert.That(city.Population, Is.Not.Null);
@@ -28,7 +28,7 @@ public class CityTests
     public void Name()
     {
         var newName = "Test123";
-        var city = new City()
+        var city = new DCity()
         {
             Name = newName
         };
@@ -38,9 +38,9 @@ public class CityTests
     [Test]
     public void AddBuilding()
     {        
-        var city = new City();
+        var city = new DCity();
         var startingBuildingCount = city.Buildings.Count;
-        var building = new Building(city);
+        var building = new DBuilding(city);
 
         Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
 
@@ -51,8 +51,8 @@ public class CityTests
     [Test]
     public void AddResource()
     {
-        var resource = Resource.Create("Test", 0);
-        var city = new City();
+        var resource = DResource.Create("Test", 0);
+        var city = new DCity();
 
         Assert.That(city.Resources.Count, Is.EqualTo(0));
 
@@ -63,8 +63,8 @@ public class CityTests
     [Test]
     public void AddPopulation()
     {
-        var person = new Person();
-        var city = new City();
+        var person = new DPerson();
+        var city = new DCity();
 
         Assert.That(city.Population.Count, Is.EqualTo(0));
 
@@ -75,8 +75,8 @@ public class CityTests
     [Test]
     public void CivilianCount()
     {
-        var person = new Person();
-        var city = new City();
+        var person = new DPerson();
+        var city = new DCity();
         Assert.That(city.CivilianCount, Is.EqualTo(0));
         city.Population.Add(person);
         Assert.That(city.CivilianCount, Is.EqualTo(1));
@@ -87,7 +87,7 @@ public class CityTests
     [Test]
     public void TurnUpdateDaysPassed()
     {
-        var city = new City();
+        var city = new DCity();
         var numberOfDaysPassed = 7;
 
         for (var i = 0; i < 10; i++)
@@ -103,10 +103,10 @@ public class CityTests
         var resourceName = "Test";
         var outputAmount = 2;
         var zero = 0;
-        var output = Resource.Create(resourceName, outputAmount);
+        var output = DResource.Create(resourceName, outputAmount);
 
-        var city = new City();
-        var building = new Building(city);
+        var city = new DCity();
+        var building = new DBuilding(city);
         building.AddResourceOutput(output);
         city.Buildings.Add(building);
 
@@ -121,10 +121,10 @@ public class CityTests
         var numberOfTurns = 5;
         var resourceName = "Test";
         var outputAmount = 2;
-        var output = Resource.Create(resourceName, outputAmount);
+        var output = DResource.Create(resourceName, outputAmount);
 
-        var city = new City();
-        var building = new Building(city);
+        var city = new DCity();
+        var building = new DBuilding(city);
         building.AddResourceOutput(output);
         city.Buildings.Add(building);
         
@@ -142,14 +142,14 @@ public class CityTests
         var resourceName = "Test";
 
         var consumeAmount = 3;
-        var consume = Resource.Create(resourceName, consumeAmount);
+        var consume = DResource.Create(resourceName, consumeAmount);
 
         var stockpileAmount = 2;
-        var stockpile = Resource.Create(resourceName, stockpileAmount);
+        var stockpile = DResource.Create(resourceName, stockpileAmount);
         
         
-        var city = new City();
-        var building = new Building(city);
+        var city = new DCity();
+        var building = new DBuilding(city);
         
         building.AddResourceConsumption(consume);
         city.Buildings.Add(building);
@@ -162,7 +162,7 @@ public class CityTests
             city.TurnUpdate(1);
         });
 
-        Assert.That(int.Parse(missingResourceId.Message), Is.EqualTo(Resource.NameToId(resourceName)));        
+        Assert.That(int.Parse(missingResourceId.Message), Is.EqualTo(DResource.NameToId(resourceName)));        
     }
 
     [Test]
@@ -172,14 +172,14 @@ public class CityTests
         var resourceName = "Test";
 
         var consumeAmount = 3;
-        var consume = Resource.Create(resourceName, consumeAmount);
+        var consume = DResource.Create(resourceName, consumeAmount);
 
         var stockpileAmount = numberOfValidTurns * consumeAmount + 1;
-        var stockpile = Resource.Create(resourceName, stockpileAmount);
+        var stockpile = DResource.Create(resourceName, stockpileAmount);
 
 
-        var city = new City();
-        var building = new Building(city);
+        var city = new DCity();
+        var building = new DBuilding(city);
 
         building.AddResourceConsumption(consume);
         city.Buildings.Add(building);
@@ -197,16 +197,16 @@ public class CityTests
             city.TurnUpdate(1);
         });
 
-        Assert.That(int.Parse(missingResourceId.Message), Is.EqualTo(Resource.NameToId(resourceName)));
+        Assert.That(int.Parse(missingResourceId.Message), Is.EqualTo(DResource.NameToId(resourceName)));
     }
 
     [Test]
     public void MovePopulation()
     {
-        var city = new City();
-        var building1 = new Building(city);
-        var building2 = new Building(city);
-        var person = new Person(building1);
+        var city = new DCity();
+        var building1 = new DBuilding(city);
+        var building2 = new DBuilding(city);
+        var person = new DPerson(building1);
         building1.AddPerson(person);
 
         city.MovePerson(person, building2);
@@ -217,14 +217,14 @@ public class CityTests
 
         building2.RemovePerson(person);
         person = null;
-        person = new Person();
+        person = new DPerson();
         city.MovePerson(person, building1);
 
         Assert.That(building1.Population.Contains(person), Is.True);
         Assert.That(person.Building, Is.EqualTo(building1));
 
-        var city2 = new City();
-        var building3 = new Building(city2);
+        var city2 = new DCity();
+        var building3 = new DBuilding(city2);
 
         Assert.Throws<BuildingNotInCityException>(() =>
         {
