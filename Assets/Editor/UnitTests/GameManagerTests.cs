@@ -52,7 +52,7 @@ public class GameManagerTests
     public void AddCityTest()
     {
         var game = new DGame();
-        var city = new DCity(CITY_NAME, MockCityController());
+        var city = new DCity(CITY_NAME, Mock<CityController>());
         
         Assert.That(game.Cities.Count, Is.EqualTo(0));
 
@@ -64,11 +64,11 @@ public class GameManagerTests
     public void MovePersonTest()
     {
         var game = new DGame();
-        var city = new DCity(CITY_NAME, MockCityController());
+        var city = new DCity(CITY_NAME, Mock<CityController>());
         game.AddCity(city);
 
-        var building1 = new DBuilding(city, BUILDING_NAME, MockBuildingController());
-        var building2 = new DBuilding(city, BUILDING_NAME_2, MockBuildingController());
+        var building1 = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var building2 = new DBuilding(city, BUILDING_NAME_2, Mock<BuildingController>());
         var person = new DPerson(building1);
 
         game.MovePerson(person, building2);
@@ -84,17 +84,10 @@ public class GameManagerTests
         Assert.That(person.Building, Is.EqualTo(building1));
     }
 
-    private BuildingController MockBuildingController()
+    private T Mock<T>() where T : Component
     {
         var mockObj = new GameObject();
         mockObjects.Add(mockObj);
-        return mockObj.AddComponent<BuildingController>().GetComponent<BuildingController>();
-    }
-
-    private CityController MockCityController()
-    {
-        var mockObj = new GameObject();
-        mockObjects.Add(mockObj);
-        return mockObj.AddComponent<CityController>().GetComponent<CityController>();
+        return mockObj.AddComponent<T>().GetComponent<T>();
     }
 }
