@@ -1,12 +1,22 @@
 ﻿using NUnit.Framework;
 using NSubstitute;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class GameManagerTests  {
+public class GameManagerTests
+{
+    private List<GameObject> mockObjects = new List<GameObject>();
 
     private string CITY_NAME = "Test City";
     private string BUILDING_NAME = "Test Building";
     private string BUILDING_NAME_2 = "Other Test Building";
+
+    [TearDown]
+    public void TearDown()
+    {
+        foreach (var entry in mockObjects)
+            Object.DestroyImmediate(entry);
+    }
 
     [Test]
     public void GameManagerTestsSimplePasses()
@@ -74,14 +84,17 @@ public class GameManagerTests  {
         Assert.That(person.Building, Is.EqualTo(building1));
     }
 
-    private static BuildingController MockBuildingController()
+    private BuildingController MockBuildingController()
     {
-        return new GameObject().AddComponent<BuildingController>().GetComponent<BuildingController>();
+        var mockObj = new GameObject();
+        mockObjects.Add(mockObj);
+        return mockObj.AddComponent<BuildingController>().GetComponent<BuildingController>();
     }
 
-    private static CityController MockCityController()
+    private CityController MockCityController()
     {
-        return new GameObject().AddComponent<CityController>().GetComponent<CityController>();
+        var mockObj = new GameObject();
+        mockObjects.Add(mockObj);
+        return mockObj.AddComponent<CityController>().GetComponent<CityController>();
     }
-
 }
