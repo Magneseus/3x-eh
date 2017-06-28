@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,4 +16,9 @@ public class BuildingController : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    internal void ConnectToDataEngine(DGame dGame, string cityName, string buildingName)
+    {
+        DBuilding dBuilding = new DBuilding(dGame.Cities[cityName], buildingName, this);        
+    }
 }

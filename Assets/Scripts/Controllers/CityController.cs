@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,5 +16,10 @@ public class CityController : MonoBehaviour {
 	void Update () {
         
 	}
-    
+
+    internal void ConnectToDataEngine(DGame dGame, string cityName)
+    {
+        dCity = new DCity(cityName, this);
+        dGame.Cities.Add(cityName, dCity);
+    }
 }
