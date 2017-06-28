@@ -6,8 +6,8 @@ using UnityEngine;
 [Serializable]
 public class DGame {
 
-    // Maybe we want this to be a reference to a Map?
-    List<DCity> listOfCities = new List<DCity>();
+
+    Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     int durationOfTurn = 7;
     int currentTurnNumber = 0;
 
@@ -15,9 +15,9 @@ public class DGame {
     public void EndTurnUpdate()
     {
         // Here we will update everything (basically just updating the cities)
-        foreach (DCity c in listOfCities)
+        foreach (var kvp in cities)
         {
-            c.TurnUpdate(durationOfTurn);
+            kvp.Value.TurnUpdate(durationOfTurn);
         }
 
         currentTurnNumber += 1;
@@ -32,10 +32,16 @@ public class DGame {
         destinationBuilding.City.MovePerson(person, destinationBuilding);
     }
 
-    public List<DCity> Cities
+    public void AddCity(DCity dCity)
     {
-        get { return listOfCities; }
+        cities.Add(dCity.Name, dCity);
     }
+
+    public Dictionary<string, DCity> Cities
+    {
+        get { return cities; }
+    }
+
 
     public int TurnNumber
     {

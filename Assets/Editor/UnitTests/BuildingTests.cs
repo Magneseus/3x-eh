@@ -1,8 +1,11 @@
 ﻿using NUnit.Framework;
 using NSubstitute;
+using UnityEngine;
 
 public class BuildingTests
 {
+    private string CITY_NAME = "Test City";
+    private string BUILDING_NAME = "Test Building";
 
     [Test]
     public void BuildingTestsSimplePasses()
@@ -13,22 +16,22 @@ public class BuildingTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         Assert.That(building.City.Name, Is.EqualTo(city.Name));
         Assert.That(building.ResourceConsumption.Count, Is.EqualTo(0));
         Assert.That(building.ResourceOutput.Count, Is.EqualTo(0));
         Assert.That(building.Population.Count, Is.EqualTo(0));
-        Assert.That(building.Name, Is.EqualTo(""));
-    }
+        Assert.That(building.Name, Is.EqualTo(BUILDING_NAME));
+    }    
 
     [Test]
     public void Name()
     {
         var newName = "Test123";
-        var city = new DCity();
-        var building = new DBuilding(city)
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController())
         {
            Name = newName
         };
@@ -45,8 +48,8 @@ public class BuildingTests
     [Test]
     public void AddSingleConsumption()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var consumptionName = "Test";
         var consumptionAmount = 5;
@@ -61,8 +64,8 @@ public class BuildingTests
     [Test]
     public void AddMultipleConsumptionSameResource()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var consumptionName = "Test";
         var consumptionAmount = 5;
@@ -82,8 +85,8 @@ public class BuildingTests
     [Test]
     public void AddSingleConsumptionDifferentResource()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var consumptionOneName = "Test";
         var consumptionOneAmount = 5;
@@ -105,8 +108,8 @@ public class BuildingTests
     [Test]
     public void AddMultipleConsumptionDifferentResource()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var consumptionOneName = "Test";
         var consumptionOneAmount = 5;
@@ -138,8 +141,8 @@ public class BuildingTests
         var consumeAmount = 3;
         var consume = DResource.Create(resourceName, consumeAmount);
 
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         city.AddResource(stockpile);
         building.AddResourceConsumption(consume);
@@ -163,10 +166,10 @@ public class BuildingTests
         var stockpile = DResource.Create(resourceName, stockpileAmount);        
         var consume = DResource.Create(resourceName, consumeAmount);
 
-        var city = new DCity();
-        city.AddResource(stockpile);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
-        var building = new DBuilding(city);
+        city.AddResource(stockpile);
         building.AddResourceConsumption(consume);
 
         
@@ -191,8 +194,8 @@ public class BuildingTests
     [Test]
     public void AddSingleOutput()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var outputName = "Test";
         var outputAmount = 5;
@@ -207,8 +210,8 @@ public class BuildingTests
     [Test]
     public void AddMultipleOutputSameResource()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var outputName = "Test";
         var outputAmount = 5;
@@ -228,8 +231,8 @@ public class BuildingTests
     [Test]
     public void AddSingleOutputDifferentResource()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var outputOneName = "Test";
         var outputOneAmount = 5;
@@ -251,8 +254,8 @@ public class BuildingTests
     [Test]
     public void AddMultipleOutputDifferentResource()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var outputOneName = "Test";
         var outputOneAmount = 5;
@@ -284,8 +287,8 @@ public class BuildingTests
         var outputAmount = 2;
         var output = DResource.Create(resourceName, outputAmount);
 
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         city.AddResource(stockpile);
         building.AddResourceOutput(output);
@@ -309,10 +312,10 @@ public class BuildingTests
         var stockpile = DResource.Create(resourceName, stockpileAmount);
         var output = DResource.Create(resourceName, outputAmount);
 
-        var city = new DCity();
-        city.AddResource(stockpile);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
-        var building = new DBuilding(city);
+        city.AddResource(stockpile);
         building.AddResourceOutput(output);
 
 
@@ -330,32 +333,34 @@ public class BuildingTests
     [Test]
     public void AddPopulation()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
-        var person = new DPerson();
-        var personCount = building.Population.Count;
+        var personCount = 0;
 
-        Assert.That(person.Building, Is.Null);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());        
         Assert.That(building.Population.Count, Is.EqualTo(personCount));
 
-        building.AddPerson(person);
+        var person = new DPerson(building);
 
         Assert.That(person.Building, Is.EqualTo(building));
         Assert.That(building.Population.Count, Is.EqualTo(personCount + 1));
+
+        var person2 = new DPerson(building);
+        Assert.That(person2.Building, Is.EqualTo(building));
+        Assert.That(building.Population.Count, Is.EqualTo(personCount + 2));
     }
 
     [Test]
     public void OverAddPopulation()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
         var person = new DPerson(building);
         var personCount = building.Population.Count;
 
         Assert.That(person.Building, Is.EqualTo(building));
         Assert.That(building.Population.Count, Is.EqualTo(personCount));
 
-        building.AddPerson(person);
+        building.AddPersonToBuilding(person);
 
         Assert.That(person.Building, Is.EqualTo(building));
         Assert.That(building.Population.Count, Is.EqualTo(personCount));
@@ -364,11 +369,11 @@ public class BuildingTests
     [Test]
     public void RemovePopulation()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
-        var person = new DPerson();
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
+        var person = new DPerson(building);
 
-        building.AddPerson(person);
+        building.AddPersonToBuilding(person);
         var personCount = building.Population.Count;
 
         Assert.That(person.Building, Is.EqualTo(building));
@@ -388,8 +393,8 @@ public class BuildingTests
     [Test]
     public void PopulationIncreasesResourceGeneration()
     {
-        var city = new DCity();
-        var building = new DBuilding(city);
+        var city = new DCity(CITY_NAME, MockCityController());
+        var building = new DBuilding(city, BUILDING_NAME, MockBuildingController());
 
         var resourceName = "Test";
         var outputAmount = 3;
@@ -407,4 +412,14 @@ public class BuildingTests
         Assert.That(city.GetResource(resourceName).Amount, Is.GreaterThan(outputAmount * 2));
     }
     #endregion
+
+    private static BuildingController MockBuildingController()
+    {
+        return new GameObject().AddComponent<BuildingController>().GetComponent<BuildingController>();
+    }
+
+    private static CityController MockCityController()
+    {
+        return new GameObject().AddComponent<CityController>().GetComponent<CityController>();
+    }
 }

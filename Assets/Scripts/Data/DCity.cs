@@ -4,41 +4,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DCity : TurnUpdatable
-{
-
-    private DBuilding emptyBuilding;
-    private List<DBuilding> listOfBuildings = new List<DBuilding>();
+{    
+    private Dictionary<string, DBuilding> buildings = new Dictionary<string, DBuilding>();
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
+    private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
 
     private CityController cityController;
-    private string cityName = "NoCityName";
-    private int cityAge = 0;
-    
-    public DCity()
+    private string cityName;
+    private int cityAge;
+        
+    public DCity(string cityName, CityController cityController)
     {        
-        emptyBuilding = new DBuilding(this);
-        listOfBuildings.Add(emptyBuilding);
+        this.cityName = cityName;
+        this.cityController = cityController;
+        this.cityAge = 0;
     }
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
-    {
-        // Here we're probably just going to call TurnUpdate on all the
-        // buildings/people/resources
-        foreach (DBuilding b in listOfBuildings)
-        {
-            b.TurnUpdate(numDaysPassed);
-        }
-        foreach (KeyValuePair<int, DResource> entry in resources)
-        {
+    {        
+        foreach (var entry in buildings)        
             entry.Value.TurnUpdate(numDaysPassed);
-        }
-        foreach (DPerson p in emptyBuilding.Population)
-        {
-            p.TurnUpdate(numDaysPassed);
-        }
+
+        foreach (var entry in resources)
+            entry.Value.TurnUpdate(numDaysPassed);
 
         cityAge += numDaysPassed;
+    }
+
+    public void AddPerson(DBuilding dBuilding, DPerson dPerson)
+    {
+        if (!people.ContainsKey(dPerson.Id))
+            people.Add(dPerson.Id, dPerson);
+
+        dBuilding.AddPersonToBuilding(dPerson);
     }
 
     public void MovePerson(DPerson person, DBuilding desinationBuilding)
@@ -54,7 +53,7 @@ public class DCity : TurnUpdatable
         }
 
         // TODO: Catch exceptions like BuildingIsFull, when implemented
-        desinationBuilding.AddPerson(person);
+        desinationBuilding.AddPersonToBuilding(person);
     }
 
     public void AddResource(DResource resource)
@@ -96,36 +95,26 @@ public class DCity : TurnUpdatable
         
     }
 
+    public Dictionary<string, DBuilding> Buildings
+    {
+        get { return buildings; }
+    }
+
     public Dictionary<int, DResource> Resources
     {
         get { return resources; }
     }
 
-    public List<DBuilding> Buildings
+    public Dictionary<int, DPerson> People
     {
-        get { return listOfBuildings; }
-    }    
-
-    public DBuilding EmptyBuilding
-    {
-        get { return emptyBuilding; }
-    }
-
-    public List<DPerson> Population
-    {
-        get { return emptyBuilding.Population; }
+        get { return people; }
     }
 
     public string Name
     {
         get { return cityName; }
         set { cityName = value; }
-    }
-
-    public int CivilianCount
-    {
-        get { return emptyBuilding.Population.Count; }
-    }
+    }   
 
     public int Age
     {
@@ -134,8 +123,7 @@ public class DCity : TurnUpdatable
 
     public CityController CityController
     {
-        get { return cityController; }
-        set { cityController = value; }
+        get { return cityController; }        
     }
 
 }

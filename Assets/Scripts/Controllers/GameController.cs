@@ -7,22 +7,37 @@ public class GameController : MonoBehaviour
 
     public DGame dGame = new DGame();
 
-    
 
     // Initialization
     void Start()
     {
-        InitializeCity();
+        InitializeCities();
+
     }
 
-    private void InitializeCity()
+    private void InitializeCities()
     {
-        DCity dCity = new DCity();
-        dCity.Name = "Ottawa Sprint 1";
+        CreateCity("Ottawa");        
+        
+    }
 
-        CityController cityController = (Instantiate(Resources.Load("Prefabs/Cities/Ottawa")) as GameObject).GetComponent<CityController>();
+    public void CreateCity(string cityName)
+    {        
+        CityController cityController = InstantiatePrefab<CityController>(Constants.OTTAWA_PREFAB_PATH);
+        DCity dCity = new DCity(cityName, cityController);
         cityController.dCity = dCity;
-        dCity.CityController = cityController;
+
+        dGame.Cities.Add(cityName, dCity);
+
+        // Create the town hall
+        CreateBuilding("Ottawa", "Town Hall");
+    }
+
+    public void CreateBuilding(string cityName, string buildingName)
+    {
+        BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH);
+        DBuilding dBuilding = new DBuilding(dGame.Cities[cityName], buildingName, buildingController);
+        buildingController.dBuilding = dBuilding;   
     }
 
     //Updated per frame, use for UI.
@@ -34,19 +49,8 @@ public class GameController : MonoBehaviour
         }
     }
 
-    //////////// Single Instance Assertion Stuff
-    private static bool _isInstantiated = false;
-
-    private void Awake()
+    private T InstantiatePrefab<T>(string prefabPath)
     {
-        // IF THIS FAILS, we've instantiated another GameManager somewhere!!
-        Debug.Assert(!_isInstantiated);
-        _isInstantiated = true;
+        return (Instantiate(Resources.Load(prefabPath)) as GameObject).GetComponent<T>();
     }
-
-    private void OnDestroy()
-    {
-        _isInstantiated = false;
-    }
-    ///// End of Single Instance Assertion Stuff
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CityController : MonoBehaviour {
+public class BuildingController : MonoBehaviour {
 
-    public DCity dCity;    
+    public DBuilding dBuilding;
 
 	// Use this for initialization
 	void Start () {
@@ -13,7 +13,6 @@ public class CityController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
+		
 	}
-    
 }

@@ -1,7 +1,12 @@
 ﻿using NUnit.Framework;
 using NSubstitute;
+using UnityEngine;
 
 public class GameManagerTests  {
+
+    private string CITY_NAME = "Test City";
+    private string BUILDING_NAME = "Test Building";
+    private string BUILDING_NAME_2 = "Other Test Building";
 
     [Test]
     public void GameManagerTestsSimplePasses()
@@ -24,9 +29,6 @@ public class GameManagerTests  {
     public void CityTurnUpdateTest()
     {
         var gm = new DGame();
-        
-
-
         for (var i = 0; i < 10; i++)
         {
             Assert.That(gm.TurnNumber, Is.EqualTo(i));
@@ -39,44 +41,47 @@ public class GameManagerTests  {
     [Test]
     public void AddCityTest()
     {
-        var city = GetCityMock();
-        var gm = new DGame();
+        var game = new DGame();
+        var city = new DCity(CITY_NAME, MockCityController());
+        
+        Assert.That(game.Cities.Count, Is.EqualTo(0));
 
-        Assert.That(gm.Cities.Count, Is.EqualTo(0));
-
-        gm.Cities.Add(city);
-        Assert.That(gm.Cities.Count, Is.EqualTo(1));
+        game.AddCity(city);
+        Assert.That(game.Cities.Count, Is.EqualTo(1));
     }
 
     [Test]
     public void MovePersonTest()
     {
-        var city = GetCityMock();
-        var gm = new DGame();
-        gm.Cities.Add(city);
-        var building1 = new DBuilding(city);
-        var building2 = new DBuilding(city);
-        var person = new DPerson(building1);
-        building1.AddPerson(person);
+        var game = new DGame();
+        var city = new DCity(CITY_NAME, MockCityController());
+        game.AddCity(city);
 
-        gm.MovePerson(person, building2);
+        var building1 = new DBuilding(city, BUILDING_NAME, MockBuildingController());
+        var building2 = new DBuilding(city, BUILDING_NAME_2, MockBuildingController());
+        var person = new DPerson(building1);
+
+        game.MovePerson(person, building2);
 
         Assert.That(building1.Population.Contains(person), Is.False);
         Assert.That(building2.Population.Contains(person), Is.True);
         Assert.That(person.Building, Is.EqualTo(building2));
-
-        building2.RemovePerson(person);
-        person = null;
-        person = new DPerson();
-        gm.MovePerson(person, building1);
+                
+        game.MovePerson(person, building1);
 
         Assert.That(building1.Population.Contains(person), Is.True);
+        Assert.That(building2.Population.Contains(person), Is.False);
         Assert.That(person.Building, Is.EqualTo(building1));
     }
 
-
-    private DCity GetCityMock()
+    private static BuildingController MockBuildingController()
     {
-        return Substitute.For<DCity>();
+        return new GameObject().AddComponent<BuildingController>().GetComponent<BuildingController>();
     }
+
+    private static CityController MockCityController()
+    {
+        return new GameObject().AddComponent<CityController>().GetComponent<CityController>();
+    }
+
 }

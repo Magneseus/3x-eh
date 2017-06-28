@@ -5,16 +5,21 @@ using UnityEngine;
 
 public class DBuilding : TurnUpdatable {
 
+    private BuildingController buildingController;
+
     private DCity city;
     private Dictionary<int, DResource> resourceConsumptionPerTurn = new Dictionary<int, DResource>();
     private Dictionary<int, DResource> resourceOutputPerTurn = new Dictionary<int, DResource>();
     private List<DPerson> listOfPersons = new List<DPerson>();
-    private String name;
+    private String buildingName;
 
-    public DBuilding(DCity city)
-    {
-        this.city = city;
-        name = "";
+    public DBuilding(DCity city, string buildingName, BuildingController buildingController)
+    {        
+        this.city = city;        
+        this.buildingName = buildingName;
+        this.buildingController = buildingController;
+
+        this.city.Buildings.Add(buildingName, this);
     }
 
     // TurnUpdate is called once per Turn
@@ -36,7 +41,7 @@ public class DBuilding : TurnUpdatable {
         
     }
 
-    public void AddPerson(DPerson person)
+    public void AddPersonToBuilding(DPerson person)
     {
         // TODO: Check for building population cap or other limiting factors
 
@@ -45,6 +50,7 @@ public class DBuilding : TurnUpdatable {
 
         listOfPersons.Add(person);
         person.Building = this;
+        City.AddPerson(this, person);
     }
 
     public void RemovePerson(DPerson person)
@@ -102,8 +108,8 @@ public class DBuilding : TurnUpdatable {
 
     public String Name
     {
-        get { return name; }
-        set { name = value; }
+        get { return buildingName; }
+        set { buildingName = value; }
     }
 }
 
