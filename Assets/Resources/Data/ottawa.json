@@ -1,6 +1,5 @@
 {
   "name": "Ottawa",
-  "numberOfBuildings": 5,
   "buildings": [
     {
       "name": "Town Hall",
