@@ -119,6 +119,139 @@ public class BuildingTests
     }
     #endregion
 
+    #region Status Tests
+    [Test]
+    public void Status()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.UNDISCOVERED));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.ASSESSED));
+    }
+
+    [Test]
+    public void BuildingStatusProgresses()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+
+        building.Discover();
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.DISCOVERED));
+
+        building.Assess(0.2f);
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.ASSESSED));
+
+        building.Reclaim(0.2f);
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.RECLAIMED));
+    }
+
+
+    #region Status Bool Tests
+    [Test]
+    public void IsUndiscovered()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsDiscovered()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsDiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+    }
+
+    [Test]
+    public void IsOnlyDiscovered()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsAssessed()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsAssessed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(true));
+    }
+
+    [Test]
+    public void IsOnlyAssessed()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsReclaimed()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(true));
+    }
+    #endregion
+    #endregion
 
     private T Mock<T>() where T : Component
     {
