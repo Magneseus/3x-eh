@@ -207,7 +207,7 @@ public class CityTests
 
         var person = new DPerson(city);
 
-        Assert.That(city.People[person.Id], Is.EqualTo(person));
+        Assert.That(city.People[person.ID], Is.EqualTo(person));
         Assert.That(person.City, Is.EqualTo(city));
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
 

@@ -26,14 +26,38 @@ public class DPerson : TurnUpdatable
     public void SetTask(DTask dTask)
     {
         if(task != null)
-            task.ClearPerson();
+            task.RemovePerson(this);
 
         task = dTask;
-        dTask.Person = this;
+
+        if (!dTask.ListOfPeople.Contains(this))
+            dTask.AddPerson(this);
+    }
+
+    public void RemoveTask(DTask dTask)
+    {
+        if (task != null)
+        {
+            if (task.ListOfPeople.Contains(this))
+            {
+                task.RemovePerson(this);
+            }
+
+            task = null;
+        }
+        else
+        {
+            throw new TaskNotFoundException("Person ID: " + id + " Task: " + dTask.Name);
+        }
+    }
+
+    public void ClearTask()
+    {
+        RemoveTask(task);
     }
         
 
-    public int Id
+    public int ID
     {
         get { return id; }
     }

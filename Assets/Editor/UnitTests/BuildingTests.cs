@@ -62,7 +62,7 @@ public class BuildingTests
         var task = new DTask(building, resource);
         
         Assert.That(building.Tasks.Count, Is.EqualTo(1));
-        Assert.That(building.Tasks[task.Id].Output, Is.EqualTo(resource));
+        Assert.That(building.Tasks[task.ID].Output, Is.EqualTo(resource));
     }
 
     public void AddTaskTwice()

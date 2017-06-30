@@ -45,13 +45,13 @@ public class DBuilding : TurnUpdatable {
 
     public void AddTask(DTask task)
     {
-        if (tasks.ContainsKey(task.Id))
+        if (tasks.ContainsKey(task.ID))
         {
             throw new TaskAlreadyAddedException("Task already assigned to this building");
         }
         else
         {
-            tasks.Add(task.Id, task);
+            tasks.Add(task.ID, task);
         }
     }
 
@@ -76,7 +76,7 @@ public class DBuilding : TurnUpdatable {
         set { buildingName = value; }
     }
 
-    public int Id
+    public int ID
     {
         get { return id; }
     }

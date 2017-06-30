@@ -25,13 +25,13 @@ public class DCity : TurnUpdatable
 
     public void AddBuilding(DBuilding dBuilding)
     {
-        if (buildings.ContainsKey(dBuilding.Id))
+        if (buildings.ContainsKey(dBuilding.ID))
         {
             throw new BuildingAlreadyAddedException(string.Format("City '{0}' already has building '{1}'", name, dBuilding.Name));
         }
         else
         {
-            buildings.Add(dBuilding.Id, dBuilding);
+            buildings.Add(dBuilding.ID, dBuilding);
         }
     }
 
@@ -52,48 +52,48 @@ public class DCity : TurnUpdatable
 
     public void AddPerson(DPerson dPerson)
     {
-        if (people.ContainsKey(dPerson.Id))
+        if (people.ContainsKey(dPerson.ID))
         {
             throw new PersonAlreadyAddedException(string.Format("Person already added to city"));
         }
-            people.Add(dPerson.Id, dPerson);                
+            people.Add(dPerson.ID, dPerson);                
     }
 
     public void AddResource(DResource resource)
     {
-        if (resources.ContainsKey(resource.Id))
+        if (resources.ContainsKey(resource.ID))
         {
-            resources[resource.Id].Amount += resource.Amount;
+            resources[resource.ID].Amount += resource.Amount;
         }
         else
         {
-            resources.Add(resource.Id, DResource.Create(resource, resource.Amount));
+            resources.Add(resource.ID, DResource.Create(resource, resource.Amount));
         }
     }
 
     public void ConsumeResource(DResource resource)
     {
-        if (resources.ContainsKey(resource.Id) && resources[resource.Id].Amount >= resource.Amount)
+        if (resources.ContainsKey(resource.ID) && resources[resource.ID].Amount >= resource.Amount)
         {
-            resources[resource.Id].Amount -= resource.Amount;
+            resources[resource.ID].Amount -= resource.Amount;
         }
         else
         {
-            throw new InsufficientResourceException(resource.Id.ToString());
+            throw new InsufficientResourceException(resource.ID.ToString());
         }
     }
 
     public DResource GetResource(string name)
     {
-        int resourceId = DResource.NameToId(name);
-        if (resources.ContainsKey(resourceId))
+        int resourceID = DResource.NameToID(name);
+        if (resources.ContainsKey(resourceID))
         {
-            return resources[resourceId];
+            return resources[resourceID];
         }
         else
         {
             AddResource(DResource.Create(name));
-            return resources[resourceId];
+            return resources[resourceID];
         }
         
     }

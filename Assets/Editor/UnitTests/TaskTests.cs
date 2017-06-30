@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PersonTests
+public class TaskTests
 {
     private string CITY_NAME = "Test City";
 
@@ -16,7 +16,7 @@ public class PersonTests
     }
 
     [Test]
-    public void PersonTestsSimplePasses()
+    public void TaskTestsSimplePasses()
     {
         Assert.Pass();
     }
@@ -24,15 +24,22 @@ public class PersonTests
     [Test]
     public void InitializesDefaultValues()
     {
+        var resource = DResource.Create("Test Resource", 1);
         var city = new DCity(CITY_NAME, Mock<CityController>());
-        var person = new DPerson(city);
+        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var task = new DTask(building, resource, 3, "test name");
 
-        Assert.That(person.City, Is.EqualTo(city));
-        Assert.That(city.People[person.ID], Is.EqualTo(person));        
+        Assert.That(task.Name, Is.EqualTo("test name"));
+        Assert.That(task.MaxPeople, Is.EqualTo(3));
+        Assert.That(task.Output, Is.EqualTo(resource));
+        Assert.That(task.ListOfPeople, Is.Not.Null);
+        Assert.That(task.Building, Is.EqualTo(building));
+
+        Assert.That(building.Tasks[task.ID], Is.EqualTo(task));
     }
 
     [Test]
-    public void PersonSetAndRemoveTask()
+    public void TaskAddAndRemovePerson()
     {
         var resource = DResource.Create("Test Resource", 1);
         var city = new DCity(CITY_NAME, Mock<CityController>());
@@ -40,53 +47,74 @@ public class PersonTests
         var task = new DTask(building, resource);
 
         var person = new DPerson(city);
+
         Assert.That(person.Task, Is.Null);
 
-        person.SetTask(task);
+        task.AddPerson(person);
         Assert.That(person.Task, Is.EqualTo(task));
         Assert.That(task.ListOfPeople.Contains(person), Is.True);
 
-        person.RemoveTask(task);
+        task.RemovePerson(person);
         Assert.That(person.Task, Is.Null);
         Assert.That(task.ListOfPeople.Contains(person), Is.False);
     }
 
     [Test]
-    public void PersonSwitchTask()
-    {
-        var resource = DResource.Create("Test Resource", 1);
-        var resource2 = DResource.Create("Test Resource 2", 2);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
-        var task = new DTask(building, resource);
-        var task2 = new DTask(building, resource2);
-
-        var person = new DPerson(city);
-        person.SetTask(task);
-        Assert.That(person.Task, Is.EqualTo(task));
-        Assert.That(task.ListOfPeople.Contains(person), Is.True);
-
-        person.SetTask(task2);
-        Assert.That(person.Task, Is.EqualTo(task2));
-        Assert.That(task2.ListOfPeople.Contains(person), Is.True);
-        Assert.That(task.ListOfPeople.Contains(person), Is.False);
-    }
-
-    [Test]
-    public void PersonVerifyTaskNotFoundException()
+    public void TaskVerifyPersonNotFoundException()
     {
         var resource = DResource.Create("Test Resource", 1);
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
-
         var person = new DPerson(city);
-        person.SetTask(task);
-        person.RemoveTask(task);
+        var person2 = new DPerson(city);
 
-        Assert.Throws<TaskNotFoundException>(() =>
+        task.AddPerson(person);
+        task.RemovePerson(person);
+
+        Assert.Throws<PersonNotFoundException>(() =>
         {
-            person.RemoveTask(task);
+            task.RemovePerson(person);
+        });
+
+        Assert.Throws<PersonNotFoundException>(() =>
+        {
+            task.RemovePerson(person2);
+        });
+    }
+
+    [Test]
+    public void TaskVerifyPersonAlreadyAddedException()
+    {
+        var resource = DResource.Create("Test Resource", 1);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var task = new DTask(building, resource);
+        var person = new DPerson(city);
+
+        task.AddPerson(person);
+
+        Assert.Throws<PersonAlreadyAddedException>(() =>
+        {
+            task.AddPerson(person);
+        });
+    }
+
+    [Test]
+    public void TaskVerifyTaskFullException()
+    {
+        var resource = DResource.Create("Test Resource", 1);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var task = new DTask(building, resource, 1, "temp");
+        var person = new DPerson(city);
+        var person2 = new DPerson(city);
+
+        task.AddPerson(person);
+
+        Assert.Throws<TaskFullException>(() =>
+        {
+            task.AddPerson(person2);
         });
     }
 

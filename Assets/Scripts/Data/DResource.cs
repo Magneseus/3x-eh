@@ -5,19 +5,19 @@ using UnityEngine;
 
 public class DResource : TurnUpdatable
 {
-    private static int resourceIdCounter = 0;
-    private static Dictionary<string, int> resourceNameToIdMap = new Dictionary<string, int>();
+    private static int resourceIDCounter = 0;
+    private static Dictionary<string, int> resourceNameToIDMap = new Dictionary<string, int>();
 
-    private int resourceId;
+    private int resourceID;
     private string resourceName = "NameUndefined";
     private int resourceAmount = 0;
         
     // Primary Factory
     public static DResource Create(string name, int amount)
     {
-        if (resourceNameToIdMap.ContainsKey(name))
+        if (resourceNameToIDMap.ContainsKey(name))
         {
-            return new DResource(resourceNameToIdMap[name], name, amount);
+            return new DResource(resourceNameToIDMap[name], name, amount);
         }
         else
         {
@@ -40,9 +40,9 @@ public class DResource : TurnUpdatable
         return Create(resource.Name, amount);
     }
 
-    private DResource(int id, string name, int amount)
+    private DResource(int ID, string name, int amount)
     {
-        resourceId = id;
+        resourceID = ID;
         resourceName = name;
         resourceAmount = amount;
     }
@@ -50,17 +50,17 @@ public class DResource : TurnUpdatable
     private DResource(string name, int amount)
     {
 
-        resourceId = resourceIdCounter++;
-        resourceNameToIdMap.Add(name, resourceId);
+        resourceID = resourceIDCounter++;
+        resourceNameToIDMap.Add(name, resourceID);
         resourceName = name;
         resourceAmount = amount;
     }
 
-    public static int NameToId(string name)
+    public static int NameToID(string name)
     {
-        if (resourceNameToIdMap.ContainsKey(name))
+        if (resourceNameToIDMap.ContainsKey(name))
         {
-            return resourceNameToIdMap[name];
+            return resourceNameToIDMap[name];
         }
         else
         {
@@ -75,9 +75,9 @@ public class DResource : TurnUpdatable
 
     }
 
-    public int Id
+    public int ID
     {
-        get { return resourceId; }
+        get { return resourceID; }
     }
 
     public string Name

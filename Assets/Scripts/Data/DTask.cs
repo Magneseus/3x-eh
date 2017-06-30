@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 public class DTask : TurnUpdatable
@@ -11,33 +12,70 @@ public class DTask : TurnUpdatable
     private int id;
     private string taskName;
     private DBuilding building;
-    private DPerson person;
+    private int maxPeople;
+    private List<DPerson> listOfPeople;
     private DResource output;
 
-    public DTask(DBuilding dBuilding, DResource dOutput, string name)
+    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName)
     {
         id = NEXT_ID++;
         building = dBuilding;
         output = dOutput;
+        maxPeople = dMaxPeople;
+        taskName = dName;
 
-        taskName = "default_task";
+        listOfPeople = new List<DPerson>();
 
         dBuilding.AddTask(this);
     }
 
-    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, "default_name")
+    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task")
     {
     }
 
-    public void ClearPerson()
+    public void AddPerson(DPerson dPerson)
     {
-        person = null;
+        if (listOfPeople.Count >= maxPeople)
+        {
+            throw new TaskFullException(taskName);
+        }
+        else if (listOfPeople.Contains(dPerson))
+        {
+            throw new PersonAlreadyAddedException(taskName);
+        }
+        else
+        {
+            listOfPeople.Add(dPerson);
+
+            if (dPerson.Task != this)
+            {
+                dPerson.SetTask(this);
+            }
+        }
     }
 
-    public DPerson Person
+    public void RemovePerson(DPerson dPerson)
     {
-        get { return person; }
-        set { person = value; }
+        if (listOfPeople.Contains(dPerson))
+        {
+            listOfPeople.Remove(dPerson);
+            dPerson.RemoveTask(this);
+        }
+        else
+        {
+            throw new PersonNotFoundException(taskName);
+        }
+    }
+
+    public int MaxPeople
+    {
+        get { return maxPeople; }
+        set { maxPeople = value; }
+    }
+
+    public List<DPerson> ListOfPeople
+    {
+        get { return listOfPeople; }
     }
 
     public string Name
@@ -46,7 +84,7 @@ public class DTask : TurnUpdatable
         set { taskName = value; }
     }
 
-    public int Id
+    public int ID
     {
         get { return id; }
     }
@@ -56,11 +94,42 @@ public class DTask : TurnUpdatable
         get { return output; }
     }
 
+    public DBuilding Building
+    {
+        get { return building; }
+    }
+
     public void TurnUpdate(int numDaysPassed)
     {
-        if (person != null)
+        if (listOfPeople.Count > 0)
         {
-            building.OutputResource(output);
+            // TODO: Make this into a exponential scale or something
+            for (int i = 0; i < listOfPeople.Count; ++i)
+                building.OutputResource(output);
         }
     }
 }
+
+
+#region Exceptions
+
+public class TaskFullException : Exception
+{
+    public TaskFullException()
+    {
+    }
+
+    public TaskFullException(string message) : base(message)
+    {
+    }
+
+    public TaskFullException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    protected TaskFullException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
+}
+
+#endregion
