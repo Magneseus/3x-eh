@@ -8,7 +8,7 @@ using UnityEngine;
 public class DCity : TurnUpdatable
 {
     private CityController cityController;
-
+        
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
     private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
@@ -98,6 +98,7 @@ public class DCity : TurnUpdatable
         
     }
 
+    #region Properties
     public Dictionary<int, DBuilding> Buildings
     {
         get { return buildings; }
@@ -128,14 +129,10 @@ public class DCity : TurnUpdatable
     {
         get { return cityController; }        
     }
-
+    #endregion
 }
 
-/*****************************
- * 
- *         Exceptions
- *         
- *****************************/
+#region Exceptions
 public class InsufficientResourceException : Exception
 {
     public InsufficientResourceException()
@@ -224,3 +221,4 @@ public class PersonAlreadyAddedException : Exception
     {
     }
 }
+#endregion

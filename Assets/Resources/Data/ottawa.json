@@ -1,21 +1,41 @@
 {
   "name": "Ottawa",
+  "numberOfBuildings": 5,
   "buildings": [
     {
       "name": "Town Hall",
-      
+      "position": {
+        "x": [ 0, 0 ],
+        "y":[ 0, 0 ]
+      }
     },
     {
-      "name": "Apartment Building"
+      "name": "Apartment Building",
+      "position": {
+        "x": [ -5, 5 ],
+        "y": [ -3, 3 ]
+      }
     },
     {
-      "name": "Derelict Building"
+      "name": "Derelict Building",
+      "position": {
+        "x": [ -5, 5 ],
+        "y": [ -3, 3 ]
+      }
     },
     {
-      "name": "Library"
+      "name": "Library",
+      "position": {
+        "x": [ -5, 5 ],
+        "y": [ -3, 3 ]
+      }
     },
     {
-      "name": "Grocery Store"
+      "name": "Grocery Store",
+      "position": {
+        "x": [ -5, 5 ],
+        "y": [ -3, 3 ]
+      }
     }
   ]
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 public class GameController : MonoBehaviour
 {
@@ -10,8 +11,8 @@ public class GameController : MonoBehaviour
 
     // Initialization
     void Start()
-    {
-        CreateCity("Ottawa");
+    {        
+        CreateCity(Constants.OTTAWA_PREFAB_PATH, Constants.OTTAWA_JSON_PATH);
     }
 
     void Update()
@@ -22,18 +23,20 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void CreateCity(string cityName)
-    {        
-        CityController cityController = InstantiatePrefab<CityController>(Constants.OTTAWA_PREFAB_PATH);
-        cityController.ConnectToDataEngine(dGame, cityName);        
+    public void CreateCity(string prefabPath, string jsonPath)
+    {
+        var cityJson = JSON.Parse(Resources.Load<TextAsset>(jsonPath).text);
 
-        // This will be refactored into some sort of text file (csv, json, etc)
-        CreateBuilding("Ottawa", "Town Hall", new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 3f), 1));
-        CreateBuilding("Ottawa", "Apartment Building", new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 3f), 1));
-        CreateBuilding("Ottawa", "Derelict Building", new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 3f), 1));
-        CreateBuilding("Ottawa", "Library", new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 3f), 1));
-        CreateBuilding("Ottawa", "Grocery Store", new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 3f), 1));
-                
+        CityController cityController = InstantiatePrefab<CityController>(Constants.OTTAWA_PREFAB_PATH);        
+        cityController.ConnectToDataEngine(dGame, cityJson["name"]);     
+        
+        foreach(JSONNode building in cityJson["buildings"].AsArray)
+        {
+            JSONNode xPos = building["position"]["x"].AsArray;
+            JSONNode yPos = building["position"]["y"].AsArray;
+
+            CreateBuilding(cityJson["name"], building["name"], new Vector3(Random.Range(xPos[0], xPos[1]), Random.Range(yPos[0], yPos[1]), 1));
+        }
     }
 
     public void CreateBuilding(string cityName, string buildingName, Vector3 position)
