@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class PersonTests
 {
     private string CITY_NAME = "Test City";
-    private string BUILDING_NAME = "Test Building";
 
     private List<GameObject> mockObjects = new List<GameObject>();
 
@@ -26,11 +25,10 @@ public class PersonTests
     public void InitializesDefaultValues()
     {
         var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        var person = new DPerson(building);
+        var person = new DPerson(city);
 
-        Assert.That(person.Building, Is.EqualTo(building));
-        Assert.That(building.Population.Contains(person), Is.True);        
+        Assert.That(person.City, Is.EqualTo(city));
+        Assert.That(city.People[person.Id], Is.EqualTo(person));        
     }
 
     private T Mock<T>() where T : Component

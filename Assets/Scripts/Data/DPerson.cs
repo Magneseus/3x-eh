@@ -5,54 +5,47 @@ using UnityEngine;
 public class DPerson : TurnUpdatable
 {
     private static int NEXT_ID = 0;
-
-
-    /* TODO: 
-     * - rework Person variables
-     * - proper access modifiers
-     */
-    public enum PAge
-    {
-        Youth,
-        Adult,
-        Elder
-    };
-
-    public PAge  Age;
-    public float Happiness;
-    public float Hunger;
-    // End of TODO
-
-    private DCity dCity;
-    private DBuilding dBuilding;
+    
     private int id;
+    private DCity city;
+    private DTask task;
 
-    public DPerson(DBuilding dBuilding)
+    public DPerson(DCity dCity)
     {
         id = NEXT_ID++;
-        dBuilding.AddPersonToBuilding(this);
+        city = dCity;
+
+        city.AddPerson(this);
     }
        
-    // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
 
     }
+
+    public void SetTask(DTask dTask)
+    {
+        if(task != null)
+            task.ClearPerson();
+
+        task = dTask;
+        dTask.Person = this;
+    }
+        
 
     public int Id
     {
         get { return id; }
     }
 
-    public DBuilding Building
+    public DTask Task
     {
-        get { return dBuilding; }
-        set { dBuilding = value; }
+        get { return task; }
+        set { task = value; }
     }
 
     public DCity City
     {
-        get { return dCity; }
-        set { dCity = value; }
+        get { return city; }
     }
 }

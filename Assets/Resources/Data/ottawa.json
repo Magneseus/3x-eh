@@ -1,0 +1,21 @@
+{
+  "name": "Ottawa",
+  "buildings": [
+    {
+      "name": "Town Hall",
+      
+    },
+    {
+      "name": "Apartment Building"
+    },
+    {
+      "name": "Derelict Building"
+    },
+    {
+      "name": "Library"
+    },
+    {
+      "name": "Grocery Store"
+    }
+  ]
+}

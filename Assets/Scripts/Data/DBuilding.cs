@@ -1,109 +1,73 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 public class DBuilding : TurnUpdatable {
 
+    private static int NEXT_ID = 0;
     private BuildingController buildingController;
 
+    private int id;
     private DCity city;
-    private Dictionary<int, DResource> resourceConsumptionPerTurn = new Dictionary<int, DResource>();
-    private Dictionary<int, DResource> resourceOutputPerTurn = new Dictionary<int, DResource>();
-    private List<DPerson> listOfPersons = new List<DPerson>();
     private String buildingName;
+    private Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();   
 
     public DBuilding(DCity city, string buildingName, BuildingController buildingController)
-    {        
+    {
+        this.id = NEXT_ID++;
         this.city = city;        
         this.buildingName = buildingName;
         this.buildingController = buildingController;
 
-        this.city.Buildings.Add(buildingName, this);
+        city.AddBuilding(this);
     }
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
-        // Output before consuming
-        foreach (KeyValuePair<int, DResource> entry in resourceOutputPerTurn)
-        {
-            // Very basic, increase amount by number of population for all resources
-            var outputResource = DResource.Create(entry.Value, entry.Value.Amount);
-            outputResource.Amount += listOfPersons.Count;
-            city.AddResource(outputResource);
-        }
-
-        foreach (KeyValuePair<int, DResource> entry in resourceConsumptionPerTurn)
-        {
-            city.ConsumeResource(entry.Value);
-        }
-        
+        foreach(var entry in tasks)
+            entry.Value.TurnUpdate(numDaysPassed);
     }
 
-    public void AddPersonToBuilding(DPerson person)
+    public DTask GetTask(int id)
     {
-        // TODO: Check for building population cap or other limiting factors
-
-        if (listOfPersons.Contains(person))
-            return;
-
-        listOfPersons.Add(person);
-        person.Building = this;
-        City.AddPerson(this, person);
-    }
-
-    public void RemovePerson(DPerson person)
-    {
-        if (!listOfPersons.Contains(person))
-            throw new PersonNotFoundException("Person in building: " + (person.Building == null ? "null" : person.Building.Name));
-
-        listOfPersons.Remove(person);
-        person.Building = null;
-    }
-
-    public void AddResourceOutput(DResource resource)
-    {        
-        if (resourceOutputPerTurn.ContainsKey(resource.Id))
+        if (tasks.ContainsKey(id))
         {
-            resourceOutputPerTurn[resource.Id].Amount += resource.Amount;
+            return tasks[id];
         }
         else
         {
-            resourceOutputPerTurn.Add(resource.Id, DResource.Create(resource, resource.Amount));
-        }        
+            throw new TaskNotFoundException("Task is not assigned to this building");
+        }
     }
 
-    public void AddResourceConsumption(DResource resource)
+    public void AddTask(DTask task)
     {
-        if (resourceConsumptionPerTurn.ContainsKey(resource.Id))
+        if (tasks.ContainsKey(task.Id))
         {
-            resourceConsumptionPerTurn[resource.Id].Amount += resource.Amount;
+            throw new TaskAlreadyAddedException("Task already assigned to this building");
         }
         else
         {
-            resourceConsumptionPerTurn.Add(resource.Id, DResource.Create(resource, resource.Amount));
+            tasks.Add(task.Id, task);
         }
     }
 
-    public Dictionary<int, DResource> ResourceConsumption
+    public void OutputResource(DResource resource)
     {
-        get { return resourceConsumptionPerTurn; }
-    }
-
-    public Dictionary<int, DResource> ResourceOutput
-    {
-        get { return resourceOutputPerTurn; }
+        city.AddResource(resource);
     }
 
     public DCity City
     {
         get { return city; }
-    }
+    }    
 
-    public List<DPerson> Population
+    public Dictionary<int, DTask> Tasks
     {
-        get { return listOfPersons; }
+        get { return tasks; }
     }
 
     public String Name
@@ -111,27 +75,48 @@ public class DBuilding : TurnUpdatable {
         get { return buildingName; }
         set { buildingName = value; }
     }
+
+    public int Id
+    {
+        get { return id; }
+    }
 }
 
-
-/*****************************
- * 
- *         Exceptions
- *         
- *****************************/
-public class PersonNotFoundException : Exception
+public class TaskNotFoundException : Exception
 {
-    public PersonNotFoundException()
+    public TaskNotFoundException()
     {
     }
 
-    public PersonNotFoundException(string message)
-    : base(message)
+    public TaskNotFoundException(string message) : base(message)
     {
     }
 
-    public PersonNotFoundException(string message, Exception inner)
-    : base(message, inner)
+    public TaskNotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    protected TaskNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 }
+
+public class TaskAlreadyAddedException : Exception
+{
+    public TaskAlreadyAddedException()
+    {
+    }
+
+    public TaskAlreadyAddedException(string message) : base(message)
+    {
+    }
+
+    public TaskAlreadyAddedException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    protected TaskAlreadyAddedException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
+}
+

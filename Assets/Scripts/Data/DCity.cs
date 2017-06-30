@@ -1,23 +1,38 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class DCity : TurnUpdatable
-{    
-    private Dictionary<string, DBuilding> buildings = new Dictionary<string, DBuilding>();
+{
+    private CityController cityController;
+
+    private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
     private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
-
-    private CityController cityController;
-    private string cityName;
-    private int cityAge;
+    
+    private int age;
+    private string name;
         
     public DCity(string cityName, CityController cityController)
     {        
-        this.cityName = cityName;
+        name = cityName;
         this.cityController = cityController;
-        this.cityAge = 0;
+        age = 0;
+    }
+
+    public void AddBuilding(DBuilding dBuilding)
+    {
+        if (buildings.ContainsKey(dBuilding.Id))
+        {
+            throw new BuildingAlreadyAddedException(string.Format("City '{0}' already has building '{1}'", name, dBuilding.Name));
+        }
+        else
+        {
+            buildings.Add(dBuilding.Id, dBuilding);
+        }
     }
 
     // TurnUpdate is called once per Turn
@@ -29,31 +44,19 @@ public class DCity : TurnUpdatable
         foreach (var entry in resources)
             entry.Value.TurnUpdate(numDaysPassed);
 
-        cityAge += numDaysPassed;
+        foreach (var entry in people)
+            entry.Value.TurnUpdate(numDaysPassed);        
+
+        age += numDaysPassed;
     }
 
-    public void AddPerson(DBuilding dBuilding, DPerson dPerson)
+    public void AddPerson(DPerson dPerson)
     {
-        if (!people.ContainsKey(dPerson.Id))
-            people.Add(dPerson.Id, dPerson);
-
-        dBuilding.AddPersonToBuilding(dPerson);
-    }
-
-    public void MovePerson(DPerson person, DBuilding desinationBuilding)
-    {
-        if (desinationBuilding.City != this)
-            throw new BuildingNotInCityException(desinationBuilding.Name);
-
-        // Remove person from current building, if any
-        if (person.Building != null)
+        if (people.ContainsKey(dPerson.Id))
         {
-            var oldBuilding = person.Building;
-            oldBuilding.RemovePerson(person);
+            throw new PersonAlreadyAddedException(string.Format("Person already added to city"));
         }
-
-        // TODO: Catch exceptions like BuildingIsFull, when implemented
-        desinationBuilding.AddPersonToBuilding(person);
+            people.Add(dPerson.Id, dPerson);                
     }
 
     public void AddResource(DResource resource)
@@ -95,7 +98,7 @@ public class DCity : TurnUpdatable
         
     }
 
-    public Dictionary<string, DBuilding> Buildings
+    public Dictionary<int, DBuilding> Buildings
     {
         get { return buildings; }
     }
@@ -112,13 +115,13 @@ public class DCity : TurnUpdatable
 
     public string Name
     {
-        get { return cityName; }
-        set { cityName = value; }
+        get { return name; }
+        set { name = value; }
     }   
 
     public int Age
     {
-        get { return cityAge; }
+        get { return age; }
     }
 
     public CityController CityController
@@ -127,7 +130,6 @@ public class DCity : TurnUpdatable
     }
 
 }
-
 
 /*****************************
  * 
@@ -151,19 +153,74 @@ public class InsufficientResourceException : Exception
     }
 }
 
-public class BuildingNotInCityException : Exception
+public class BuildingNotFoundException : Exception
 {
-    public BuildingNotInCityException()
+    public BuildingNotFoundException()
     {
     }
 
-    public BuildingNotInCityException(string message)
+    public BuildingNotFoundException(string message)
     : base(message)
     {
     }
 
-    public BuildingNotInCityException(string message, Exception inner)
+    public BuildingNotFoundException(string message, Exception inner)
     : base(message, inner)
+    {
+    }
+}
+
+public class BuildingAlreadyAddedException : Exception
+{
+    public BuildingAlreadyAddedException()
+    {
+    }
+
+    public BuildingAlreadyAddedException(string message) : base(message)
+    {
+    }
+
+    public BuildingAlreadyAddedException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    protected BuildingAlreadyAddedException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
+}
+
+public class PersonNotFoundException : Exception
+{
+    public PersonNotFoundException()
+    {
+    }
+
+    public PersonNotFoundException(string message)
+    : base(message)
+    {
+    }
+
+    public PersonNotFoundException(string message, Exception inner)
+    : base(message, inner)
+    {
+    }
+}
+
+public class PersonAlreadyAddedException : Exception
+{
+    public PersonAlreadyAddedException()
+    {
+    }
+
+    public PersonAlreadyAddedException(string message) : base(message)
+    {
+    }
+
+    public PersonAlreadyAddedException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    protected PersonAlreadyAddedException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 }
