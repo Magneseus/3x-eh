@@ -65,6 +65,7 @@ public class BuildingTests
         Assert.That(building.Tasks[task.ID].Output, Is.EqualTo(resource));
     }
 
+    [Test]
     public void AddTaskTwice()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
@@ -78,6 +79,7 @@ public class BuildingTests
         });
     }
 
+    [Test]
     public void PassesTaskOutputToCity()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
@@ -91,10 +93,32 @@ public class BuildingTests
 
         city.TurnUpdate(1);
 
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
+    }
+
+    [Test]
+    public void DisablingTasks()
+    {
+        var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var task = new DTask(building, resource);
+        var person = new DPerson(city);
+        person.SetTask(task);
+
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
+
+        city.TurnUpdate(1);
+
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
+
+        task.Enabled = false;
+        city.TurnUpdate(1);
+
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
     }
     #endregion
-    
+
 
     private T Mock<T>() where T : Component
     {

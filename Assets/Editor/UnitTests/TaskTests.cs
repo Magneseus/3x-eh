@@ -34,6 +34,7 @@ public class TaskTests
         Assert.That(task.Output, Is.EqualTo(resource));
         Assert.That(task.ListOfPeople, Is.Not.Null);
         Assert.That(task.Building, Is.EqualTo(building));
+        Assert.That(task.Enabled, Is.True);
 
         Assert.That(building.Tasks[task.ID], Is.EqualTo(task));
     }

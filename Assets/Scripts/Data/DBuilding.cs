@@ -27,8 +27,11 @@ public class DBuilding : TurnUpdatable {
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
-        foreach(var entry in tasks)
-            entry.Value.TurnUpdate(numDaysPassed);
+        foreach (var entry in tasks)
+        {
+            if (entry.Value.Enabled)
+                entry.Value.TurnUpdate(numDaysPassed);
+        }
     }
 
     public DTask GetTask(int id)

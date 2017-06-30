@@ -15,6 +15,7 @@ public class DTask : TurnUpdatable
     private int maxPeople;
     private List<DPerson> listOfPeople;
     private DResource output;
+    private bool taskEnabled;
 
     public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName)
     {
@@ -25,6 +26,7 @@ public class DTask : TurnUpdatable
         taskName = dName;
 
         listOfPeople = new List<DPerson>();
+        taskEnabled = true;
 
         dBuilding.AddTask(this);
     }
@@ -97,6 +99,12 @@ public class DTask : TurnUpdatable
     public DBuilding Building
     {
         get { return building; }
+    }
+
+    public bool Enabled
+    {
+        get { return taskEnabled; }
+        set { taskEnabled = value; }
     }
 
     public void TurnUpdate(int numDaysPassed)
