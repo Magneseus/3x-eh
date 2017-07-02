@@ -435,7 +435,6 @@ public class BuildingTests
 
         building.Reclaim();
         Assert.That(building.Status, Is.EqualTo(Building.BuildingStatus.RECLAIMED));
-        Assert.That(building.Status, Is.EqualTo(Building.BuildingStatus.ASSESSED));
     }
 
 
