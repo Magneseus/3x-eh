@@ -9,13 +9,13 @@ public class DTask : TurnUpdatable
 
     private static int NEXT_ID = 0;
 
-    private int id;
-    private string taskName;
-    private DBuilding building;
-    private int maxPeople;
-    private List<DPerson> listOfPeople;
-    private DResource output;
-    private bool taskEnabled;
+    protected int id;
+    protected string taskName;
+    protected DBuilding building;
+    protected int maxPeople;
+    protected List<DPerson> listOfPeople;
+    protected DResource output;
+    protected bool taskEnabled;
 
     public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName)
     {
@@ -33,6 +33,16 @@ public class DTask : TurnUpdatable
 
     public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task")
     {
+    }
+
+    public virtual void TurnUpdate(int numDaysPassed)
+    {
+        if (listOfPeople.Count > 0)
+        {
+            // TODO: Make this into a exponential scale or something
+            for (int i = 0; i < listOfPeople.Count; ++i)
+                building.OutputResource(output);
+        }
     }
 
     public void AddPerson(DPerson dPerson)
@@ -69,6 +79,25 @@ public class DTask : TurnUpdatable
         }
     }
 
+    public void EnableTask()
+    {
+        taskEnabled = true;
+    }
+
+    public void DisableTask()
+    {
+        // Remove people from task
+        foreach (DPerson person in ListOfPeople)
+        {
+            person.ClearTask();
+        }
+
+        // Disable task
+        taskEnabled = false;
+    }
+
+    #region Accessors
+
     public int MaxPeople
     {
         get { return maxPeople; }
@@ -104,18 +133,8 @@ public class DTask : TurnUpdatable
     public bool Enabled
     {
         get { return taskEnabled; }
-        set { taskEnabled = value; }
     }
-
-    public void TurnUpdate(int numDaysPassed)
-    {
-        if (listOfPeople.Count > 0)
-        {
-            // TODO: Make this into a exponential scale or something
-            for (int i = 0; i < listOfPeople.Count; ++i)
-                building.OutputResource(output);
-        }
-    }
+    #endregion
 }
 
 
