@@ -87,9 +87,9 @@ public class DTask : TurnUpdatable
     public void DisableTask()
     {
         // Remove people from task
-        foreach (DPerson person in ListOfPeople)
+        while (ListOfPeople.Count > 0)
         {
-            person.ClearTask();
+            ListOfPeople[0].ClearTask();
         }
 
         // Disable task

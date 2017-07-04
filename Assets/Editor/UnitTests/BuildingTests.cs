@@ -112,7 +112,7 @@ public class BuildingTests
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
 
-        task.Enabled = false;
+        task.DisableTask();
         city.TurnUpdate(1);
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
