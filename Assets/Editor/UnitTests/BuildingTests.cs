@@ -547,11 +547,7 @@ public class BuildingTests
     {
         var city = new City();
         var building = new Building(city);
-        Assert.That(building.MaxAssessment, Is.EqualTo(5));
-
-        int val = 3;
-        building.MaxAssessment = val;
-        Assert.That(building.MaxAssessment, Is.EqualTo(val));
+        Assert.That(building.MaxAssessmentLevel, Is.EqualTo(1f));
     }
 
     [Test]
@@ -559,11 +555,7 @@ public class BuildingTests
     {
         var city = new City();
         var building = new Building(city);
-        Assert.That(building.MaxReclaimed, Is.EqualTo(5));
-
-        int val = 3;
-        building.MaxReclaimed = val;
-        Assert.That(building.MaxReclaimed, Is.EqualTo(val));
+        Assert.That(building.MaxReclaimLevel, Is.EqualTo(1f));
     }
 
     [Test]
@@ -573,7 +565,7 @@ public class BuildingTests
         var building = new Building(city);
         Assert.That(building.LevelAssessed, Is.EqualTo(0));
 
-        int val = 2;
+        float val = 1f;
         building.LevelAssessed = val;
         Assert.That(building.LevelAssessed, Is.EqualTo(val));
     }
@@ -585,7 +577,7 @@ public class BuildingTests
         var building = new Building(city);
         Assert.That(building.LevelReclaimed, Is.EqualTo(0));
 
-        int val = 2;
+        float val = 1f;
         building.LevelReclaimed = val;
         Assert.That(building.LevelReclaimed, Is.EqualTo(val));
     }
@@ -595,19 +587,19 @@ public class BuildingTests
     {
         var city = new City();
         var building = new Building(city);
-        Assert.That(building.LevelAssessed, Is.EqualTo(0));
-
+        Assert.That(building.LevelAssessed, Is.EqualTo(0f));
         building.Discover();
-        building.Assess();
-        Assert.That(building.LevelAssessed, Is.EqualTo(1));
+
+        float numAssessments = building.MaxAssessmentLevel / building.AssessmentLevelInterval;
+        for (int i=1; i <= numAssessments; i++)
+        {
+            building.Assess();
+            Assert.That(building.LevelAssessed, Is.EqualTo(building.AssessmentLevelInterval * i));
+        }
+        
 
         building.Assess();
-        Assert.That(building.LevelAssessed, Is.EqualTo(2));
-
-        int max = 2;
-        building.MaxAssessment = max;
-        building.Assess();
-        Assert.That(building.LevelAssessed, Is.EqualTo(max));
+        Assert.That(building.LevelAssessed, Is.EqualTo(building.MaxAssessmentLevel));
     }
 
     [Test]
@@ -616,19 +608,20 @@ public class BuildingTests
         var city = new City();
         var building = new Building(city);
         Assert.That(building.LevelReclaimed, Is.EqualTo(0));
-
         building.Discover();
         building.Assess();
-        building.Reclaim();
-        Assert.That(building.LevelReclaimed, Is.EqualTo(1));
+
+
+        float numReclaims = building.MaxReclaimLevel / building.ReclaimLevelInterval;
+        for (int i = 1; i <= numReclaims; i++)
+        {
+            building.Reclaim();
+            Assert.That(building.LevelReclaimed, Is.EqualTo(building.ReclaimLevelInterval * i));
+        }
+
 
         building.Reclaim();
-        Assert.That(building.LevelReclaimed, Is.EqualTo(2));
-
-        int max = 2;
-        building.MaxReclaimed = max;
-        building.Reclaim();
-        Assert.That(building.LevelReclaimed, Is.EqualTo(max));
+        Assert.That(building.LevelReclaimed, Is.EqualTo(building.MaxReclaimLevel));
     }
     #endregion
 }

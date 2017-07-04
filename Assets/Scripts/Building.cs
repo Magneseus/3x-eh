@@ -12,20 +12,24 @@ public class Building : TurnUpdatable {
     private String name;
     public enum BuildingStatus { UNDISCOVERED, DISCOVERED, ASSESSED, RECLAIMED };
     private BuildingStatus status;
-    private int levelAssessed;
-    private int levelReclaimed;
-    private int maxAssessment;
-    private int maxReclaimed;
+    private float levelAssessed;
+    private float levelReclaimed;
+    private int numAssessmentLevels = 5;
+    private int numReclaimLevels = 5;
+    private float maxAssessmentLevel = 1f;
+    private float maxReclaimLevel = 1f;
+    private float assessmentLevelInterval;
+    private float reclaimLevelInterval;
 
     public Building(City city)
     {
         this.city = city;
         name = "";
         status = BuildingStatus.UNDISCOVERED;
-        levelAssessed = 0;
-        levelReclaimed = 0;
-        maxAssessment = 5;  // temp default value until system further developed
-        maxReclaimed = 5;
+        levelAssessed = 0f;
+        levelReclaimed = 0f;
+        assessmentLevelInterval = maxAssessmentLevel / numAssessmentLevels;
+        reclaimLevelInterval = maxReclaimLevel / numReclaimLevels;
     }
 
     // TurnUpdate is called once per Turn
@@ -132,8 +136,8 @@ public class Building : TurnUpdatable {
 
     private void IncreaseAssessment()
     {
-        if (levelAssessed < maxAssessment)
-            levelAssessed++;
+        if (levelAssessed < maxAssessmentLevel)
+            levelAssessed += assessmentLevelInterval;
     }
 
     public void Reclaim()
@@ -146,32 +150,50 @@ public class Building : TurnUpdatable {
 
     private void IncreaseReclaimed()
     {
-        if (levelReclaimed < maxReclaimed)
-            levelReclaimed++;
+        if (levelReclaimed < maxReclaimLevel)
+            levelReclaimed += reclaimLevelInterval;
     }
 
-    public int LevelAssessed
+    public float LevelAssessed
     {
         get { return levelAssessed; }
         set { levelAssessed = value; }      // should only be used for dev, increase with Assess()
     }
 
-    public int LevelReclaimed
+    public float LevelReclaimed
     {
         get { return levelReclaimed; }
         set { levelReclaimed = value; }     // should only be used for dev, increase with Reclaim()
     }
 
-    public int MaxAssessment
+    public int NumAssessmentLevels
     {
-        get { return maxAssessment; }
-        set { maxAssessment = value; }
+        get { return numAssessmentLevels; }
     }
 
-    public int MaxReclaimed
+    public int NumReclaimLevels
     {
-        get { return maxReclaimed; }
-        set { maxReclaimed = value; }
+        get { return numReclaimLevels; }
+    }
+
+    public float AssessmentLevelInterval
+    {
+        get { return assessmentLevelInterval; }
+    }
+
+    public float ReclaimLevelInterval
+    {
+        get { return reclaimLevelInterval; }
+    }
+
+    public float MaxAssessmentLevel
+    {
+        get { return maxAssessmentLevel; }
+    }
+
+    public float MaxReclaimLevel
+    {
+        get { return maxReclaimLevel; }
     }
 
     public BuildingStatus Status
