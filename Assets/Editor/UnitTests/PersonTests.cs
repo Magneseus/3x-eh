@@ -25,7 +25,7 @@ public class PersonTests
     public void InitializesDefaultValues()
     {
         var city = new DCity(CITY_NAME, Mock<CityController>());
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
 
         Assert.That(person.City, Is.EqualTo(city));
         Assert.That(city.People[person.ID], Is.EqualTo(person));        
@@ -39,7 +39,7 @@ public class PersonTests
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
 
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         Assert.That(person.Task, Is.Null);
 
         person.SetTask(task);
@@ -61,7 +61,7 @@ public class PersonTests
         var task = new DTask(building, resource);
         var task2 = new DTask(building, resource2);
 
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         person.SetTask(task);
         Assert.That(person.Task, Is.EqualTo(task));
         Assert.That(task.ListOfPeople.Contains(person), Is.True);
@@ -80,7 +80,7 @@ public class PersonTests
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
 
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         person.SetTask(task);
         person.RemoveTask(task);
 

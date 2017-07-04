@@ -96,7 +96,7 @@ public class CityTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         Assert.That(city.People.Count, Is.EqualTo(0));
 
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         Assert.That(city.People.Count, Is.EqualTo(1));
         Assert.That(person.City, Is.EqualTo(city));
     }
@@ -109,11 +109,11 @@ public class CityTests
 
         Assert.That(city.People.Count, Is.EqualTo(startCount));        
         
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         Assert.That(city.People.Count, Is.EqualTo(startCount + 1));
         Assert.That(person.City, Is.EqualTo(city));
 
-        var otherPerson = new DPerson(city);
+        var otherPerson = new DPerson(city, Mock<MeepleController>());
         Assert.That(city.People.Count, Is.EqualTo(startCount + 2));
         Assert.That(otherPerson.City, Is.EqualTo(city));
     }
@@ -126,7 +126,7 @@ public class CityTests
 
         Assert.That(city.People.Count, Is.EqualTo(startCount));
 
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         Assert.That(city.People.Count, Is.EqualTo(startCount + 1));
         Assert.That(person.City, Is.EqualTo(city));
 
@@ -160,7 +160,7 @@ public class CityTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
         var task = new DTask(building, output);
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         person.SetTask(task);
 
         Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(zero));
@@ -179,7 +179,7 @@ public class CityTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
         var task = new DTask(building, output);
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         person.SetTask(task);
 
         for (var i=0; i<numberOfTurns; i++)
@@ -205,7 +205,7 @@ public class CityTests
         var task_A = new DTask(building, resource_A);
         var task_B = new DTask(building, resource_B);
 
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
 
         Assert.That(city.People[person.ID], Is.EqualTo(person));
         Assert.That(person.City, Is.EqualTo(city));
