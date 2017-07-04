@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void CreateCity(string prefabPath, string jsonPath)
+    public CityController CreateCity(string prefabPath, string jsonPath)
     {
         var cityJson = JSON.Parse(Resources.Load<TextAsset>(jsonPath).text);
 
@@ -35,16 +35,36 @@ public class GameController : MonoBehaviour
             JSONNode xPos = building["position"]["x"].AsArray;
             JSONNode yPos = building["position"]["y"].AsArray;
 
-            CreateBuilding(cityJson["name"], building["name"], new Vector3(Random.Range(xPos[0], xPos[1]), Random.Range(yPos[0], yPos[1]), 1));
+            BuildingController bControl = CreateBuilding(cityJson["name"], building["name"], new Vector3(Random.Range(xPos[0], xPos[1]), Random.Range(yPos[0], yPos[1]), 1));
+
+            foreach (JSONNode task in building["tasks"].AsArray)
+            {
+                string taskName = task["name"];
+                int maxPeople = task["maxPeople"];
+
+                DResource taskResource = DResource.Create(
+                    task["resource"]["name"],
+                    task["resource"]["amount"]);
+
+                DTask newTask = new DTask(
+                    bControl.dBuilding, 
+                    taskResource, 
+                    maxPeople, 
+                    taskName);
+            }
         }
+
+        return cityController;
     }
 
-    public void CreateBuilding(string cityName, string buildingName, Vector3 position)
+    public BuildingController CreateBuilding(string cityName, string buildingName, Vector3 position)
     {
         BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH);
         buildingController.ConnectToDataEngine(dGame, cityName, buildingName);
         
         buildingController.transform.position = position;
+
+        return buildingController;
     }
 
     private T InstantiatePrefab<T>(string prefabPath)

@@ -19,6 +19,6 @@ public class BuildingController : MonoBehaviour {
 
     internal void ConnectToDataEngine(DGame dGame, string cityName, string buildingName)
     {
-        DBuilding dBuilding = new DBuilding(dGame.Cities[cityName], buildingName, this);        
+        dBuilding = new DBuilding(dGame.Cities[cityName], buildingName, this);        
     }
 }

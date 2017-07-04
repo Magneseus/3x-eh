@@ -20,7 +20,17 @@
       "position": {
         "x": [ -5, 5 ],
         "y": [ -3, 3 ]
-      }
+      },
+      "tasks": [
+      	{
+      		"name": "Food Storage Management",
+      		"resource": {
+      			"name": "Food Storage",
+      			"amount": 100
+      		},
+      		"maxPeople": 1
+      	}
+      ]
     },
     {
       "name": "Library",
@@ -34,7 +44,17 @@
       "position": {
         "x": [ -5, 5 ],
         "y": [ -3, 3 ]
-      }
+      },
+      "tasks": [
+      	{
+      		"name": "Food Production",
+      		"resource": {
+      			"name": "Food",
+      			"amount": 10
+      		},
+      		"maxPeople": 2
+      	}
+      ]
     }
   ]
 }
