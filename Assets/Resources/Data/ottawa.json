@@ -53,6 +53,14 @@
       			"amount": 10
       		},
       		"maxPeople": 2
+      	},
+      	{
+      		"name": "Food Storage Management",
+      		"resource": {
+      			"name": "Food Storage",
+      			"amount": 20
+      		},
+      		"maxPeople": 1
       	}
       ]
     }
