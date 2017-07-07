@@ -5,15 +5,17 @@ using UnityEngine;
 public class DPerson : TurnUpdatable
 {
     private static int NEXT_ID = 0;
+    private MeepleController meepleController;
     
     private int id;
     private DCity city;
     private DTask task;
 
-    public DPerson(DCity dCity)
+    public DPerson(DCity dCity, MeepleController mController)
     {
         id = NEXT_ID++;
         city = dCity;
+        meepleController = mController;
 
         city.AddPerson(this);
     }

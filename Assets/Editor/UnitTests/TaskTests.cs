@@ -47,7 +47,7 @@ public class TaskTests
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
 
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
 
         Assert.That(person.Task, Is.Null);
 
@@ -67,8 +67,8 @@ public class TaskTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
-        var person = new DPerson(city);
-        var person2 = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
+        var person2 = new DPerson(city, Mock<MeepleController>());
 
         task.AddPerson(person);
         task.RemovePerson(person);
@@ -91,7 +91,7 @@ public class TaskTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
 
         task.AddPerson(person);
 
@@ -108,8 +108,8 @@ public class TaskTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource, 1, "temp");
-        var person = new DPerson(city);
-        var person2 = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
+        var person2 = new DPerson(city, Mock<MeepleController>());
 
         task.AddPerson(person);
 

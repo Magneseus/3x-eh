@@ -86,7 +86,7 @@ public class BuildingTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
         var task = new DTask(building, resource);
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         person.SetTask(task);
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
@@ -103,7 +103,7 @@ public class BuildingTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
         var task = new DTask(building, resource);
-        var person = new DPerson(city);
+        var person = new DPerson(city, Mock<MeepleController>());
         person.SetTask(task);
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
