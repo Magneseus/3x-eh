@@ -1,8 +1,23 @@
 ﻿using NUnit.Framework;
 using NSubstitute;
+using UnityEngine;
+using System.Collections.Generic;
 
 public class BuildingTests
 {
+    private static string CITY_NAME = "Test City";
+    private static string BUILDING_NAME = "Test Building";
+    private static string RESOURCE_NAME = "Test Resource";
+    private static int RESOURCE_START_AMOUNT = 3;
+
+    private List<GameObject> mockObjects = new List<GameObject>();
+
+    [TearDown]
+    public void TearDown()
+    {
+        foreach(var entry in mockObjects)
+            Object.DestroyImmediate(entry);
+    }
 
     [Test]
     public void BuildingTestsSimplePasses()
@@ -13,22 +28,20 @@ public class BuildingTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new City();
-        var building = new Building(city);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
 
         Assert.That(building.City.Name, Is.EqualTo(city.Name));
-        Assert.That(building.ResourceConsumption.Count, Is.EqualTo(0));
-        Assert.That(building.ResourceOutput.Count, Is.EqualTo(0));
-        Assert.That(building.Population.Count, Is.EqualTo(0));
-        Assert.That(building.Name, Is.EqualTo(""));
-    }
+        Assert.That(building.Tasks.Count, Is.EqualTo(0));
+        Assert.That(building.Name, Is.EqualTo(BUILDING_NAME));
+    }    
 
     [Test]
-    public void Name()
+    public void NameOverride()
     {
         var newName = "Test123";
-        var city = new City();
-        var building = new Building(city)
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>())
         {
            Name = newName
         };
@@ -36,375 +49,214 @@ public class BuildingTests
         Assert.That(building.Name, Is.EqualTo(newName));
     }
 
-    #region Consumption Tests
-    /*****************************
-     * 
-     *      Consumption Tests
-     *         
-     *****************************/
+    #region Task Tests
     [Test]
-    public void AddSingleConsumption()
+    public void AddTask()
     {
-        var city = new City();
-        var building = new Building(city);
+        var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
 
-        var consumptionName = "Test";
-        var consumptionAmount = 5;
-        var consumption = Resource.Create(consumptionName, consumptionAmount);
+        Assert.That(building.Tasks.Count, Is.EqualTo(0));
 
-        building.AddResourceConsumption(consumption);
-
-        Assert.That(building.ResourceConsumption.Count, Is.EqualTo(1));
-        Assert.That(building.ResourceConsumption[consumption.Id].Amount, Is.EqualTo(consumption.Amount));
-    }
-
-    [Test]
-    public void AddMultipleConsumptionSameResource()
-    {
-        var city = new City();
-        var building = new Building(city);
-
-        var consumptionName = "Test";
-        var consumptionAmount = 5;
-        var consumption = Resource.Create(consumptionName, consumptionAmount);
-
-        var numberOfAdds = 5;
-        for(var i=0; i<numberOfAdds; i++)
-        {
-            building.AddResourceConsumption(consumption);
-        }        
-
-        Assert.That(building.ResourceConsumption.Count, Is.EqualTo(1));
-        Assert.That(building.ResourceConsumption[consumption.Id].Amount, Is.EqualTo(consumption.Amount * numberOfAdds));
-    }
-
-
-    [Test]
-    public void AddSingleConsumptionDifferentResource()
-    {
-        var city = new City();
-        var building = new Building(city);
-
-        var consumptionOneName = "Test";
-        var consumptionOneAmount = 5;
-        var consumptionOne = Resource.Create(consumptionOneName, consumptionOneAmount);
-
-        var consumptionTwoName = "Other Test";
-        var consumptionTwoAmount = 3;
-        var consumptionTwo = Resource.Create(consumptionTwoName, consumptionTwoAmount);
-
+        var task = new DTask(building, resource);
         
-        building.AddResourceConsumption(consumptionOne);
-        building.AddResourceConsumption(consumptionTwo);
-
-        Assert.That(building.ResourceConsumption.Count, Is.EqualTo(2));
-        Assert.That(building.ResourceConsumption[consumptionOne.Id].Amount, Is.EqualTo(consumptionOne.Amount));
-        Assert.That(building.ResourceConsumption[consumptionTwo.Id].Amount, Is.EqualTo(consumptionTwo.Amount));
-    }    
+        Assert.That(building.Tasks.Count, Is.EqualTo(1));
+        Assert.That(building.Tasks[task.ID].Output, Is.EqualTo(resource));
+    }
 
     [Test]
-    public void AddMultipleConsumptionDifferentResource()
+    public void AddTaskTwice()
     {
-        var city = new City();
-        var building = new Building(city);
+        var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var task = new DTask(building, resource);
 
-        var consumptionOneName = "Test";
-        var consumptionOneAmount = 5;
-        var consumptionOne = Resource.Create(consumptionOneName, consumptionOneAmount);
-
-        var consumptionTwoName = "Other Test";
-        var consumptionTwoAmount = 3;
-        var consumptionTwo = Resource.Create(consumptionTwoName, consumptionTwoAmount);
-
-        var numberOfAdds = 5;
-        for (var i = 0; i < numberOfAdds; i++)
+        Assert.Throws<TaskAlreadyAddedException>(() =>
         {
-            building.AddResourceConsumption(consumptionOne);
-            building.AddResourceConsumption(consumptionTwo);
-        }
-
-        Assert.That(building.ResourceConsumption.Count, Is.EqualTo(2));
-        Assert.That(building.ResourceConsumption[consumptionOne.Id].Amount, Is.EqualTo(consumptionOne.Amount * numberOfAdds));
-        Assert.That(building.ResourceConsumption[consumptionTwo.Id].Amount, Is.EqualTo(consumptionTwo.Amount * numberOfAdds));
-    }
-
-    [Test]
-    public void ConsumeResourcesSingleTurn()
-    {        
-        var resourceName = "Test";
-        var stockpileAmount = 10;
-        var stockpile = Resource.Create(resourceName, stockpileAmount);
-
-        var consumeAmount = 3;
-        var consume = Resource.Create(resourceName, consumeAmount);
-
-        var city = new City();
-        var building = new Building(city);
-
-        city.AddResource(stockpile);
-        building.AddResourceConsumption(consume);
-
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount));
-
-        building.TurnUpdate(1);
-
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount - consumeAmount));
-    }
-
-    [Test]
-    public void ConsumeResourcesMultipleTurns()
-    {
-        var numberOfTurns = 5;
-        var resourceName = "Test";
-
-        var consumeAmount = 3;
-        var stockpileAmount = consumeAmount * numberOfTurns;
-
-        var stockpile = Resource.Create(resourceName, stockpileAmount);        
-        var consume = Resource.Create(resourceName, consumeAmount);
-
-        var city = new City();
-        city.AddResource(stockpile);
-
-        var building = new Building(city);
-        building.AddResourceConsumption(consume);
-
-        
-        for (var i=0; i<numberOfTurns; i++)
-        {
-            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount - (consumeAmount * i)));
-            building.TurnUpdate(1);
-            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount - (consumeAmount * (i+1))));
-        }
-    }
-
-
-    #endregion
-
-
-    #region Output Tests
-    /*****************************
-     * 
-     *         Output Tests
-     *         
-     *****************************/
-    [Test]
-    public void AddSingleOutput()
-    {
-        var city = new City();
-        var building = new Building(city);
-
-        var outputName = "Test";
-        var outputAmount = 5;
-        var output = Resource.Create(outputName, outputAmount);
-
-        building.AddResourceOutput(output);
-
-        Assert.That(building.ResourceOutput.Count, Is.EqualTo(1));
-        Assert.That(building.ResourceOutput[output.Id].Amount, Is.EqualTo(output.Amount));
-    }
-
-    [Test]
-    public void AddMultipleOutputSameResource()
-    {
-        var city = new City();
-        var building = new Building(city);
-
-        var outputName = "Test";
-        var outputAmount = 5;
-        var output = Resource.Create(outputName, outputAmount);
-
-        var numberOfAdds = 5;
-        for (var i = 0; i < numberOfAdds; i++)
-        {
-            building.AddResourceOutput(output);
-        }
-
-        Assert.That(building.ResourceOutput.Count, Is.EqualTo(1));
-        Assert.That(building.ResourceOutput[output.Id].Amount, Is.EqualTo(output.Amount * numberOfAdds));
-    }
-
-
-    [Test]
-    public void AddSingleOutputDifferentResource()
-    {
-        var city = new City();
-        var building = new Building(city);
-
-        var outputOneName = "Test";
-        var outputOneAmount = 5;
-        var outputOne = Resource.Create(outputOneName, outputOneAmount);
-
-        var outputTwoName = "Other Test";
-        var outputTwoAmount = 3;
-        var outputTwo = Resource.Create(outputTwoName, outputTwoAmount);
-
-
-        building.AddResourceOutput(outputOne);
-        building.AddResourceOutput(outputTwo);
-
-        Assert.That(building.ResourceOutput.Count, Is.EqualTo(2));
-        Assert.That(building.ResourceOutput[outputOne.Id].Amount, Is.EqualTo(outputOne.Amount));
-        Assert.That(building.ResourceOutput[outputTwo.Id].Amount, Is.EqualTo(outputTwo.Amount));
-    }
-
-    [Test]
-    public void AddMultipleOutputDifferentResource()
-    {
-        var city = new City();
-        var building = new Building(city);
-
-        var outputOneName = "Test";
-        var outputOneAmount = 5;
-        var outputOne = Resource.Create(outputOneName, outputOneAmount);
-
-        var outputTwoName = "Other Test";
-        var outputTwoAmount = 3;
-        var outputTwo = Resource.Create(outputTwoName, outputTwoAmount);
-
-        var numberOfAdds = 5;        
-        for (var i = 0; i < numberOfAdds; i++)
-        {
-            building.AddResourceOutput(outputOne);
-            building.AddResourceOutput(outputTwo);
-        }
-
-        Assert.That(building.ResourceOutput.Count, Is.EqualTo(2));
-        Assert.That(building.ResourceOutput[outputOne.Id].Amount, Is.EqualTo(outputOne.Amount * numberOfAdds));
-        Assert.That(building.ResourceOutput[outputTwo.Id].Amount, Is.EqualTo(outputTwo.Amount * numberOfAdds));
-    }
-
-    [Test]
-    public void OutputResourcesSingleTurn()
-    {
-        var resourceName = "Test";
-        var stockpileAmount = 5;
-        var stockpile = Resource.Create(resourceName, stockpileAmount);
-
-        var outputAmount = 2;
-        var output = Resource.Create(resourceName, outputAmount);
-
-        var city = new City();
-        var building = new Building(city);
-
-        city.AddResource(stockpile);
-        building.AddResourceOutput(output);
-
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount));
-
-        building.TurnUpdate(1);
-
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount + outputAmount));
-    }
-
-    [Test]
-    public void OutputResourcesMultipleTurns()
-    {
-        var numberOfTurns = 5;
-        var resourceName = "Test";
-
-        var outputAmount = 3;
-        var stockpileAmount = 2;
-
-        var stockpile = Resource.Create(resourceName, stockpileAmount);
-        var output = Resource.Create(resourceName, outputAmount);
-
-        var city = new City();
-        city.AddResource(stockpile);
-
-        var building = new Building(city);
-        building.AddResourceOutput(output);
-
-
-        for (var i = 0; i < numberOfTurns; i++)
-        {
-            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount + (outputAmount * i)));
-            building.TurnUpdate(1);
-            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount + (outputAmount * (i + 1))));
-        }
-    }
-    #endregion
-
-
-    #region Population Modifiers
-    [Test]
-    public void AddPopulation()
-    {
-        var city = new City();
-        var building = new Building(city);
-        var person = new Person();
-        var personCount = building.Population.Count;
-
-        Assert.That(person.Building, Is.Null);
-        Assert.That(building.Population.Count, Is.EqualTo(personCount));
-
-        building.AddPerson(person);
-
-        Assert.That(person.Building, Is.EqualTo(building));
-        Assert.That(building.Population.Count, Is.EqualTo(personCount + 1));
-    }
-
-    [Test]
-    public void OverAddPopulation()
-    {
-        var city = new City();
-        var building = new Building(city);
-        var person = new Person(building);
-        var personCount = building.Population.Count;
-
-        Assert.That(person.Building, Is.EqualTo(building));
-        Assert.That(building.Population.Count, Is.EqualTo(personCount));
-
-        building.AddPerson(person);
-
-        Assert.That(person.Building, Is.EqualTo(building));
-        Assert.That(building.Population.Count, Is.EqualTo(personCount));
-    }
-
-    [Test]
-    public void RemovePopulation()
-    {
-        var city = new City();
-        var building = new Building(city);
-        var person = new Person();
-
-        building.AddPerson(person);
-        var personCount = building.Population.Count;
-
-        Assert.That(person.Building, Is.EqualTo(building));
-        Assert.That(building.Population.Count, Is.EqualTo(personCount));
-
-        building.RemovePerson(person);
-
-        Assert.That(person.Building, Is.Null);
-        Assert.That(building.Population.Count, Is.EqualTo(personCount - 1));
-
-        Assert.Throws<PersonNotFoundException>(() =>
-        {
-            building.RemovePerson(person);
+            building.AddTask(task);
         });
     }
 
     [Test]
-    public void PopulationIncreasesResourceGeneration()
+    public void PassesTaskOutputToCity()
     {
-        var city = new City();
-        var building = new Building(city);
+        var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var task = new DTask(building, resource);
+        var person = new DPerson(city, Mock<MeepleController>());
+        person.SetTask(task);
 
-        var resourceName = "Test";
-        var outputAmount = 3;
-        var output = Resource.Create(resourceName, outputAmount);
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
 
-        building.AddResourceOutput(output);
+        city.TurnUpdate(1);
 
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(0));
-        building.TurnUpdate(1);
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount));
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
+    }
 
+    [Test]
+    public void DisablingTasks()
+    {
+        var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var task = new DTask(building, resource);
+        var person = new DPerson(city, Mock<MeepleController>());
+        person.SetTask(task);
 
-        building.Population.Add(new Person(building));
-        building.TurnUpdate(1);
-        Assert.That(city.GetResource(resourceName).Amount, Is.GreaterThan(outputAmount * 2));
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
+
+        city.TurnUpdate(1);
+
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
+
+        task.DisableTask();
+        city.TurnUpdate(1);
+
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
     }
     #endregion
+
+    #region Status Tests
+    [Test]
+    public void Status()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.UNDISCOVERED));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.ASSESSED));
+    }
+
+    [Test]
+    public void BuildingStatusProgresses()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+
+        building.Discover();
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.DISCOVERED));
+
+        building.Assess(0.2f);
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.ASSESSED));
+
+        building.Reclaim(0.2f);
+        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.RECLAIMED));
+    }
+
+
+    #region Status Bool Tests
+    [Test]
+    public void IsUndiscovered()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsDiscovered()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsDiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+    }
+
+    [Test]
+    public void IsOnlyDiscovered()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsAssessed()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsAssessed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsAssessed(), Is.EqualTo(true));
+    }
+
+    [Test]
+    public void IsOnlyAssessed()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(true));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+    }
+
+    [Test]
+    public void IsReclaimed()
+    {
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.DISCOVERED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.ASSESSED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+
+        building.Status = DBuilding.BuildingStatus.RECLAIMED;
+        Assert.That(building.IsReclaimed(), Is.EqualTo(true));
+    }
+    #endregion
+    #endregion
+
+    private T Mock<T>() where T : Component
+    {
+        var mockObj = new GameObject();
+        mockObjects.Add(mockObj);
+        return mockObj.AddComponent<T>().GetComponent<T>();
+    }
 }

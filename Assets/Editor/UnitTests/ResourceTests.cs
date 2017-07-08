@@ -17,11 +17,11 @@ public class ResourceTests
         var name = "Test";
         var zero = 0;
 
-        Resource resource = Resource.Create(name);
+        DResource resource = DResource.Create(name);
 
         Assert.That(resource.Name, Is.EqualTo(name));
         Assert.That(resource.Amount, Is.EqualTo(zero));
-        Assert.That(resource.Id, Is.EqualTo(Resource.NameToId(name)));
+        Assert.That(resource.ID, Is.EqualTo(DResource.NameToID(name)));
     }
 
     [Test]
@@ -30,11 +30,11 @@ public class ResourceTests
         var name = "Test";
         var amount = 7;
 
-        Resource resource = Resource.Create(name, amount);
+        DResource resource = DResource.Create(name, amount);
 
         Assert.That(resource.Name, Is.EqualTo(name));
         Assert.That(resource.Amount, Is.EqualTo(amount));
-        Assert.That(resource.Id, Is.EqualTo(Resource.NameToId(name)));
+        Assert.That(resource.ID, Is.EqualTo(DResource.NameToID(name)));
     }
 
     [Test]
@@ -44,49 +44,49 @@ public class ResourceTests
         var amount = 7;
         var zero = 0;
 
-        Resource resource = Resource.Create(name, amount);
+        DResource resource = DResource.Create(name, amount);
 
         Assert.That(resource.Name, Is.EqualTo(name));
         Assert.That(resource.Amount, Is.EqualTo(amount));
-        Assert.That(resource.Id, Is.EqualTo(Resource.NameToId(name)));
+        Assert.That(resource.ID, Is.EqualTo(DResource.NameToID(name)));
                 
-        Resource otherResource = Resource.Create(resource);
+        DResource otherResource = DResource.Create(resource);
 
         Assert.That(otherResource.Name, Is.EqualTo(name));
         Assert.That(otherResource.Amount, Is.EqualTo(zero));
-        Assert.That(otherResource.Id, Is.EqualTo(Resource.NameToId(name)));
+        Assert.That(otherResource.ID, Is.EqualTo(DResource.NameToID(name)));
     }
 
     [Test]
-    public void NameToIdFound()
+    public void NameToIDFound()
     {
         var name = "Test";
         var zero = 0;
-        Resource resource = Resource.Create(name);
+        DResource resource = DResource.Create(name);
 
         Assert.That(resource.Name, Is.EqualTo(name));
         Assert.That(resource.Amount, Is.EqualTo(zero));
-        Assert.That(resource.Id, Is.EqualTo(Resource.NameToId(name)));
+        Assert.That(resource.ID, Is.EqualTo(DResource.NameToID(name)));
 
-        Assert.DoesNotThrow(() => { Resource.NameToId(name); });
-        Assert.That(Resource.NameToId(name), Is.EqualTo(resource.Id));
+        Assert.DoesNotThrow(() => { DResource.NameToID(name); });
+        Assert.That(DResource.NameToID(name), Is.EqualTo(resource.ID));
     }
 
     [Test]
-    public void NameToIdNotFound()
+    public void NameToIDNotFound()
     {
         var name = "Good";
         var wrongName = "Bad";
         var zero = 0;
         var exceptionMessage = "Resource name does not exist: Bad";
 
-        Resource resource = Resource.Create(name);
+        DResource resource = DResource.Create(name);
 
         Assert.That(resource.Name, Is.EqualTo(name));
         Assert.That(resource.Amount, Is.EqualTo(zero));
-        Assert.That(resource.Id, Is.EqualTo(Resource.NameToId(name)));
+        Assert.That(resource.ID, Is.EqualTo(DResource.NameToID(name)));
 
-        var notFoundException = Assert.Throws<ResourceNameNotFoundException>(() => { Resource.NameToId(wrongName); });
+        var notFoundException = Assert.Throws<ResourceNameNotFoundException>(() => { DResource.NameToID(wrongName); });
         Assert.That(notFoundException.Message, Is.EqualTo(exceptionMessage));
     }
 

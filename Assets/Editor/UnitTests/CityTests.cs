@@ -1,9 +1,21 @@
-﻿using System;
-using NUnit.Framework;
-using NSubstitute;
+﻿using NUnit.Framework;
+using UnityEngine;
+using System.Collections.Generic;
 
 public class CityTests
 {
+    private List<GameObject> mockObjects = new List<GameObject>();
+
+    private string CITY_NAME = "Test City";
+    private string BUILDING_NAME = "Test Building";
+    private string BUILDING_NAME_2 = "Other Test Building";
+
+    [TearDown]
+    public void TearDown()
+    {
+        foreach (var entry in mockObjects)
+            Object.DestroyImmediate(entry);
+    }
 
     [Test]
     public void CityTestsSimplePasses()
@@ -14,21 +26,19 @@ public class CityTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new City();
+        var city = new DCity(CITY_NAME, Mock<CityController>());
         Assert.That(city.Buildings, Is.Not.Null);
         Assert.That(city.Resources, Is.Not.Null);
-        Assert.That(city.Population, Is.Not.Null);
-        Assert.That(city.Name, Is.EqualTo("NoCityName"));
-        Assert.That(city.CivilianCount, Is.EqualTo(0));
+        Assert.That(city.People, Is.Not.Null);
+        Assert.That(city.Name, Is.EqualTo(CITY_NAME));
         Assert.That(city.Age, Is.EqualTo(0));
-        Assert.That(city.EmptyBuilding, Is.Not.Null);
     }
 
     [Test]
     public void Name()
     {
         var newName = "Test123";
-        var city = new City()
+        var city = new DCity(CITY_NAME, Mock<CityController>())
         {
             Name = newName
         };
@@ -37,22 +47,42 @@ public class CityTests
 
     [Test]
     public void AddBuilding()
-    {        
-        var city = new City();
-        var startingBuildingCount = city.Buildings.Count;
-        var building = new Building(city);
-
+    {
+        var startingBuildingCount = 0;
+        var city = new DCity(CITY_NAME, Mock<CityController>());
         Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
 
-        city.Buildings.Add(building);
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
         Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 1));
+        Assert.That(building.City, Is.EqualTo(city));
+
+        var building2 = new DBuilding(city, BUILDING_NAME_2, Mock<BuildingController>());
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 2));
+        Assert.That(building2.City, Is.EqualTo(city));
+    }    
+
+    [Test]
+    public void AddSameBuildingTwice()
+    {
+        var startingBuildingCount = 0;
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
+
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 1));
+        Assert.That(building.City, Is.EqualTo(city));
+
+        Assert.Throws<BuildingAlreadyAddedException>(() =>
+        {
+            city.AddBuilding(building);
+        });
     }
 
     [Test]
     public void AddResource()
     {
-        var resource = Resource.Create("Test", 0);
-        var city = new City();
+        var resource = DResource.Create("Test", 0);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
 
         Assert.That(city.Resources.Count, Is.EqualTo(0));
 
@@ -61,33 +91,55 @@ public class CityTests
     }
 
     [Test]
-    public void AddPopulation()
+    public void CountPeople()
     {
-        var person = new Person();
-        var city = new City();
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        Assert.That(city.People.Count, Is.EqualTo(0));
 
-        Assert.That(city.Population.Count, Is.EqualTo(0));
+        var person = new DPerson(city, Mock<MeepleController>());
+        Assert.That(city.People.Count, Is.EqualTo(1));
+        Assert.That(person.City, Is.EqualTo(city));
+    }
+    
+    [Test]
+    public void AddPerson()
+    {
+        var startCount = 0;
+        var city = new DCity(CITY_NAME, Mock<CityController>());
 
-        city.Population.Add(person);
-        Assert.That(city.Population.Count, Is.EqualTo(1));
+        Assert.That(city.People.Count, Is.EqualTo(startCount));        
+        
+        var person = new DPerson(city, Mock<MeepleController>());
+        Assert.That(city.People.Count, Is.EqualTo(startCount + 1));
+        Assert.That(person.City, Is.EqualTo(city));
+
+        var otherPerson = new DPerson(city, Mock<MeepleController>());
+        Assert.That(city.People.Count, Is.EqualTo(startCount + 2));
+        Assert.That(otherPerson.City, Is.EqualTo(city));
     }
 
     [Test]
-    public void CivilianCount()
+    public void AddSamePersonTwice()
     {
-        var person = new Person();
-        var city = new City();
-        Assert.That(city.CivilianCount, Is.EqualTo(0));
-        city.Population.Add(person);
-        Assert.That(city.CivilianCount, Is.EqualTo(1));
+        var startCount = 0;
+        var city = new DCity(CITY_NAME, Mock<CityController>());
 
+        Assert.That(city.People.Count, Is.EqualTo(startCount));
+
+        var person = new DPerson(city, Mock<MeepleController>());
+        Assert.That(city.People.Count, Is.EqualTo(startCount + 1));
+        Assert.That(person.City, Is.EqualTo(city));
+
+        Assert.Throws<PersonAlreadyAddedException>(() =>
+        {
+            city.AddPerson(person);
+        });
     }
-
 
     [Test]
     public void TurnUpdateDaysPassed()
     {
-        var city = new City();
+        var city = new DCity(CITY_NAME, Mock<CityController>());
         var numberOfDaysPassed = 7;
 
         for (var i = 0; i < 10; i++)
@@ -103,12 +155,13 @@ public class CityTests
         var resourceName = "Test";
         var outputAmount = 2;
         var zero = 0;
-        var output = Resource.Create(resourceName, outputAmount);
+        var output = DResource.Create(resourceName, outputAmount);
 
-        var city = new City();
-        var building = new Building(city);
-        building.AddResourceOutput(output);
-        city.Buildings.Add(building);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var task = new DTask(building, output);
+        var person = new DPerson(city, Mock<MeepleController>());
+        person.SetTask(task);
 
         Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(zero));
         Assert.DoesNotThrow(() => { city.TurnUpdate(1); });
@@ -121,114 +174,59 @@ public class CityTests
         var numberOfTurns = 5;
         var resourceName = "Test";
         var outputAmount = 2;
-        var output = Resource.Create(resourceName, outputAmount);
+        var output = DResource.Create(resourceName, outputAmount);
 
-        var city = new City();
-        var building = new Building(city);
-        building.AddResourceOutput(output);
-        city.Buildings.Add(building);
-        
-        for(var i=0; i<numberOfTurns; i++)
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var task = new DTask(building, output);
+        var person = new DPerson(city, Mock<MeepleController>());
+        person.SetTask(task);
+
+        for (var i=0; i<numberOfTurns; i++)
         {
             Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount * i));
             Assert.DoesNotThrow(() => { city.TurnUpdate(1); });
             Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount * (i+1)));
         }
-    }
+    }   
 
     [Test]
-    public void TurnUpdateInsufficientResourcesSingleTurn()
+    public void ChangePersonToValidTask()
     {
-        var resourceName = "Test";
+        string RESOURCE_NAME = "Test Resource";
+        int RESOURCE_A_AMOUNT = 1;
+        int RESOURCE_B_AMOUNT = 1000;
 
-        var consumeAmount = 3;
-        var consume = Resource.Create(resourceName, consumeAmount);
+        var resource_A = DResource.Create(RESOURCE_NAME, RESOURCE_A_AMOUNT);
+        var resource_B = DResource.Create(RESOURCE_NAME, RESOURCE_B_AMOUNT);
 
-        var stockpileAmount = 2;
-        var stockpile = Resource.Create(resourceName, stockpileAmount);
-        
-        
-        var city = new City();
-        var building = new Building(city);
-        
-        building.AddResourceConsumption(consume);
-        city.Buildings.Add(building);
-        city.AddResource(stockpile);
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var task_A = new DTask(building, resource_A);
+        var task_B = new DTask(building, resource_B);
 
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount));
+        var person = new DPerson(city, Mock<MeepleController>());
 
-        var missingResourceId = Assert.Throws<InsufficientResourceException>(() =>
-        {
-            city.TurnUpdate(1);
-        });
+        Assert.That(city.People[person.ID], Is.EqualTo(person));
+        Assert.That(person.City, Is.EqualTo(city));
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
 
-        Assert.That(int.Parse(missingResourceId.Message), Is.EqualTo(Resource.NameToId(resourceName)));        
+        city.TurnUpdate(1);
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
+
+        person.SetTask(task_A);
+        city.TurnUpdate(1);
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT));
+
+        person.SetTask(task_B);
+        city.TurnUpdate(1);
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));                
     }
-
-    [Test]
-    public void TurnUpdateInsufficientResourcesAfterMultipleTurns()
+    
+    private T Mock<T>() where T : Component
     {
-        var numberOfValidTurns = 4;
-        var resourceName = "Test";
-
-        var consumeAmount = 3;
-        var consume = Resource.Create(resourceName, consumeAmount);
-
-        var stockpileAmount = numberOfValidTurns * consumeAmount + 1;
-        var stockpile = Resource.Create(resourceName, stockpileAmount);
-
-
-        var city = new City();
-        var building = new Building(city);
-
-        building.AddResourceConsumption(consume);
-        city.Buildings.Add(building);
-        city.AddResource(stockpile);
-
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(stockpileAmount));
-
-        for(var i=0; i<numberOfValidTurns; i++)
-        {
-            Assert.DoesNotThrow(() => { city.TurnUpdate(1); });
-        }
-
-        var missingResourceId = Assert.Throws<InsufficientResourceException>(() =>
-        {
-            city.TurnUpdate(1);
-        });
-
-        Assert.That(int.Parse(missingResourceId.Message), Is.EqualTo(Resource.NameToId(resourceName)));
-    }
-
-    [Test]
-    public void MovePopulation()
-    {
-        var city = new City();
-        var building1 = new Building(city);
-        var building2 = new Building(city);
-        var person = new Person(building1);
-        building1.AddPerson(person);
-
-        city.MovePerson(person, building2);
-
-        Assert.That(building1.Population.Contains(person), Is.False);
-        Assert.That(building2.Population.Contains(person), Is.True);
-        Assert.That(person.Building, Is.EqualTo(building2));
-
-        building2.RemovePerson(person);
-        person = null;
-        person = new Person();
-        city.MovePerson(person, building1);
-
-        Assert.That(building1.Population.Contains(person), Is.True);
-        Assert.That(person.Building, Is.EqualTo(building1));
-
-        var city2 = new City();
-        var building3 = new Building(city2);
-
-        Assert.Throws<BuildingNotInCityException>(() =>
-        {
-            city.MovePerson(person, building3);
-        });
+        var mockObj = new GameObject();
+        mockObjects.Add(mockObj);
+        return mockObj.AddComponent<T>().GetComponent<T>();
     }
 }
