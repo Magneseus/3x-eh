@@ -16,10 +16,12 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            dGame.EndTurnUpdate();
-        }
+
+    }
+
+    public void EndTurnButtonCallback()
+    {
+        dGame.EndTurnUpdate();
     }
 
     public CityController CreateCity(string prefabPath, string jsonPath)
