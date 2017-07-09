@@ -456,7 +456,7 @@ MonoBehaviour:
   Food: {fileID: 1081945377}
   Fuel: {fileID: 1428870971}
   Materials: {fileID: 1797898733}
-  Medecine: {fileID: 1043642270}
+  Medicine: {fileID: 1043642270}
 --- !u!1 &1043642268
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,7 +468,7 @@ GameObject:
   - component: {fileID: 1043642271}
   - component: {fileID: 1043642270}
   m_Layer: 5
-  m_Name: Medecine
+  m_Name: Medicine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -524,7 +524,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Medecine: '
+  m_Text: 'Medicine: '
 --- !u!222 &1043642271
 CanvasRenderer:
   m_ObjectHideFlags: 0
