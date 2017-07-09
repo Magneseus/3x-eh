@@ -9,7 +9,7 @@ public class ResourceDisplayController : MonoBehaviour {
     public Text Food;
     public Text Fuel;
     public Text Materials;
-    public Text Medecine;
+    public Text Medicine;
 
     private DCity dCity;
     // Use this for initialization
@@ -25,6 +25,6 @@ public class ResourceDisplayController : MonoBehaviour {
         Food.text = "Food: " + dCity.GetResource("Food").Amount;
         Fuel.text = "Fuel: " + dCity.GetResource("Fuel").Amount;
         Materials.text = "Materials: " + dCity.GetResource("Materials").Amount;
-        Medecine.text = "Medecine: " + dCity.GetResource("Medecine").Amount;
+        Medicine.text = "Medicine: " + dCity.GetResource("Medicine").Amount;
     }
 }
