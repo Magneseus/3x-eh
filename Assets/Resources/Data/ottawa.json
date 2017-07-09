@@ -5,7 +5,7 @@
       "name": "Town Hall",
       "position": {
         "x": [ 0, 0 ],
-        "y":[ 0, 0 ]
+        "y": [ 0, 0 ]
       }
     },
     {
@@ -22,14 +22,14 @@
         "y": [ -3, 3 ]
       },
       "tasks": [
-      	{
-      		"name": "Food Storage Management",
-      		"resource": {
-      			"name": "Food Storage",
-      			"amount": 100
-      		},
-      		"maxPeople": 1
-      	}
+        {
+          "name": "Food Storage Management",
+          "resource": {
+            "name": "Food Storage",
+            "amount": 100
+          },
+          "maxPeople": 1
+        }
       ]
     },
     {
@@ -46,23 +46,41 @@
         "y": [ -3, 3 ]
       },
       "tasks": [
-      	{
-      		"name": "Food Production",
-      		"resource": {
-      			"name": "Food",
-      			"amount": 10
-      		},
-      		"maxPeople": 2
-      	},
-      	{
-      		"name": "Food Storage Management",
-      		"resource": {
-      			"name": "Food Storage",
-      			"amount": 20
-      		},
-      		"maxPeople": 1
-      	}
+        {
+          "name": "Food Production",
+          "resource": {
+            "name": "Food",
+            "amount": 10
+          },
+          "maxPeople": 2
+        },
+        {
+          "name": "Food Storage Management",
+          "resource": {
+            "name": "Food Storage",
+            "amount": 20
+          },
+          "maxPeople": 1
+        }
       ]
+    }
+  ],
+  "resources": [
+    {
+      "name": "Food",
+      "amount": 0
+    },
+    {
+      "name": "Fuel",
+      "amount": 0
+    },
+    {
+      "name": "Materials",
+      "amount": 0
+    },
+    {
+      "name": "Medecine",
+      "amount": 0
     }
   ]
 }

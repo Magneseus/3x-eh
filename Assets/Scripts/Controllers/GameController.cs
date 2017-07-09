@@ -62,6 +62,11 @@ public class GameController : MonoBehaviour
                 TaskController newTaskController = AttachTaskController(newTask, bControl);
             }
         }
+        foreach(JSONNode resource in cityJson["resources"].AsArray)
+        {
+            DResource r = DResource.Create(resource["name"], resource["amount"]);
+            cityController.dCity.AddResource(r);
+        }
 
         //TODO: Remove this
         CreateMeeple(cityJson["name"]);
