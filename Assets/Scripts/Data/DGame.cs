@@ -5,20 +5,21 @@ using UnityEngine;
 
 [Serializable]
 public class DGame
-{   
-    
-    Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
+{
 
+    Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
+    private DateTime currentDate = new DateTime(2017,1,1);
     int durationOfTurn = 7;
     int currentTurnNumber = 0;
-        
+
     public void EndTurnUpdate()
-    {        
+    {
         foreach (var kvp in cities)
         {
             kvp.Value.TurnUpdate(durationOfTurn);
         }
 
+      currentDate =  currentDate.AddDays(durationOfTurn);
         currentTurnNumber += 1;
     }
 
@@ -31,7 +32,7 @@ public class DGame
     {
         get { return cities; }
     }
-    
+
     public int TurnNumber
     {
         get { return currentTurnNumber; }
@@ -43,7 +44,10 @@ public class DGame
         get { return durationOfTurn; }
         set { durationOfTurn = value; }
     }
-
+    public string currentDateString
+    {
+        get { return currentDate.ToString(); }
+    }
     public int DaysTranspired
     {
         get { return TurnDuration * TurnNumber; }
