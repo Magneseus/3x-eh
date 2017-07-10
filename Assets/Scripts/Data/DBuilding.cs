@@ -14,7 +14,13 @@ public class DBuilding : TurnUpdatable {
     private String buildingName;
     private Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
 
-    public enum BuildingStatus { UNDISCOVERED, DISCOVERED, ASSESSED, RECLAIMED };
+    public enum BuildingStatus
+    {
+      UNDISCOVERED,
+      DISCOVERED, 
+      ASSESSED,
+      RECLAIMED
+    };
     private BuildingStatus status;
     private float levelAssessed;
     private float levelReclaimed;
@@ -22,7 +28,7 @@ public class DBuilding : TurnUpdatable {
     public DBuilding(DCity city, string buildingName, BuildingController buildingController)
     {
         this.id = NEXT_ID++;
-        this.city = city;        
+        this.city = city;
         this.buildingName = buildingName;
         this.buildingController = buildingController;
 
@@ -75,7 +81,7 @@ public class DBuilding : TurnUpdatable {
     public DCity City
     {
         get { return city; }
-    }    
+    }
 
     public Dictionary<int, DTask> Tasks
     {
@@ -228,4 +234,3 @@ public class TaskAlreadyAddedException : Exception
     {
     }
 }
-
