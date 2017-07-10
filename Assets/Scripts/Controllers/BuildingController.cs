@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPointerExitHandler {
 
     public DBuilding dBuilding;
@@ -21,10 +21,10 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
         SetTaskControllerVisibility(false);
     }
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
     #region MouseOver Functions
@@ -45,6 +45,14 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
         if (MouseOverCount == 1)
         {
+
+
+            //Relating to building info text on hover
+            Vector3 textPos =  this.transform.position;
+            textPos.x += 0.5f;
+            GameObject.Find("BuildingInfo").transform.position = textPos;
+            GameObject.Find("BuildingInfo").GetComponent<TextMesh>().text = "Status: " + dBuilding.Status +"\nAssessed: " + dBuilding.LevelAssessed +"\nReclaimed: " + dBuilding.LevelReclaimed;
+
             SetTaskControllerVisibility(true);
         }
     }
@@ -55,6 +63,8 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
         if (MouseOverCount == 0)
         {
+          // deletes building info text
+          GameObject.Find("BuildingInfo").GetComponent<TextMesh>().text = "";
             StartCoroutine("MouseOffBuildingTimer");
         }
     }
@@ -113,7 +123,7 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
     internal void ConnectToDataEngine(DGame dGame, string cityName, string buildingName)
     {
-        dBuilding = new DBuilding(dGame.Cities[cityName], buildingName, this);        
+        dBuilding = new DBuilding(dGame.Cities[cityName], buildingName, this);
     }
-    
+
 }
