@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
 
     // Initialization
     void Start()
-    {        
+    {
         CreateCity(Constants.OTTAWA_PREFAB_PATH, Constants.OTTAWA_JSON_PATH);
     }
 
@@ -28,9 +28,9 @@ public class GameController : MonoBehaviour
     {
         var cityJson = JSON.Parse(Resources.Load<TextAsset>(jsonPath).text);
 
-        CityController cityController = InstantiatePrefab<CityController>(Constants.OTTAWA_PREFAB_PATH);        
-        cityController.ConnectToDataEngine(dGame, cityJson["name"]);     
-        
+        CityController cityController = InstantiatePrefab<CityController>(Constants.OTTAWA_PREFAB_PATH);
+        cityController.ConnectToDataEngine(dGame, cityJson["name"]);
+
         // Load in all buildings for the city
         foreach(JSONNode building in cityJson["buildings"].AsArray)
         {
@@ -53,9 +53,9 @@ public class GameController : MonoBehaviour
                     task["resource"]["amount"]);
 
                 DTask newTask = new DTask(
-                    bControl.dBuilding, 
-                    taskResource, 
-                    maxPeople, 
+                    bControl.dBuilding,
+                    taskResource,
+                    maxPeople,
                     taskName);
 
                 // Generate the task controller and attach it
@@ -67,7 +67,11 @@ public class GameController : MonoBehaviour
             DResource r = DResource.Create(resource["name"], resource["amount"]);
             cityController.dCity.AddResource(r);
         }
-
+        // MAP OF CANADA STUFF
+          string[] edges = new string[cityJson["edges"].AsArray.Count];
+          int i = 0;
+          foreach(JSONNode edge in cityJson["edges"].AsArray) edges[i++] = edge;
+          cityController.dCity.setEdges(edges);
         //TODO: Remove this
         CreateMeeple(cityJson["name"]);
 
@@ -78,7 +82,7 @@ public class GameController : MonoBehaviour
     {
         BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH);
         buildingController.ConnectToDataEngine(dGame, cityName, buildingName);
-        
+
         buildingController.transform.position = position;
 
         return buildingController;
