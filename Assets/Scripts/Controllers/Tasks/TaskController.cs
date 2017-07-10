@@ -9,6 +9,7 @@ public class TaskController : MonoBehaviour {
     public GameObject TaskTraySinglePrefab;
     public DTask dTask;
     public BuildingController buildingController;
+    public TextMesh taskText;
 
     private int MouseOverCount = 0;
     private List<TaskTraySingle> listOfTraySingles;
@@ -73,11 +74,24 @@ public class TaskController : MonoBehaviour {
                 Destroy(listOfTraySingles[0].gameObject);
             }
 
+            // Move the Text to the left of the boxes
+            float xOffset =
+                    ((float)(0) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) *
+                    TaskTraySingle.WIDTH_CONST;
+
+            taskText.text = dTask.Name;
+
+            Vector3 newTaskTextPos = this.transform.position;
+            newTaskTextPos.x += xOffset;
+            newTaskTextPos.x -= taskText.characterSize * taskText.fontSize / 8.0f;
+
+            taskText.transform.position = newTaskTextPos;
+
             // Generate the new trays
             for (int i = 0; i < dTask.MaxPeople; i++)
             {
                 // Find where in the tray we will position each single
-                float xOffset = 
+                xOffset = 
                     ((float)(i) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) * 
                     TaskTraySingle.WIDTH_CONST;
 

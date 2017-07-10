@@ -16,10 +16,12 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            dGame.EndTurnUpdate();
-        }
+
+    }
+
+    public void EndTurnButtonCallback()
+    {
+        dGame.EndTurnUpdate();
     }
 
     public CityController CreateCity(string prefabPath, string jsonPath)
@@ -59,6 +61,11 @@ public class GameController : MonoBehaviour
                 // Generate the task controller and attach it
                 TaskController newTaskController = AttachTaskController(newTask, bControl);
             }
+        }
+        foreach(JSONNode resource in cityJson["resources"].AsArray)
+        {
+            DResource r = DResource.Create(resource["name"], resource["amount"]);
+            cityController.dCity.AddResource(r);
         }
 
         //TODO: Remove this
