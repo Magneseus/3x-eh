@@ -50,8 +50,8 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
             //Relating to building info text on hover
             Vector3 textPos =  this.transform.position;
             textPos.x += 0.5f;
-            GameObject.Find("BuildingInfo").transform.position = textPos;
-            GameObject.Find("BuildingInfo").GetComponent<TextMesh>().text = "Status: " + dBuilding.Status +"\nAssessed: " + dBuilding.LevelAssessed +"\nReclaimed: " + dBuilding.LevelReclaimed;
+            transform.Find("BuildingInfo").transform.position = textPos;
+            transform.Find("BuildingInfo").GetComponent<TextMesh>().text = "Status: " + dBuilding.Status +"\nAssessed: " + dBuilding.LevelAssessed +"\nReclaimed: " + dBuilding.LevelReclaimed;
 
             SetTaskControllerVisibility(true);
         }
@@ -64,7 +64,7 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
         if (MouseOverCount == 0)
         {
           // deletes building info text
-          GameObject.Find("BuildingInfo").GetComponent<TextMesh>().text = "";
+          transform.Find("BuildingInfo").GetComponent<TextMesh>().text = "";
             StartCoroutine("MouseOffBuildingTimer");
         }
     }
