@@ -28,6 +28,12 @@ public class DGame
         cities.Add(dCity.Name, dCity);
     }
 
+    public void LinkCities(string city1Key, string city2Key)
+    {
+        cities[city1Key].linkToCity(city2Key);
+        cities[city2Key].linkToCity(city1Key);
+    }
+
     public Dictionary<string, DCity> Cities
     {
         get { return cities; }

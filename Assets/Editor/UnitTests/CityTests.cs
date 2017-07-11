@@ -7,6 +7,7 @@ public class CityTests
     private List<GameObject> mockObjects = new List<GameObject>();
 
     private string CITY_NAME = "Test City";
+    private string LINKED_CITY_NAME = "Linked City";
     private string BUILDING_NAME = "Test Building";
     private string BUILDING_NAME_2 = "Other Test Building";
 
@@ -222,7 +223,49 @@ public class CityTests
         city.TurnUpdate(1);
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));                
     }
-    
+
+    [Test]
+    public void ConstructorLinksCities()
+    {
+        List<string> linkedCities = new List<string>();
+        linkedCities.Add(LINKED_CITY_NAME);
+
+        DCity city = new DCity(CITY_NAME, Mock<CityController>(), linkedCities);
+        Assert.That(city.LinkedCityKeys, Is.EqualTo(linkedCities));
+
+        DCity unlinkedCity = new DCity(CITY_NAME, Mock<CityController>());
+        Assert.Null(city.LinkedCityKeys);
+    }
+
+    [Test]
+    public void AddsLinkedCity()
+    {
+        DCity city = new DCity(CITY_NAME, Mock<CityController>());
+        city.linkToCity(LINKED_CITY_NAME);
+        Assert.True(city.LinkedCityKeys.Contains(LINKED_CITY_NAME));
+    }
+
+    [Test]
+    public void ReturnsAllLinkedCities()
+    {
+        int numCities = 4;
+
+        DCity city = new DCity(CITY_NAME, Mock<CityController>());
+        List<string> linkedCities = new List<string>();
+
+        for(int i = 0; i < numCities; i++)
+            linkedCities.Add(LINKED_CITY_NAME + i.ToString());
+
+        city.LinkedCityKeys = linkedCities;
+
+        foreach(string cityKey in city.getAllLinkedCityKeys())
+        {
+            Assert.True(linkedCities.Contains(cityKey));
+            linkedCities.Remove(cityKey);
+        }
+        Assert.True(linkedCities.Count == 0);
+    }
+
     private T Mock<T>() where T : Component
     {
         var mockObj = new GameObject();

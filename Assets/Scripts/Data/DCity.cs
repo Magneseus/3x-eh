@@ -11,6 +11,8 @@ public class DCity : TurnUpdatable
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
     private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
+    //private Dictionary<int, DCity> linkedCityKeys = new Dictionary<int, DCity>();
+    private List<string> linkedCityKeys = new List<string>();
 
     private int age;
     private string name;
@@ -23,6 +25,7 @@ public class DCity : TurnUpdatable
         name = cityName;
         this.cityController = cityController;
         age = 0;
+        this.linkedCityKeys = linkedCityKeys;
     }
 
     public void AddBuilding(DBuilding dBuilding)
@@ -110,6 +113,23 @@ public class DCity : TurnUpdatable
       edges = s;
     }
 
+    public void linkToCity(string cityKey)
+    {
+        if (!linkedCityKeys.Contains(cityKey))
+            linkedCityKeys.Add(cityKey);
+    }
+
+    public IEnumerable<string> getAllLinkedCityKeys()
+    {
+        foreach (string key in linkedCityKeys)
+            yield return key;
+    }
+
+    public bool isLinkedTo(string cityKey)
+    {
+        return linkedCityKeys.Contains(cityKey);
+    }
+
     #region Properties
     public Dictionary<int, DBuilding> Buildings
     {
@@ -124,6 +144,12 @@ public class DCity : TurnUpdatable
     public Dictionary<int, DPerson> People
     {
         get { return people; }
+    }
+
+    public List<string> LinkedCityKeys
+    {
+        get { return linkedCityKeys; }
+        set { linkedCityKeys = value; }
     }
 
     public string Name
