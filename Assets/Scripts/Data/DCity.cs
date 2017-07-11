@@ -26,6 +26,11 @@ public class DCity : TurnUpdatable
         this.cityController = cityController;
         age = 0;
         this.linkedCityKeys = linkedCityKeys;
+
+        if (this.linkedCityKeys == null)
+        {
+            this.linkedCityKeys = new List<string>();
+        }
     }
 
     public void AddBuilding(DBuilding dBuilding)
