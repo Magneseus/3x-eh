@@ -20,7 +20,7 @@ public class DCity : TurnUpdatable
     private Vector2 mapLocation;
     private string[] edges;
 
-    public DCity(string cityName, CityController cityController)
+    public DCity(string cityName, CityController cityController, List<string> linkedCityKeys = null)
     {
         name = cityName;
         this.cityController = cityController;
