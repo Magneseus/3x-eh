@@ -234,7 +234,7 @@ public class CityTests
         Assert.That(city.LinkedCityKeys, Is.EqualTo(linkedCities));
 
         DCity unlinkedCity = new DCity(CITY_NAME, Mock<CityController>());
-        Assert.Null(unlinkedCity.LinkedCityKeys);
+        Assert.IsEmpty(unlinkedCity.LinkedCityKeys);
     }
 
     [Test]
@@ -250,20 +250,19 @@ public class CityTests
     {
         int numCities = 4;
 
-        DCity city = new DCity(CITY_NAME, Mock<CityController>());
         List<string> linkedCities = new List<string>();
 
         for(int i = 0; i < numCities; i++)
             linkedCities.Add(LINKED_CITY_NAME + i.ToString());
 
-        city.LinkedCityKeys = linkedCities;
-        
+        DCity city = new DCity(CITY_NAME, Mock<CityController>(), linkedCities);
+
         foreach(string cityKey in city.getAllLinkedCityKeys())
         {
             Assert.True(linkedCities.Contains(cityKey));
-            //linkedCities.Remove(cityKey);
+            linkedCities.Remove(cityKey);
         }
-        //Assert.True(linkedCities.Count == 0);
+        Assert.True(linkedCities.Count == 0);
     }
 
     private T Mock<T>() where T : Component
