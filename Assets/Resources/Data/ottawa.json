@@ -82,5 +82,10 @@
       "name": "Medicine",
       "amount": 0
     }
+  ],
+  "edges":[
+    {
+      "name":"Toronto"
+    }
   ]
 }
