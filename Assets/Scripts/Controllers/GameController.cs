@@ -3,26 +3,57 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
 using System.IO;
+
 public class GameController : MonoBehaviour
 {
-    public DGame dGame = new DGame();
-    public bool activeCity = false;
+    public DGame dGame;
 
+    public GameObject UICanvas;
+    public GameObject CountryViewUIPrefab;
+    public GameObject CityViewUIPrefab;
+
+    private GameObject countryView;
+    private GameObject cityView;
 
     // Initialization
     void Start()
     {
-      Debug.Log(System.IO.Directory.GetCurrentDirectory());
-      foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
-      {
-        if(Path.GetExtension(file) == ".json")
-          CreateCity(Constants.CITY_PREFAB_PATH,  File.ReadAllText(file));
-      }
+        dGame = new DGame();
+
+        // Start off at the country view
+        countryView = Instantiate(CountryViewUIPrefab, UICanvas.transform);
+        CountryMap countryMap = countryView.GetComponent<CountryMap>();
+
+        // Get all cities
+        foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
+        {
+            if (Path.GetExtension(file) == ".json")
+            {
+                var cityJSON = JSON.Parse(File.ReadAllText(file));
+                
+                countryMap.SpawnCityNode(
+                    cityJSON["name"],
+                    new Vector3(cityJSON["position"]["x"],cityJSON["position"]["y"], -1),
+                    new List<string>(cityJSON["edges"].AsArray));
+            }
+        }
     }
 
     void Update()
     {
 
+    }
+
+    public void SelectCity(string cityName)
+    {
+        CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"\" + cityName.ToLower() + ".json"));
+        dGame.SelectCity(cityName);
+
+        // Spawn City UI
+        cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
+
+        // Disable Country View
+        countryView.SetActive(false);
     }
 
     public void EndTurnButtonCallback()
@@ -32,8 +63,6 @@ public class GameController : MonoBehaviour
 
     public CityController CreateCity(string prefabPath, string json)
     {
-      Debug.Log(json);
-
         var cityJson = JSON.Parse(json);
         CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH);
         cityController.ConnectToDataEngine(dGame, cityJson["name"]);
@@ -74,11 +103,12 @@ public class GameController : MonoBehaviour
             DResource r = DResource.Create(resource["name"], resource["amount"]);
             cityController.dCity.AddResource(r);
         }
+
         // MAP OF CANADA STUFF
-          List<string> edges = new List<string>();
-          int i = 0;
-          foreach(JSONNode edge in cityJson["edges"].AsArray) edges.Add(edge);
-          cityController.dCity.setEdges(edges);
+        List<string> edges = new List<string>();
+        foreach (JSONNode edge in cityJson["edges"].AsArray) edges.Add(edge);
+        cityController.dCity.setEdges(edges);
+
         //TODO: Remove this
         CreateMeeple(cityJson["name"]);
 
