@@ -6,6 +6,7 @@ using SimpleJSON;
 public class GameController : MonoBehaviour
 {
     public DGame dGame = new DGame();
+    public bool activeCity = false;
 
 
     // Initialization
