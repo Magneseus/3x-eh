@@ -17,8 +17,7 @@ public class DCity : TurnUpdatable
     private int age;
     private string name;
     //map of canada vars
-    private Vector2 mapLocation;
-    private string[] edges;
+    // private List<string> edges;
 
     public DCity(string cityName, CityController cityController, List<string> linkedCityKeys = null)
     {
@@ -103,14 +102,14 @@ public class DCity : TurnUpdatable
 
     }
     // map of canada methods
-    public Vector2 MapLocation
+    // public Vector2 MapLocation
+    // {
+    //     get{ return mapLocation;}
+    //     set{  mapLocation = value;}
+    // }
+    public void setEdges(List<string> s)
     {
-        get{ return mapLocation;}
-        set{  mapLocation = value;}
-    }
-    public void setEdges(string[] s)
-    {
-      edges = s;
+      linkedCityKeys = s;
     }
 
     public void linkToCity(string cityKey)

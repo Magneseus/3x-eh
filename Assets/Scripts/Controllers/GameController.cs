@@ -68,9 +68,9 @@ public class GameController : MonoBehaviour
             cityController.dCity.AddResource(r);
         }
         // MAP OF CANADA STUFF
-          string[] edges = new string[cityJson["edges"].AsArray.Count];
+          List<string> edges = new List<string>();
           int i = 0;
-          foreach(JSONNode edge in cityJson["edges"].AsArray) edges[i++] = edge;
+          foreach(JSONNode edge in cityJson["edges"].AsArray) edges.Add(edge);
           cityController.dCity.setEdges(edges);
         //TODO: Remove this
         CreateMeeple(cityJson["name"]);
