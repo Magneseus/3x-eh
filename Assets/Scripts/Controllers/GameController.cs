@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
-
+using System.IO;
 public class GameController : MonoBehaviour
 {
     public DGame dGame = new DGame();
@@ -12,7 +12,12 @@ public class GameController : MonoBehaviour
     // Initialization
     void Start()
     {
-        CreateCity(Constants.OTTAWA_PREFAB_PATH, Constants.OTTAWA_JSON_PATH);
+      Debug.Log(System.IO.Directory.GetCurrentDirectory());
+      foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
+      {
+        if(Path.GetExtension(file) == ".json")
+          CreateCity(Constants.CITY_PREFAB_PATH,  File.ReadAllText(file));
+      }
     }
 
     void Update()
@@ -25,11 +30,12 @@ public class GameController : MonoBehaviour
         dGame.EndTurnUpdate();
     }
 
-    public CityController CreateCity(string prefabPath, string jsonPath)
+    public CityController CreateCity(string prefabPath, string json)
     {
-        var cityJson = JSON.Parse(Resources.Load<TextAsset>(jsonPath).text);
+      Debug.Log(json);
 
-        CityController cityController = InstantiatePrefab<CityController>(Constants.OTTAWA_PREFAB_PATH);
+        var cityJson = JSON.Parse(json);
+        CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH);
         cityController.ConnectToDataEngine(dGame, cityJson["name"]);
 
         // Load in all buildings for the city
