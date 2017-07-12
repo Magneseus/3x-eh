@@ -20,7 +20,7 @@ public class CityController : MonoBehaviour {
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
       GetComponent<SpriteRenderer>().sprite =
-      Resources.Load(Constants.CITY_SPRITE_PATH + cityName) as Sprite;
+      Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + cityName);
         dCity = new DCity(cityName, this);
         dGame.Cities.Add(cityName, dCity);
     }
