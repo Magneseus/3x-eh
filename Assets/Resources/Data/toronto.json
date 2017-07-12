@@ -84,8 +84,11 @@
     }
   ],
   "edges":[
-    {
-      "name":"Ottawa"
-    }
-  ]
+    "Ottawa",
+    "Montreal"
+  ],
+  "position": {
+    "x": 209,
+    "y": -324
+  }
 }

@@ -84,8 +84,11 @@
     }
   ],
   "edges":[
-    {
-      "name":"Toronto"
-    }
-  ]
+    "Toronto",
+    "Montreal"
+  ],
+  "position": {
+    "x": 245,
+    "y": -294
+  }
 }
