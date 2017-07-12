@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212750251161145158}
   - component: {fileID: 114241623631770508}
   m_Layer: 0
-  m_Name: City
+  m_Name: Ottawa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,7 +52,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43565c1872d5ecd418dc16342a767315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
 --- !u!212 &212750251161145158
 SpriteRenderer:
   m_ObjectHideFlags: 1
