@@ -46,7 +46,7 @@ public class GameController : MonoBehaviour
 
     public void SelectCity(string cityName)
     {
-        CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"\" + cityName.ToLower() + ".json"));
+        CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
         dGame.SelectCity(cityName);
 
         // Spawn City UI
