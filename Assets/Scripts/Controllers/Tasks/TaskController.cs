@@ -95,18 +95,26 @@ public class TaskController : MonoBehaviour {
                     ((float)(i) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) * 
                     TaskTraySingle.WIDTH_CONST;
 
-                GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);
-
+                GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);                
                 Vector3 currentPosition = go.transform.position;
                 currentPosition.x += xOffset;
                 go.transform.position = currentPosition;
 
                 // Set the parent TaskController
                 go.GetComponent<TaskTraySingle>().taskController = this;
+                go.GetComponent<TaskTraySingle>().UpdateSprite();
 
                 listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
             }
         }
+    }
+
+    internal void UpdateSprite()
+    {
+        foreach(var entry in listOfTraySingles)
+        {
+            entry.UpdateSprite();
+        }       
     }
 
     internal void ConnectToDataEngine(DTask dTask)
