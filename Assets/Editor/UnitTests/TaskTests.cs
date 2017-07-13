@@ -1,18 +1,16 @@
 ﻿using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Editor.UnitTests;
 
 public class TaskTests
 {
     private string CITY_NAME = "Test City";
 
-    private List<GameObject> mockObjects = new List<GameObject>();
-
     [TearDown]
     public void TearDown()
     {
-        foreach (var entry in mockObjects)
-            Object.DestroyImmediate(entry);
+        Mock.TearDown();
     }
 
     [Test]
@@ -25,8 +23,8 @@ public class TaskTests
     public void InitializesDefaultValues()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 3, "test name");
 
         Assert.That(task.Name, Is.EqualTo("test name"));
@@ -51,11 +49,11 @@ public class TaskTests
     public void TaskAddAndRemovePerson()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
-        var person = new DPerson(city, Mock<MeepleController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
 
         Assert.That(person.Task, Is.Null);
 
@@ -72,11 +70,11 @@ public class TaskTests
     public void TaskVerifyPersonNotFoundException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
-        var person = new DPerson(city, Mock<MeepleController>());
-        var person2 = new DPerson(city, Mock<MeepleController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
+        var person2 = new DPerson(city, Mock.Component<MeepleController>());
 
         task.AddPerson(person);
         task.RemovePerson(person);
@@ -96,10 +94,10 @@ public class TaskTests
     public void TaskVerifyPersonAlreadyAddedException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
-        var person = new DPerson(city, Mock<MeepleController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
 
         task.AddPerson(person);
 
@@ -113,11 +111,11 @@ public class TaskTests
     public void TaskVerifyTaskFullException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "temp");
-        var person = new DPerson(city, Mock<MeepleController>());
-        var person2 = new DPerson(city, Mock<MeepleController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
+        var person2 = new DPerson(city, Mock.Component<MeepleController>());
 
         task.AddPerson(person);
 
@@ -133,8 +131,8 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
         task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
@@ -149,8 +147,8 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
         task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
@@ -164,8 +162,8 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
         task.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
@@ -184,8 +182,8 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG * -2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
         task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
@@ -199,8 +197,8 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG * 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
         task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
@@ -215,8 +213,8 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG * -2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
         task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG / 2;
@@ -229,19 +227,12 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG * 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
         task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
         task.Repair(amount);
         Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MIN_FUNGAL_DMG));
-    }
-
-    private T Mock<T>() where T : Component
-    {
-        var mockObj = new GameObject();
-        mockObjects.Add(mockObj);
-        return mockObj.AddComponent<T>().GetComponent<T>();
     }
 }

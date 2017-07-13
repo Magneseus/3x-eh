@@ -44,11 +44,13 @@ public class DTask : TurnUpdatable
 
     public virtual void TurnUpdate(int numDaysPassed)
     {
-        if (listOfPeople.Count > 0)
+        for (int i=0; i<listOfPeople.Count; i++)
         {
-            // TODO: Make this into a exponential scale or something
-            if(structuralDamage >= 1.0f) EnableTask();
-            for (int i = 0; i < listOfPeople.Count; ++i)
+            if (Infected)
+                Repair(Constants.TEMP_REPAIR_AMOUNT);
+            else if (Damaged)
+                Repair(Constants.TEMP_REPAIR_AMOUNT);
+            else
                 building.OutputResource(output);
         }
     }

@@ -2,6 +2,7 @@
 using NSubstitute;
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Editor.UnitTests;
 
 public class BuildingTests
 {
@@ -9,14 +10,11 @@ public class BuildingTests
     private static string BUILDING_NAME = "Test Building";
     private static string RESOURCE_NAME = "Test Resource";
     private static int RESOURCE_START_AMOUNT = 3;
-
-    private List<GameObject> mockObjects = new List<GameObject>();
-
+    
     [TearDown]
     public void TearDown()
     {
-        foreach(var entry in mockObjects)
-            Object.DestroyImmediate(entry);
+        Mock.TearDown();
     }
 
     [Test]
@@ -28,8 +26,8 @@ public class BuildingTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
 
         Assert.That(building.City.Name, Is.EqualTo(city.Name));
         Assert.That(building.Tasks.Count, Is.EqualTo(0));
@@ -40,8 +38,8 @@ public class BuildingTests
     public void NameOverride()
     {
         var newName = "Test123";
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>())
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>())
         {
            Name = newName
         };
@@ -54,8 +52,8 @@ public class BuildingTests
     public void AddTask()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
 
         Assert.That(building.Tasks.Count, Is.EqualTo(0));
 
@@ -69,8 +67,8 @@ public class BuildingTests
     public void AddTaskTwice()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
         Assert.Throws<TaskAlreadyAddedException>(() =>
@@ -83,10 +81,10 @@ public class BuildingTests
     public void PassesTaskOutputToCity()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        var task = new DTask(building, resource);
-        var person = new DPerson(city, Mock<MeepleController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = Mock.CleanTask(building, resource);
+        var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
@@ -100,10 +98,10 @@ public class BuildingTests
     public void DisablingTasks()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        var task = new DTask(building, resource);
-        var person = new DPerson(city, Mock<MeepleController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = Mock.CleanTask(building, resource);
+        var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
@@ -144,11 +142,4 @@ public class BuildingTests
 
     }
     #endregion
-
-    private T Mock<T>() where T : Component
-    {
-        var mockObj = new GameObject();
-        mockObjects.Add(mockObj);
-        return mockObj.AddComponent<T>().GetComponent<T>();
-    }
 }

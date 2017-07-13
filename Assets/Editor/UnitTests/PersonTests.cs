@@ -1,18 +1,16 @@
 ﻿using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Editor.UnitTests;
 
 public class PersonTests
 {
     private string CITY_NAME = "Test City";
 
-    private List<GameObject> mockObjects = new List<GameObject>();
-
     [TearDown]
     public void TearDown()
     {
-        foreach (var entry in mockObjects)
-            Object.DestroyImmediate(entry);
+        Mock.TearDown();
     }
 
     [Test]
@@ -24,8 +22,8 @@ public class PersonTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var person = new DPerson(city, Mock<MeepleController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
 
         Assert.That(person.City, Is.EqualTo(city));
         Assert.That(city.People[person.ID], Is.EqualTo(person));        
@@ -35,11 +33,11 @@ public class PersonTests
     public void PersonSetAndRemoveTask()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
-        var person = new DPerson(city, Mock<MeepleController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
         Assert.That(person.Task, Is.Null);
 
         person.SetTask(task);
@@ -56,12 +54,12 @@ public class PersonTests
     {
         var resource = DResource.Create("Test Resource", 1);
         var resource2 = DResource.Create("Test Resource 2", 2);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
         var task2 = new DTask(building, resource2);
 
-        var person = new DPerson(city, Mock<MeepleController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
         Assert.That(person.Task, Is.EqualTo(task));
         Assert.That(task.ListOfPeople.Contains(person), Is.True);
@@ -76,11 +74,11 @@ public class PersonTests
     public void PersonVerifyTaskNotFoundException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
-        var person = new DPerson(city, Mock<MeepleController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
         person.RemoveTask(task);
 
@@ -88,12 +86,5 @@ public class PersonTests
         {
             person.RemoveTask(task);
         });
-    }
-
-    private T Mock<T>() where T : Component
-    {
-        var mockObj = new GameObject();
-        mockObjects.Add(mockObj);
-        return mockObj.AddComponent<T>().GetComponent<T>();
-    }
+    }    
 }

@@ -2,19 +2,17 @@
 using NSubstitute;
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Editor.UnitTests;
 
 public class GameManagerTests
 {
-    private List<GameObject> mockObjects = new List<GameObject>();
-
     private string CITY_NAME = "Test City";
     private string LINKED_CITY_NAME = "Linked City";
 
     [TearDown]
     public void TearDown()
     {
-        foreach (var entry in mockObjects)
-            Object.DestroyImmediate(entry);
+        Mock.TearDown();
     }
 
     [Test]
@@ -51,7 +49,7 @@ public class GameManagerTests
     public void AddCityTest()
     {
         var game = new DGame();
-        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
         
         Assert.That(game.Cities.Count, Is.EqualTo(0));
 
@@ -63,8 +61,8 @@ public class GameManagerTests
     public void LinkCities()
     {
         var game = new DGame();
-        DCity city = new DCity(CITY_NAME, Mock<CityController>());
-        DCity linkedCity = new DCity(LINKED_CITY_NAME, Mock<CityController>());
+        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        DCity linkedCity = new DCity(LINKED_CITY_NAME, Mock.Component<CityController>());
 
         game.AddCity(city);
         game.AddCity(linkedCity);
@@ -72,12 +70,5 @@ public class GameManagerTests
 
         Assert.True(city.isLinkedTo(LINKED_CITY_NAME));
         Assert.True(linkedCity.isLinkedTo(CITY_NAME));
-    }
-
-    private T Mock<T>() where T : Component
-    {
-        var mockObj = new GameObject();
-        mockObjects.Add(mockObj);
-        return mockObj.AddComponent<T>().GetComponent<T>();
-    }
+    }    
 }
