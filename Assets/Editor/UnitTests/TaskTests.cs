@@ -136,7 +136,8 @@ public class TaskTests
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
-        
+
+        task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
         task.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
         task.Repair(amount);
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_STRUCTURAL_DMG - amount));
@@ -187,6 +188,7 @@ public class TaskTests
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
 
+        task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
         task.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG / 2;
         task.Repair(amount);
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_STRUCTURAL_DMG));
@@ -201,6 +203,7 @@ public class TaskTests
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
 
+        task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
         task.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
         task.Repair(amount);
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MIN_STRUCTURAL_DMG));
@@ -216,9 +219,9 @@ public class TaskTests
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
 
-        task.LevelDamaged = Constants.TASK_MAX_FUNGAL_DMG / 2;
+        task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG / 2;
         task.Repair(amount);
-        Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_FUNGAL_DMG));
+        Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MAX_FUNGAL_DMG));
     }
     [Test]
     public void InfectionIsClampedMin()
@@ -230,9 +233,9 @@ public class TaskTests
         var building = new DBuilding(city, "Test Building", Mock<BuildingController>());
         var task = new DTask(building, resource);
 
-        task.LevelDamaged = Constants.TASK_MAX_FUNGAL_DMG;
+        task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
         task.Repair(amount);
-        Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MIN_FUNGAL_DMG));
+        Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MIN_FUNGAL_DMG));
     }
 
     private T Mock<T>() where T : Component

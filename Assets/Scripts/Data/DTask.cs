@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
@@ -31,8 +30,9 @@ public class DTask : TurnUpdatable
         output = dOutput;
         maxPeople = dMaxPeople;
 
-        structuralDamage = Constants.TASK_MIN_STRUCTURAL_DMG;
-        fungalDamage = Constants.TASK_MIN_FUNGAL_DMG;
+        
+        structuralDamage = Random.Range(Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG);
+        fungalDamage = Random.Range(Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
 
         taskEnabled = true;
         dBuilding.AddTask(this);
@@ -182,7 +182,7 @@ public class DTask : TurnUpdatable
 
 #region Exceptions
 
-public class TaskFullException : Exception
+public class TaskFullException : System.Exception
 {
     public TaskFullException()
     {
@@ -192,7 +192,7 @@ public class TaskFullException : Exception
     {
     }
 
-    public TaskFullException(string message, Exception innerException) : base(message, innerException)
+    public TaskFullException(string message, System.Exception innerException) : base(message, innerException)
     {
     }
 
