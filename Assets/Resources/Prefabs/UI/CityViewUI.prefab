@@ -231,6 +231,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: End Turn
+--- !u!114 &114100072502327958
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1151925998157584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd15f14031b3b148b6d23894a9e0173, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114140856578958518
 MonoBehaviour:
   m_ObjectHideFlags: 1

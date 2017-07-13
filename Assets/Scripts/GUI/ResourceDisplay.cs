@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResourceDisplayController : MonoBehaviour {
+public class ResourceDisplay : MonoBehaviour {
     public Text Population;
     public Text Food;
     public Text Fuel;
