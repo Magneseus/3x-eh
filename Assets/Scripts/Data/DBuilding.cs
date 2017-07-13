@@ -12,7 +12,7 @@ public class DBuilding : TurnUpdatable {
     private int id;
     private DCity city;
     private String buildingName;
-    private Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
+    public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
 
     public enum BuildingStatus
     {
@@ -23,8 +23,7 @@ public class DBuilding : TurnUpdatable {
     };
     private BuildingStatus status;
     private float levelAssessed;
-    private float levelReclaimed;
-
+    public float LevelReclaimed;
     public DBuilding(DCity city, string buildingName, BuildingController buildingController)
     {
         this.id = NEXT_ID++;
@@ -34,7 +33,6 @@ public class DBuilding : TurnUpdatable {
 
         status = BuildingStatus.UNDISCOVERED;
         levelAssessed = 0.1f;
-        levelReclaimed = 0.1f;
 
         city.AddBuilding(this);
     }
@@ -42,11 +40,17 @@ public class DBuilding : TurnUpdatable {
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
+      int numTasks =0;
+      float rawReclaimed=0.0f;
         foreach (var entry in tasks)
         {
+          //calculate reclaimed %
+          rawReclaimed += entry.Value.LevelReclaimed;
+          numTasks++;
             if (entry.Value.Enabled)
                 entry.Value.TurnUpdate(numDaysPassed);
         }
+        LevelReclaimed = rawReclaimed/numTasks;
     }
 
     public DTask GetTask(int id)
@@ -123,17 +127,13 @@ public class DBuilding : TurnUpdatable {
 
     public void Reclaim(float amount)
     {
-        if (IsOnlyAssessed())
-            status = BuildingStatus.RECLAIMED;
-        if (IsAssessed())
-            IncreaseReclaimed(amount);
+        // if (IsOnlyAssessed())
+        //     status = BuildingStatus.RECLAIMED;
+        // if (IsAssessed())
+        //     IncreaseReclaimed(amount);
     }
 
-    private void IncreaseReclaimed(float amount)
-    {
-        if (levelReclaimed < 1.0f)
-            levelReclaimed = Mathf.Clamp01(levelReclaimed + amount);
-    }
+
 
     public float LevelAssessed
     {
@@ -141,11 +141,7 @@ public class DBuilding : TurnUpdatable {
         set { levelAssessed = Mathf.Clamp01(value); }      // should only be used for dev, increase with Assess()
     }
 
-    public float LevelReclaimed
-    {
-        get { return levelReclaimed; }
-        set { levelReclaimed = Mathf.Clamp01(value); }     // should only be used for dev, increase with Reclaim()
-    }
+
 
     public BuildingStatus Status
     {
@@ -176,7 +172,7 @@ public class DBuilding : TurnUpdatable {
 
     public bool IsAssessed()
     {
-        if (IsOnlyAssessed() || IsReclaimed())
+        if (IsOnlyAssessed() )
             return true;
         return false;
     }
@@ -188,12 +184,7 @@ public class DBuilding : TurnUpdatable {
         return false;
     }
 
-    public bool IsReclaimed()
-    {
-        if (status == BuildingStatus.RECLAIMED)
-            return true;
-        return false;
-    }
+
     #endregion
 }
 

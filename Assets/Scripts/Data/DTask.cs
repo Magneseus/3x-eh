@@ -16,6 +16,9 @@ public class DTask : TurnUpdatable
     protected List<DPerson> listOfPeople;
     protected DResource output;
     protected bool taskEnabled;
+    protected bool reclaimed;
+    private float levelReclaimed;
+
 
     public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName)
     {
@@ -27,6 +30,7 @@ public class DTask : TurnUpdatable
 
         listOfPeople = new List<DPerson>();
         taskEnabled = true;
+        levelReclaimed = 0.1f;
 
         dBuilding.AddTask(this);
     }
@@ -40,6 +44,7 @@ public class DTask : TurnUpdatable
         if (listOfPeople.Count > 0)
         {
             // TODO: Make this into a exponential scale or something
+            if(levelReclaimed >= 1.0f) EnableTask();
             for (int i = 0; i < listOfPeople.Count; ++i)
                 building.OutputResource(output);
         }
@@ -95,9 +100,21 @@ public class DTask : TurnUpdatable
         // Disable task
         taskEnabled = false;
     }
-
+    public void IncreaseReclaimed(float amount)
+    {
+        if (levelReclaimed < 1.0f)
+            levelReclaimed = Mathf.Clamp01(levelReclaimed + amount);
+    }
     #region Accessors
-
+    public float LevelReclaimed
+    {
+        get { return levelReclaimed; }
+        set { levelReclaimed = Mathf.Clamp01(value); }     // should only be used for dev, increase with Reclaim()
+    }
+    public bool IsReclaimed()
+    {
+        return reclaimed;
+    }
     public int MaxPeople
     {
         get { return maxPeople; }

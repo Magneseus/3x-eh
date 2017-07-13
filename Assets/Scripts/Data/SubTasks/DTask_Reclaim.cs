@@ -20,12 +20,26 @@ public class DTask_Reclaim : DTask
         if (listOfPeople.Count > 0)
         {
             // TODO: Make this into a exponential scale or something
-            for (int i = 0; i < listOfPeople.Count; ++i)
-                building.Reclaim(0.1f);
+            // for (int i = 0; i < listOfPeople.Count; ++i)
+                foreach (var task in building.tasks)
+                {
+                  if (task.Value.IsReclaimed())
+                  {
+                    continue;
+                  }else{
+                    task.Value.IncreaseReclaimed(reclaimAmount);
+                    // if(building.tasks.GetLast().equals (task) && task.Value.IsReclaimed())
+                      // DisableTask();
+                    break;
+                  }
+                  //didnt reclaim anything (everythings done)
+                  DisableTask();
+              }
+                // building.Reclaim(0.1f);
         }
 
         // Check if we've fully reclaimed the building, and if so disable task
-        if (building.IsReclaimed())
+        if (building.LevelReclaimed >=1.0f)
         {
             DisableTask();
         }

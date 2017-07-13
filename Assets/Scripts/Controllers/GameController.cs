@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour
             if (Path.GetExtension(file) == ".json")
             {
                 var cityJSON = JSON.Parse(File.ReadAllText(file));
-                
+
                 countryMap.SpawnCityNode(
                     cityJSON["name"],
                     new Vector3(cityJSON["position"]["x"],cityJSON["position"]["y"], -1),
@@ -46,7 +46,8 @@ public class GameController : MonoBehaviour
 
     public void SelectCity(string cityName)
     {
-        CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"\" + cityName.ToLower() + ".json"));
+      // Debug.Log(Path.DirectorySeparatorChar);
+        CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
         dGame.SelectCity(cityName);
 
         // Spawn City UI
