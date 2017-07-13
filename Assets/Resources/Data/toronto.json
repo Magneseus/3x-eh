@@ -1,5 +1,5 @@
 {
-  "name": "Ottawa",
+  "name": "Toronto",
   "buildings": [
     {
       "name": "Town Hall",
@@ -84,11 +84,11 @@
     }
   ],
   "edges":[
-    "Toronto",
+    "Ottawa",
     "Montreal"
   ],
   "position": {
-    "x": 245,
-    "y": -294
+    "x": 209,
+    "y": -324
   }
 }

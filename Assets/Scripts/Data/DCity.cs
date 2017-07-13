@@ -8,19 +8,36 @@ using UnityEngine;
 public class DCity : TurnUpdatable
 {
     private CityController cityController;
-        
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
     private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
-    
+    //private Dictionary<int, DCity> linkedCityKeys = new Dictionary<int, DCity>();
+    private List<string> linkedCityKeys = new List<string>();
+
     private int age;
     private string name;
-        
-    public DCity(string cityName, CityController cityController)
-    {        
+    //map of canada vars
+    // private List<string> edges;
+
+    public DCity(string cityName, CityController cityController, List<string> linkedCityKeys = null)
+    {
         name = cityName;
         this.cityController = cityController;
         age = 0;
+
+        if (linkedCityKeys == null)
+        {
+            this.linkedCityKeys = new List<string>();
+        }
+        else
+        {
+            this.linkedCityKeys = new List<string>();
+
+            foreach (string cityKey in linkedCityKeys)
+            {
+                this.linkedCityKeys.Add(cityKey);
+            }
+        }
     }
 
     public void AddBuilding(DBuilding dBuilding)
@@ -37,15 +54,15 @@ public class DCity : TurnUpdatable
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
-    {        
-        foreach (var entry in buildings)        
+    {
+        foreach (var entry in buildings)
             entry.Value.TurnUpdate(numDaysPassed);
 
         foreach (var entry in resources)
             entry.Value.TurnUpdate(numDaysPassed);
 
         foreach (var entry in people)
-            entry.Value.TurnUpdate(numDaysPassed);        
+            entry.Value.TurnUpdate(numDaysPassed);
 
         age += numDaysPassed;
     }
@@ -56,7 +73,7 @@ public class DCity : TurnUpdatable
         {
             throw new PersonAlreadyAddedException(string.Format("Person already added to city"));
         }
-            people.Add(dPerson.ID, dPerson);                
+            people.Add(dPerson.ID, dPerson);
     }
 
     public void AddResource(DResource resource)
@@ -95,7 +112,34 @@ public class DCity : TurnUpdatable
             AddResource(DResource.Create(name));
             return resources[resourceID];
         }
-        
+
+    }
+    // map of canada methods
+    // public Vector2 MapLocation
+    // {
+    //     get{ return mapLocation;}
+    //     set{  mapLocation = value;}
+    // }
+    public void setEdges(List<string> s)
+    {
+      linkedCityKeys = s;
+    }
+
+    public void linkToCity(string cityKey)
+    {
+        if (!linkedCityKeys.Contains(cityKey))
+            linkedCityKeys.Add(cityKey);
+    }
+
+    public IEnumerable<string> getAllLinkedCityKeys()
+    {
+        foreach (string key in linkedCityKeys)
+            yield return key;
+    }
+
+    public bool isLinkedTo(string cityKey)
+    {
+        return linkedCityKeys.Contains(cityKey);
     }
 
     #region Properties
@@ -114,11 +158,17 @@ public class DCity : TurnUpdatable
         get { return people; }
     }
 
+    public List<string> LinkedCityKeys
+    {
+        get { return linkedCityKeys; }
+        set { linkedCityKeys = value; }
+    }
+
     public string Name
     {
         get { return name; }
         set { name = value; }
-    }   
+    }
 
     public int Age
     {
@@ -127,7 +177,7 @@ public class DCity : TurnUpdatable
 
     public CityController CityController
     {
-        get { return cityController; }        
+        get { return cityController; }
     }
     #endregion
 }

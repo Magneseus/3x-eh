@@ -17,7 +17,7 @@ public class DBuilding : TurnUpdatable {
     public enum BuildingStatus
     {
       UNDISCOVERED,
-      DISCOVERED, 
+      DISCOVERED,
       ASSESSED,
       RECLAIMED
     };

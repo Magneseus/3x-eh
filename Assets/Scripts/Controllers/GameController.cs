@@ -2,16 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
+using System.IO;
 
 public class GameController : MonoBehaviour
 {
-    public DGame dGame = new DGame();
+    public DGame dGame;
 
+    public GameObject UICanvas;
+    public GameObject CountryViewUIPrefab;
+    public GameObject CityViewUIPrefab;
+
+    private GameObject countryView;
+    private GameObject cityView;
 
     // Initialization
     void Start()
-    {        
-        CreateCity(Constants.OTTAWA_PREFAB_PATH, Constants.OTTAWA_JSON_PATH);
+    {
+        dGame = new DGame();
+
+        // Start off at the country view
+        countryView = Instantiate(CountryViewUIPrefab, UICanvas.transform);
+        CountryMap countryMap = countryView.GetComponent<CountryMap>();
+
+        // Get all cities
+        foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
+        {
+            if (Path.GetExtension(file) == ".json")
+            {
+                var cityJSON = JSON.Parse(File.ReadAllText(file));
+                List<string> edges = new List<string>();
+                for(int i=0; i< cityJSON["edges"].AsArray.Count; i++)
+                {
+                   edges.Add((cityJSON["edges"].AsArray[i]));
+                }
+                countryMap.SpawnCityNode(
+                    cityJSON["name"],
+                    new Vector3(cityJSON["position"]["x"],cityJSON["position"]["y"], -1),
+                    edges);
+
+            }
+        }
+        countryMap.SpawnEdges();
     }
 
     void Update()
@@ -19,18 +50,29 @@ public class GameController : MonoBehaviour
 
     }
 
+    public void SelectCity(string cityName)
+    {
+        CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
+        dGame.SelectCity(cityName);
+
+        // Spawn City UI
+        cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
+
+        // Disable Country View
+        countryView.SetActive(false);
+    }
+
     public void EndTurnButtonCallback()
     {
         dGame.EndTurnUpdate();
     }
 
-    public CityController CreateCity(string prefabPath, string jsonPath)
+    public CityController CreateCity(string prefabPath, string json)
     {
-        var cityJson = JSON.Parse(Resources.Load<TextAsset>(jsonPath).text);
+        var cityJson = JSON.Parse(json);
+        CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH);
+        cityController.ConnectToDataEngine(dGame, cityJson["name"]);
 
-        CityController cityController = InstantiatePrefab<CityController>(Constants.OTTAWA_PREFAB_PATH);        
-        cityController.ConnectToDataEngine(dGame, cityJson["name"]);     
-        
         // Load in all buildings for the city
         foreach(JSONNode building in cityJson["buildings"].AsArray)
         {
@@ -53,9 +95,9 @@ public class GameController : MonoBehaviour
                     task["resource"]["amount"]);
 
                 DTask newTask = new DTask(
-                    bControl.dBuilding, 
-                    taskResource, 
-                    maxPeople, 
+                    bControl.dBuilding,
+                    taskResource,
+                    maxPeople,
                     taskName);
 
                 // Generate the task controller and attach it
@@ -68,6 +110,11 @@ public class GameController : MonoBehaviour
             cityController.dCity.AddResource(r);
         }
 
+        // MAP OF CANADA STUFF
+        List<string> edges = new List<string>();
+        foreach (JSONNode edge in cityJson["edges"].AsArray) edges.Add(edge);
+        cityController.dCity.setEdges(edges);
+
         //TODO: Remove this
         CreateMeeple(cityJson["name"]);
 
@@ -78,7 +125,7 @@ public class GameController : MonoBehaviour
     {
         BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH);
         buildingController.ConnectToDataEngine(dGame, cityName, buildingName);
-        
+
         buildingController.transform.position = position;
 
         return buildingController;
