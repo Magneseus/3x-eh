@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224465729376615778}
-  - component: {fileID: 114100072502327958}
+  - component: {fileID: 114416463090619292}
   m_Layer: 5
   m_Name: CityViewUI
   m_TagString: Untagged
@@ -370,6 +370,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnCounterText: {fileID: 0}
+--- !u!114 &114416463090619292
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1151925998157584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd15f14031b3b148b6d23894a9e0173, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114693662303183266
 MonoBehaviour:
   m_ObjectHideFlags: 1

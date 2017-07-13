@@ -51,7 +51,8 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
             Vector3 textPos =  this.transform.position;
             textPos.x += 0.5f;
             transform.Find("BuildingInfo").transform.position = textPos;
-            transform.Find("BuildingInfo").GetComponent<TextMesh>().text = "Status: " + dBuilding.Status +"\nAssessed: " + dBuilding.LevelAssessed +"\nReclaimed: " + dBuilding.LevelReclaimed;
+            string status = "Discovered";
+            transform.Find("BuildingInfo").GetComponent<TextMesh>().text = string.Format("Status: {0}\nDamaged: {1}\nInfected: {2}", status, dBuilding.LevelDamaged , dBuilding.LevelInfected);
 
             SetTaskControllerVisibility(true);
         }

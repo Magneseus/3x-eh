@@ -12,18 +12,10 @@ public class DBuilding : TurnUpdatable {
     private int id;
     private DCity city;
     private String buildingName;
-    private Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
+    public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
 
-    public enum BuildingStatus
-    {
-      UNDISCOVERED,
-      DISCOVERED,
-      ASSESSED,
-      RECLAIMED
-    };
-    private BuildingStatus status;
-    private float levelAssessed;
-    private float levelReclaimed;
+    private float percentInfected;
+    private float percentDamaged;
 
     public DBuilding(DCity city, string buildingName, BuildingController buildingController)
     {
@@ -31,22 +23,37 @@ public class DBuilding : TurnUpdatable {
         this.city = city;
         this.buildingName = buildingName;
         this.buildingController = buildingController;
-
-        status = BuildingStatus.UNDISCOVERED;
-        levelAssessed = 0.1f;
-        levelReclaimed = 0.1f;
-
+        
         city.AddBuilding(this);
     }
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
-    {
+    { 
         foreach (var entry in tasks)
-        {
+        {            
             if (entry.Value.Enabled)
                 entry.Value.TurnUpdate(numDaysPassed);
         }
+        CalculateDamages();        
+    }
+
+    private void CalculateDamages()
+    {
+        int numberOfTasks = 0;
+        float totalDamaged = 0.0f;
+        float totalInfected = 0.0f;
+
+        foreach (var entry in tasks)
+        {
+            //calculate %
+            totalDamaged += entry.Value.LevelDamaged;
+            totalInfected += entry.Value.LevelInfected;
+            numberOfTasks++;
+        }
+
+        percentInfected = totalInfected / numberOfTasks;
+        percentDamaged = totalDamaged / numberOfTasks;
     }
 
     public DTask GetTask(int id)
@@ -70,6 +77,7 @@ public class DBuilding : TurnUpdatable {
         else
         {
             tasks.Add(task.ID, task);
+            CalculateDamages();
         }
     }
 
@@ -99,100 +107,26 @@ public class DBuilding : TurnUpdatable {
         get { return id; }
     }
 
-    #region Assessment Components
+    #region Assessment Components   
 
-    public void Discover()
+    public float LevelDamaged
     {
-        if (IsUndiscovered())
-            status = BuildingStatus.DISCOVERED;
+        get { return percentDamaged; }        
     }
 
-    public void Assess(float amount)
+    public float LevelInfected
     {
-        if (IsOnlyDiscovered())
-            status = BuildingStatus.ASSESSED;
-        if (IsDiscovered())
-            IncreaseAssessment(amount);
+        get { return percentInfected; }
+    }   
+
+    public bool Damaged
+    {
+        get { return percentDamaged != 1.0f; }
     }
 
-    private void IncreaseAssessment(float amount)
+    public bool Infected
     {
-        if (levelAssessed < 1.0f)
-            levelAssessed = Mathf.Clamp01(levelAssessed + amount);
-    }
-
-    public void Reclaim(float amount)
-    {
-        if (IsOnlyAssessed())
-            status = BuildingStatus.RECLAIMED;
-        if (IsAssessed())
-            IncreaseReclaimed(amount);
-    }
-
-    private void IncreaseReclaimed(float amount)
-    {
-        if (levelReclaimed < 1.0f)
-            levelReclaimed = Mathf.Clamp01(levelReclaimed + amount);
-    }
-
-    public float LevelAssessed
-    {
-        get { return levelAssessed; }
-        set { levelAssessed = Mathf.Clamp01(value); }      // should only be used for dev, increase with Assess()
-    }
-
-    public float LevelReclaimed
-    {
-        get { return levelReclaimed; }
-        set { levelReclaimed = Mathf.Clamp01(value); }     // should only be used for dev, increase with Reclaim()
-    }
-
-    public BuildingStatus Status
-    {
-        get { return status; }
-        set { status = value; }
-    }
-
-    public bool IsUndiscovered()
-    {
-        if (status == BuildingStatus.UNDISCOVERED)
-            return true;
-        return false;
-    }
-
-    public bool IsDiscovered()
-    {
-        if (!IsUndiscovered())
-            return true;
-        return false;
-    }
-
-    public bool IsOnlyDiscovered()
-    {
-        if (status == BuildingStatus.DISCOVERED)
-            return true;
-        return false;
-    }
-
-    public bool IsAssessed()
-    {
-        if (IsOnlyAssessed() || IsReclaimed())
-            return true;
-        return false;
-    }
-
-    public bool IsOnlyAssessed()
-    {
-        if (status == BuildingStatus.ASSESSED)
-            return true;
-        return false;
-    }
-
-    public bool IsReclaimed()
-    {
-        if (status == BuildingStatus.RECLAIMED)
-            return true;
-        return false;
+        get { return percentInfected != 1.0f; }
     }
     #endregion
 }

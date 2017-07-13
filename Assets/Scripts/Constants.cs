@@ -15,4 +15,13 @@ public static class Constants {
     public static string MEEPLE_PREFAB_PATH = @"Prefabs/MeepleController";
 
     public static string CITY_JSON_PATH = @"Assets/Resources/Data";
+
+    #region Task Constants
+    public static float TEMP_REPAIR_AMOUNT = 0.2f;
+
+    public static float TASK_MIN_STRUCTURAL_DMG = 0.0f;
+    public static float TASK_MAX_STRUCTURAL_DMG = 1.0f;
+    public static float TASK_MIN_FUNGAL_DMG = 0.0f;
+    public static float TASK_MAX_FUNGAL_DMG = 1.0f;
+    #endregion
 }

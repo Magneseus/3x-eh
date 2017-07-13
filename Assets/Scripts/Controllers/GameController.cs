@@ -30,6 +30,7 @@ public class GameController : MonoBehaviour
             if (Path.GetExtension(file) == ".json")
             {
                 var cityJSON = JSON.Parse(File.ReadAllText(file));
+
                 List<string> edges = new List<string>();
                 for(int i=0; i< cityJSON["edges"].AsArray.Count; i++)
                 {
