@@ -31,15 +31,12 @@ public class DTask_Reclaim : DTask
                     // if(building.tasks.GetLast().equals (task) && task.Value.IsReclaimed())
                       // DisableTask();
                     break;
-                  }
-                  //didnt reclaim anything (everythings done)
-                  DisableTask();
+                  }                  
               }
-                // building.Reclaim(0.1f);
         }
 
         // Check if we've fully reclaimed the building, and if so disable task
-        if (building.LevelReclaimed >=1.0f)
+        if (building.LevelReclaimed >= Constants.BUILDING_MAX_RECLAIM)
         {
             DisableTask();
         }

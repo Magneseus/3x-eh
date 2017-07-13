@@ -121,136 +121,114 @@ public class BuildingTests
 
     #region Status Tests
     [Test]
-    public void Status()
+    public void BuildingStartsUndiscovered()
     {
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.UNDISCOVERED));
-
-        building.Status = DBuilding.BuildingStatus.ASSESSED;
-        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.ASSESSED));
+        Assert.That(building.Discovered, Is.False);
     }
 
     [Test]
-    public void BuildingStatusProgresses()
+    public void BuildingBecomesDiscovered()
     {
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+        Assert.That(building.Discovered, Is.False);
 
-        building.Discover();
-        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.DISCOVERED));
-
-        building.Assess(0.2f);
-        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.ASSESSED));
-
-        building.Reclaim(0.2f);
-        Assert.That(building.Status, Is.EqualTo(DBuilding.BuildingStatus.RECLAIMED));
-    }
-
-
-    #region Status Bool Tests
-    [Test]
-    public void IsUndiscovered()
-    {
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.IsUndiscovered(), Is.EqualTo(true));
-
-        building.Status = DBuilding.BuildingStatus.DISCOVERED;
-        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
-
-        building.Status = DBuilding.BuildingStatus.ASSESSED;
-        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
-
-        building.Status = DBuilding.BuildingStatus.RECLAIMED;
-        Assert.That(building.IsUndiscovered(), Is.EqualTo(false));
+        building.Assess(Constants.BUILDING_MAX_ASSESS / 2);
+        Assert.That(building.Discovered, Is.True);
     }
 
     [Test]
-    public void IsDiscovered()
+    public void BuildingBecomesUndiscovered()
     {
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.IsDiscovered(), Is.EqualTo(false));
+        Assert.That(building.Discovered, Is.False);
 
-        building.Status = DBuilding.BuildingStatus.DISCOVERED;
-        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+        building.Assess(Constants.BUILDING_MAX_ASSESS / 2);
+        Assert.That(building.Discovered, Is.True);
 
-        building.Status = DBuilding.BuildingStatus.ASSESSED;
-        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
-
-        building.Status = DBuilding.BuildingStatus.RECLAIMED;
-        Assert.That(building.IsDiscovered(), Is.EqualTo(true));
+        building.Assess((Constants.BUILDING_MAX_ASSESS / 2) * -1);
+        Assert.That(building.Discovered, Is.False);
     }
 
     [Test]
-    public void IsOnlyDiscovered()
+    public void BuildingCanBeAssessed()
     {
+        float increment = 0.2f;
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
 
-        building.Status = DBuilding.BuildingStatus.DISCOVERED;
-        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(true));
+        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS));
 
-        building.Status = DBuilding.BuildingStatus.ASSESSED;
-        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
-
-        building.Status = DBuilding.BuildingStatus.RECLAIMED;
-        Assert.That(building.IsOnlyDiscovered(), Is.EqualTo(false));
+        building.Assess(increment);
+        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS + increment));
     }
 
     [Test]
-    public void IsAssessed()
+    public void BuildingCannotBeAssessedBelowMinimum()
     {
+        float increment = -0.2f;
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.IsAssessed(), Is.EqualTo(false));
 
-        building.Status = DBuilding.BuildingStatus.DISCOVERED;
-        Assert.That(building.IsAssessed(), Is.EqualTo(false));
+        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS));
 
-        building.Status = DBuilding.BuildingStatus.ASSESSED;
-        Assert.That(building.IsAssessed(), Is.EqualTo(true));
-
-        building.Status = DBuilding.BuildingStatus.RECLAIMED;
-        Assert.That(building.IsAssessed(), Is.EqualTo(true));
+        building.Assess(increment);
+        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS));
     }
 
     [Test]
-    public void IsOnlyAssessed()
+    public void BuildingCannotBeAssessedAboveMaximum()
     {
+        float increment = Constants.BUILDING_MAX_ASSESS +  0.2f;
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
 
-        building.Status = DBuilding.BuildingStatus.DISCOVERED;
-        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS));
 
-        building.Status = DBuilding.BuildingStatus.ASSESSED;
-        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(true));
-
-        building.Status = DBuilding.BuildingStatus.RECLAIMED;
-        Assert.That(building.IsOnlyAssessed(), Is.EqualTo(false));
+        building.Assess(increment);
+        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MAX_ASSESS));
     }
 
     [Test]
-    public void IsReclaimed()
+    public void BuildingCanBeReclaimed()
     {
+        float increment = 0.2f;
         var city = new DCity(CITY_NAME, Mock<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        // Assert.That(building.IsReclaimed(), Is.EqualTo(false));
 
-        building.Status = DBuilding.BuildingStatus.DISCOVERED;
-        // Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM));
+        building.Reclaim(increment);
+        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM + increment));
+    }   
 
-        building.Status = DBuilding.BuildingStatus.ASSESSED;
-        // Assert.That(building.IsReclaimed(), Is.EqualTo(false));
+    [Test]
+    public void BuildingCannotBeReclaimedBelowMinimum()
+    {
+        float increment = -0.2f;
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
 
-        building.Status = DBuilding.BuildingStatus.RECLAIMED;
-        // Assert.That(building.IsReclaimed(), Is.EqualTo(true));
+        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM));
+
+        building.Reclaim(increment);
+        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM));
     }
-    #endregion
+
+    [Test]
+    public void BuildingCannotBeReclaimedAboveMaximum()
+    {
+        float increment = Constants.BUILDING_MAX_RECLAIM + 0.2f;
+        var city = new DCity(CITY_NAME, Mock<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
+
+        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM));
+
+        building.Reclaim(increment);
+        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MAX_RECLAIM));
+    }  
     #endregion
 
     private T Mock<T>() where T : Component

@@ -14,25 +14,19 @@ public class DBuilding : TurnUpdatable {
     private String buildingName;
     public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
 
-    public enum BuildingStatus
-    {
-      UNDISCOVERED,
-      DISCOVERED,
-      ASSESSED,
-      RECLAIMED
-    };
-    private BuildingStatus status;
+        
     private float levelAssessed;
-    public float LevelReclaimed;
+    private float levelReclaimed;
+
     public DBuilding(DCity city, string buildingName, BuildingController buildingController)
     {
         this.id = NEXT_ID++;
         this.city = city;
         this.buildingName = buildingName;
         this.buildingController = buildingController;
-
-        status = BuildingStatus.UNDISCOVERED;
-        levelAssessed = 0.1f;
+        
+        levelAssessed = Constants.BUILDING_MIN_ASSESS;
+        levelReclaimed = Constants.BUILDING_MIN_RECLAIM;
 
         city.AddBuilding(this);
     }
@@ -50,7 +44,7 @@ public class DBuilding : TurnUpdatable {
             if (entry.Value.Enabled)
                 entry.Value.TurnUpdate(numDaysPassed);
         }
-        LevelReclaimed = rawReclaimed/numTasks;
+        levelReclaimed = rawReclaimed/numTasks;
     }
 
     public DTask GetTask(int id)
@@ -104,87 +98,44 @@ public class DBuilding : TurnUpdatable {
     }
 
     #region Assessment Components
-
-    public void Discover()
-    {
-        if (IsUndiscovered())
-            status = BuildingStatus.DISCOVERED;
-    }
-
     public void Assess(float amount)
     {
-        if (IsOnlyDiscovered())
-            status = BuildingStatus.ASSESSED;
-        if (IsDiscovered())
-            IncreaseAssessment(amount);
-    }
-
-    private void IncreaseAssessment(float amount)
-    {
-        if (levelAssessed < 1.0f)
-            levelAssessed = Mathf.Clamp01(levelAssessed + amount);
+        levelAssessed += amount;
+        levelAssessed = Math.Max(Constants.BUILDING_MIN_ASSESS, levelAssessed);
+        levelAssessed = Math.Min(Constants.BUILDING_MAX_ASSESS, levelAssessed);
     }
 
     public void Reclaim(float amount)
     {
-        // if (IsOnlyAssessed())
-        //     status = BuildingStatus.RECLAIMED;
-        // if (IsAssessed())
-        //     IncreaseReclaimed(amount);
+        levelReclaimed += amount;
+        levelReclaimed = Math.Max(Constants.BUILDING_MIN_RECLAIM, levelReclaimed);
+        levelReclaimed = Math.Min(Constants.BUILDING_MAX_RECLAIM, levelReclaimed);
     }
-
-
 
     public float LevelAssessed
     {
-        get { return levelAssessed; }
-        set { levelAssessed = Mathf.Clamp01(value); }      // should only be used for dev, increase with Assess()
+        get { return levelAssessed; }        
     }
 
-
-
-    public BuildingStatus Status
+    public float LevelReclaimed
     {
-        get { return status; }
-        set { status = value; }
+        get { return levelReclaimed; }
     }
 
-    public bool IsUndiscovered()
+    public bool Discovered
     {
-        if (status == BuildingStatus.UNDISCOVERED)
-            return true;
-        return false;
+        get { return levelAssessed != Constants.BUILDING_MIN_ASSESS; }
     }
 
-    public bool IsDiscovered()
+    public bool Assessed
     {
-        if (!IsUndiscovered())
-            return true;
-        return false;
+        get { return levelAssessed == Constants.BUILDING_MAX_ASSESS; }
     }
 
-    public bool IsOnlyDiscovered()
+    public bool Reclaimed
     {
-        if (status == BuildingStatus.DISCOVERED)
-            return true;
-        return false;
+        get { return levelReclaimed == Constants.BUILDING_MAX_RECLAIM; }
     }
-
-    public bool IsAssessed()
-    {
-        if (IsOnlyAssessed() )
-            return true;
-        return false;
-    }
-
-    public bool IsOnlyAssessed()
-    {
-        if (status == BuildingStatus.ASSESSED)
-            return true;
-        return false;
-    }
-
-
     #endregion
 }
 

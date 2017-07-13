@@ -25,7 +25,7 @@ public class DTask_Assess : DTask
         }
 
         // Check if we've fully assessed the building, and if so disable task
-        if (building.IsAssessed())
+        if (building.Assessed)
         {
             DisableTask();
         }
