@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4729194207708882}
   - component: {fileID: 114489981260806758}
   m_Layer: 0
-  m_Name: GameManagerController
+  m_Name: GameController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,3 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 447074e70ddb24202b06bd6c592b37f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dGame: {}
+  UICanvas: {fileID: 0}
+  CountryViewUIPrefab: {fileID: 0}
+  CityViewUIPrefab: {fileID: 0}
