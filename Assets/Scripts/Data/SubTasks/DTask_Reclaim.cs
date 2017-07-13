@@ -17,29 +17,34 @@ public class DTask_Reclaim : DTask
 
     public override void TurnUpdate(int numDaysPassed)
     {
-        if (listOfPeople.Count > 0)
-        {
-            // TODO: Make this into a exponential scale or something
-            // for (int i = 0; i < listOfPeople.Count; ++i)
-                foreach (var task in building.tasks)
-                {
-                  if (task.Value.IsReclaimed())
-                  {
-                    continue;
-                  }else{
-                    task.Value.IncreaseReclaimed(reclaimAmount);
-                    // if(building.tasks.GetLast().equals (task) && task.Value.IsReclaimed())
-                      // DisableTask();
-                    break;
-                  }                  
-              }
-        }
+        // NOT IMPLEMENTED YET
 
-        // Check if we've fully reclaimed the building, and if so disable task
-        if (building.LevelReclaimed >= Constants.BUILDING_MAX_RECLAIM)
-        {
-            DisableTask();
-        }
+
+        //if (listOfPeople.Count > 0)
+        //{
+        //    TODO: Make this into a exponential scale or something
+        //     for (int i = 0; i < listOfPeople.Count; ++i)
+        //        foreach (var task in building.tasks)
+        //        {
+        //            if (task.Value.IsReclaimed())
+        //            {
+        //                continue;
+        //            }
+        //            else
+        //            {
+        //                task.Value.Repair(reclaimAmount);
+        //                if (building.tasks.GetLast().equals(task) && task.Value.IsReclaimed())
+        //                    DisableTask();
+        //                break;
+        //            }
+        //        }
+        //}
+
+        //Check if we've fully reclaimed the building, and if so disable task
+        //if (building.LevelReclaimed >= Constants.BUILDING_MAX_RECLAIM)
+        //{
+        //    DisableTask();
+        //}
     }
 
     #region Accessors

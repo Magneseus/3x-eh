@@ -14,9 +14,8 @@ public class DBuilding : TurnUpdatable {
     private String buildingName;
     public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
 
-        
-    private float levelAssessed;
-    private float levelReclaimed;
+    private float percentInfected;
+    private float percentDamaged;
 
     public DBuilding(DCity city, string buildingName, BuildingController buildingController)
     {
@@ -25,26 +24,36 @@ public class DBuilding : TurnUpdatable {
         this.buildingName = buildingName;
         this.buildingController = buildingController;
         
-        levelAssessed = Constants.BUILDING_MIN_ASSESS;
-        levelReclaimed = Constants.BUILDING_MIN_RECLAIM;
-
         city.AddBuilding(this);
     }
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
-    {
-      int numTasks =0;
-      float rawReclaimed=0.0f;
+    { 
         foreach (var entry in tasks)
-        {
-          //calculate reclaimed %
-          rawReclaimed += entry.Value.LevelReclaimed;
-          numTasks++;
+        {            
             if (entry.Value.Enabled)
                 entry.Value.TurnUpdate(numDaysPassed);
         }
-        levelReclaimed = rawReclaimed/numTasks;
+        CalculateDamages();        
+    }
+
+    private void CalculateDamages()
+    {
+        int numberOfTasks = 0;
+        float totalDamaged = 0.0f;
+        float totalInfected = 0.0f;
+
+        foreach (var entry in tasks)
+        {
+            //calculate %
+            totalDamaged += entry.Value.LevelDamaged;
+            totalInfected += entry.Value.LevelInfected;
+            numberOfTasks++;
+        }
+
+        percentInfected = totalInfected / numberOfTasks;
+        percentDamaged = totalDamaged / numberOfTasks;
     }
 
     public DTask GetTask(int id)
@@ -68,6 +77,7 @@ public class DBuilding : TurnUpdatable {
         else
         {
             tasks.Add(task.ID, task);
+            CalculateDamages();
         }
     }
 
@@ -97,44 +107,26 @@ public class DBuilding : TurnUpdatable {
         get { return id; }
     }
 
-    #region Assessment Components
-    public void Assess(float amount)
+    #region Assessment Components   
+
+    public float LevelDamaged
     {
-        levelAssessed += amount;
-        levelAssessed = Math.Max(Constants.BUILDING_MIN_ASSESS, levelAssessed);
-        levelAssessed = Math.Min(Constants.BUILDING_MAX_ASSESS, levelAssessed);
+        get { return percentDamaged; }        
     }
 
-    public void Reclaim(float amount)
+    public float LevelInfected
     {
-        levelReclaimed += amount;
-        levelReclaimed = Math.Max(Constants.BUILDING_MIN_RECLAIM, levelReclaimed);
-        levelReclaimed = Math.Min(Constants.BUILDING_MAX_RECLAIM, levelReclaimed);
+        get { return percentInfected; }
+    }   
+
+    public bool Damaged
+    {
+        get { return percentDamaged != 1.0f; }
     }
 
-    public float LevelAssessed
+    public bool Infected
     {
-        get { return levelAssessed; }        
-    }
-
-    public float LevelReclaimed
-    {
-        get { return levelReclaimed; }
-    }
-
-    public bool Discovered
-    {
-        get { return levelAssessed != Constants.BUILDING_MIN_ASSESS; }
-    }
-
-    public bool Assessed
-    {
-        get { return levelAssessed == Constants.BUILDING_MAX_ASSESS; }
-    }
-
-    public bool Reclaimed
-    {
-        get { return levelReclaimed == Constants.BUILDING_MAX_RECLAIM; }
+        get { return percentInfected != 1.0f; }
     }
     #endregion
 }

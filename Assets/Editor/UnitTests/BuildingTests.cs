@@ -119,116 +119,30 @@ public class BuildingTests
     }
     #endregion
 
-    #region Status Tests
+    #region Damage Tests
     [Test]
-    public void BuildingStartsUndiscovered()
+    public void Damaged()
     {
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.Discovered, Is.False);
+
     }
 
     [Test]
-    public void BuildingBecomesDiscovered()
+    public void Infected()
     {
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.Discovered, Is.False);
 
-        building.Assess(Constants.BUILDING_MAX_ASSESS / 2);
-        Assert.That(building.Discovered, Is.True);
     }
 
     [Test]
-    public void BuildingBecomesUndiscovered()
+    public void LevelDamaged()
     {
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-        Assert.That(building.Discovered, Is.False);
 
-        building.Assess(Constants.BUILDING_MAX_ASSESS / 2);
-        Assert.That(building.Discovered, Is.True);
-
-        building.Assess((Constants.BUILDING_MAX_ASSESS / 2) * -1);
-        Assert.That(building.Discovered, Is.False);
     }
 
     [Test]
-    public void BuildingCanBeAssessed()
+    public void LevelInfected()
     {
-        float increment = 0.2f;
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
 
-        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS));
-
-        building.Assess(increment);
-        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS + increment));
     }
-
-    [Test]
-    public void BuildingCannotBeAssessedBelowMinimum()
-    {
-        float increment = -0.2f;
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-
-        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS));
-
-        building.Assess(increment);
-        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS));
-    }
-
-    [Test]
-    public void BuildingCannotBeAssessedAboveMaximum()
-    {
-        float increment = Constants.BUILDING_MAX_ASSESS +  0.2f;
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-
-        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MIN_ASSESS));
-
-        building.Assess(increment);
-        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.BUILDING_MAX_ASSESS));
-    }
-
-    [Test]
-    public void BuildingCanBeReclaimed()
-    {
-        float increment = 0.2f;
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-
-        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM));
-        building.Reclaim(increment);
-        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM + increment));
-    }   
-
-    [Test]
-    public void BuildingCannotBeReclaimedBelowMinimum()
-    {
-        float increment = -0.2f;
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-
-        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM));
-
-        building.Reclaim(increment);
-        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM));
-    }
-
-    [Test]
-    public void BuildingCannotBeReclaimedAboveMaximum()
-    {
-        float increment = Constants.BUILDING_MAX_RECLAIM + 0.2f;
-        var city = new DCity(CITY_NAME, Mock<CityController>());
-        var building = new DBuilding(city, BUILDING_NAME, Mock<BuildingController>());
-
-        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MIN_RECLAIM));
-
-        building.Reclaim(increment);
-        Assert.That(building.LevelReclaimed, Is.EqualTo(Constants.BUILDING_MAX_RECLAIM));
-    }  
     #endregion
 
     private T Mock<T>() where T : Component

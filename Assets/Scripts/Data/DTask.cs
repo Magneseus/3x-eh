@@ -11,27 +11,30 @@ public class DTask : TurnUpdatable
 
     protected int id;
     protected string taskName;
-    protected DBuilding building;
     protected int maxPeople;
+    protected DBuilding building;
     protected List<DPerson> listOfPeople;
     protected DResource output;
     protected bool taskEnabled;
-    protected bool reclaimed;
-    private float levelReclaimed;
+
+    private float structuralDamage;
+    private float fungalDamage;
 
 
     public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName)
     {
+        listOfPeople = new List<DPerson>();
+
         id = NEXT_ID++;
+        taskName = dName;
         building = dBuilding;
         output = dOutput;
         maxPeople = dMaxPeople;
-        taskName = dName;
 
-        listOfPeople = new List<DPerson>();
+        structuralDamage = Constants.TASK_MIN_STRUCTURAL_DMG;
+        fungalDamage = Constants.TASK_MIN_FUNGAL_DMG;
+
         taskEnabled = true;
-        levelReclaimed = 0.1f;
-
         dBuilding.AddTask(this);
     }
 
@@ -44,7 +47,7 @@ public class DTask : TurnUpdatable
         if (listOfPeople.Count > 0)
         {
             // TODO: Make this into a exponential scale or something
-            if(levelReclaimed >= 1.0f) EnableTask();
+            if(structuralDamage >= 1.0f) EnableTask();
             for (int i = 0; i < listOfPeople.Count; ++i)
                 building.OutputResource(output);
         }
@@ -100,21 +103,43 @@ public class DTask : TurnUpdatable
         // Disable task
         taskEnabled = false;
     }
-    public void IncreaseReclaimed(float amount)
+    public void Repair(float amount)
     {
-        if (levelReclaimed < 1.0f)
-            levelReclaimed = Mathf.Clamp01(levelReclaimed + amount);
+        if(Infected)
+        {
+            fungalDamage -= amount;
+            fungalDamage = Mathf.Clamp(fungalDamage, Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
+        }
+        else if(Damaged)
+        {
+            structuralDamage -= amount;
+            structuralDamage = Mathf.Clamp(structuralDamage, Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG);
+        }
     }
-    #region Accessors
-    public float LevelReclaimed
+
+    #region Properties
+    public float LevelDamaged
     {
-        get { return levelReclaimed; }
-        set { levelReclaimed = Mathf.Clamp01(value); }     // should only be used for dev, increase with Reclaim()
+        get { return structuralDamage; }
+        set { structuralDamage = Mathf.Clamp(value, Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG); }
     }
-    public bool IsReclaimed()
+
+    public float LevelInfected
     {
-        return reclaimed;
+        get { return fungalDamage; }
+        set { fungalDamage = Mathf.Clamp(value, Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG); }
     }
+
+    public bool Damaged
+    {
+        get { return structuralDamage != Constants.TASK_MIN_STRUCTURAL_DMG; }
+    }
+
+    public bool Infected
+    {
+        get { return fungalDamage != Constants.TASK_MIN_FUNGAL_DMG; }
+    }
+
     public int MaxPeople
     {
         get { return maxPeople; }
