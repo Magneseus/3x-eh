@@ -42,6 +42,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CityNodePrefab: {fileID: 1800581609871400, guid: c269eb638c7c2b74187fb85e7b660e58,
     type: 2}
+  CityEdgePrefab: {fileID: 1052370028778980, guid: cd1b336da4251c1499198486027df664,
+    type: 2}
 --- !u!114 &114579524139489926
 MonoBehaviour:
   m_ObjectHideFlags: 1

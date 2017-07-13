@@ -80,7 +80,7 @@ public class DGame
     }
     public string currentDateString
     {
-        get { return currentDate.ToString(); }
+        get { return currentDate.ToShortDateString(); }
     }
     public int DaysTranspired
     {

@@ -30,13 +30,19 @@ public class GameController : MonoBehaviour
             if (Path.GetExtension(file) == ".json")
             {
                 var cityJSON = JSON.Parse(File.ReadAllText(file));
-                
+                List<string> edges = new List<string>();
+                for(int i=0; i< cityJSON["edges"].AsArray.Count; i++)
+                {
+                   edges.Add((cityJSON["edges"].AsArray[i]));
+                }
                 countryMap.SpawnCityNode(
                     cityJSON["name"],
                     new Vector3(cityJSON["position"]["x"],cityJSON["position"]["y"], -1),
-                    new List<string>(cityJSON["edges"].AsArray));
+                    edges);
+
             }
         }
+        countryMap.SpawnEdges();
     }
 
     void Update()
