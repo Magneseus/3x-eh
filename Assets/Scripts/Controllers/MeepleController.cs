@@ -111,13 +111,13 @@ public class MeepleController : MonoBehaviour {
             }
             else
             {
+                // Set the new task
+                dPerson.SetTaskSlot(closestTray.taskSlot);
+
                 // Set the new parent transform
                 this.transform.parent = closestTray.transform;
                 this.transform.localPosition = new Vector3(0, 0, -3);
                 this.parentTray = closestTray;
-
-                // Set the new task
-                dPerson.SetTaskSlot(closestTray.taskSlot);
             }
         }
 
