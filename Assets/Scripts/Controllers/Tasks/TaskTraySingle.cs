@@ -9,15 +9,21 @@ public class TaskTraySingle : MonoBehaviour {
 
     public static readonly float WIDTH_CONST = 3.25f / 4.0f;
     public TaskController taskController;
+    private SpriteRenderer spriteRenderer;
+
+    void Awake()
+    {
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    }
 
     // Use this for initialization
     void Start () {
-
+        
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+        
 	}
 
     #region MouseOver Functions
@@ -29,6 +35,22 @@ public class TaskTraySingle : MonoBehaviour {
     public void OnMouseExit()
     {
         taskController.DecreaseMouseOverCount();
+    }
+
+    internal void UpdateSprite()
+    {
+        if (taskController.dTask.Infected)
+        {
+            spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/food-infected");
+        }
+        else if (taskController.dTask.Damaged)
+        {
+            spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/food-damaged");
+        }
+        else
+        {
+            spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/food-clean");
+        }
     }
     #endregion
 }

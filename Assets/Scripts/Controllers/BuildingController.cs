@@ -92,6 +92,8 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
         foreach (TaskController tc in taskControllers)
         {
+            if(visibility)
+                tc.UpdateSprite();
             tc.gameObject.SetActive(visibility);
         }
     }
