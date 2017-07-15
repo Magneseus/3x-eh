@@ -10,7 +10,11 @@ public class DTask_Assess : DTask
     private float assessAmount;
 
     public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName)
-    {}
+    {
+        // This will need to be changed to ForceClean and ForceRepair
+        this.LevelDamaged = Constants.TASK_MIN_STRUCTURAL_DMG;
+        this.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
+    }
 
     public DTask_Assess(DBuilding dBuilding) : this(dBuilding, DEFAULT_ASSESS_AMOUNT, 4, "default_assess_task")
     {}
@@ -18,20 +22,18 @@ public class DTask_Assess : DTask
     public override void TurnUpdate(int numDaysPassed)
     {
         // NOT IMPLEMENTED YET
-        //if (listOfPeople.Count > 0)
-        //{
+        if (listOfPeople.Count > 0)
+        {
+            // TODO: Make this into a exponential scale or something
+            for (int i = 0; i < listOfPeople.Count; ++i)
+                building.Assess(0.1f);
+        }
 
-
-        //    TODO: Make this into a exponential scale or something
-        //    for (int i = 0; i < listOfPeople.Count; ++i)
-        //        building.Assess(0.1f);
-        //}
-
-        //Check if we've fully assessed the building, and if so disable task
-        //if (building.Assessed)
-        //{
-        //    DisableTask();
-        //}
+        // Check if we've fully assessed the building, and if so disable task
+        if (building.Assessed)
+        {
+            DisableTask();
+        }
     }
 
     #region Accessors
