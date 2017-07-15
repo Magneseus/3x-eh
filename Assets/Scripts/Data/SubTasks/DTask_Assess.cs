@@ -11,11 +11,13 @@ public class DTask_Assess : DTask
 
     public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName)
     {
+        this.assessAmount = assessAmount;
+
         ForceClean();
         ForceFixed();
     }
 
-    public DTask_Assess(DBuilding dBuilding) : this(dBuilding, DEFAULT_ASSESS_AMOUNT, 4, "default_assess_task")
+    public DTask_Assess(DBuilding dBuilding) : this(dBuilding, DEFAULT_ASSESS_AMOUNT, 4, "Assess")
     {}
 
     public override void TurnUpdate(int numDaysPassed)
@@ -26,7 +28,9 @@ public class DTask_Assess : DTask
 
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
+            {
                 building.Assess(assessAmount);
+            }
         }
 
         // Check if we've fully assessed the building, and if so disable task
