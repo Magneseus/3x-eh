@@ -129,6 +129,12 @@ public class GameController : MonoBehaviour
 
         buildingController.transform.position = position;
 
+        // Generate all predefined tasks
+        foreach (var kvp in buildingController.dBuilding.Tasks)
+        {
+            TaskController newTaskController = AttachTaskController(kvp.Value, buildingController);
+        }
+
         return buildingController;
     }
 

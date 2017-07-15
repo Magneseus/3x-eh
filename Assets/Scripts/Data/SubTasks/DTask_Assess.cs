@@ -10,7 +10,11 @@ public class DTask_Assess : DTask
     private float assessAmount;
 
     public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName)
-    {}
+    {
+        // This will need to be changed to ForceClean and ForceRepair
+        this.LevelDamaged = Constants.TASK_MIN_STRUCTURAL_DMG;
+        this.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
+    }
 
     public DTask_Assess(DBuilding dBuilding) : this(dBuilding, DEFAULT_ASSESS_AMOUNT, 4, "default_assess_task")
     {}

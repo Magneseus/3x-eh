@@ -30,7 +30,7 @@ public class BuildingTests
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
 
         Assert.That(building.City.Name, Is.EqualTo(city.Name));
-        Assert.That(building.Tasks.Count, Is.EqualTo(0));
+        Assert.That(building.Tasks.Count, Is.EqualTo(1));
         Assert.That(building.Name, Is.EqualTo(BUILDING_NAME));
     }
 
@@ -55,11 +55,11 @@ public class BuildingTests
         var city = new DCity(CITY_NAME, Mock.Component<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
 
-        Assert.That(building.Tasks.Count, Is.EqualTo(0));
+        Assert.That(building.Tasks.Count, Is.EqualTo(1));
 
         var task = new DTask(building, resource);
 
-        Assert.That(building.Tasks.Count, Is.EqualTo(1));
+        Assert.That(building.Tasks.Count, Is.EqualTo(2));
         Assert.That(building.Tasks[task.ID].Output, Is.EqualTo(resource));
     }
 

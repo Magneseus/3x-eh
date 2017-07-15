@@ -29,6 +29,9 @@ public class DBuilding : TurnUpdatable {
         //TODO: Change the default discovery to false, as it will be false for almost all buildings
         this.discovered = true;
         this.percentAssessed = 0.0f;
+
+        // Add an assess task by default
+        DTask assessTask = new DTask_Assess(this, 0.2f, 2, "Assess Building");
         
         city.AddBuilding(this);
     }
