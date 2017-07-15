@@ -9,13 +9,14 @@ public class DPerson : TurnUpdatable
     
     private int id;
     private DCity city;
-    private DTask task;
+    private DTaskSlot taskSlot;
 
     public DPerson(DCity dCity, MeepleController mController)
     {
         id = NEXT_ID++;
         city = dCity;
         meepleController = mController;
+        taskSlot = null;
 
         city.AddPerson(this);
     }
@@ -25,39 +26,45 @@ public class DPerson : TurnUpdatable
 
     }
 
+    #region Task Management
+
     public void SetTask(DTask dTask)
     {
-        if(task != null)
-            task.RemovePerson(this);
+        if (taskSlot != null && Task != dTask)
+            RemoveTask();
 
-        task = dTask;
-
-        if (!dTask.ListOfPeople.Contains(this))
-            dTask.AddPerson(this);
+        dTask.AddPerson(this);
     }
 
-    public void RemoveTask(DTask dTask)
+    public void SetTaskSlot(DTaskSlot dTaskSlot)
     {
-        if (task != null)
-        {
-            if (task.ListOfPeople.Contains(this))
-            {
-                task.RemovePerson(this);
-            }
+        if (taskSlot != null)
+            RemoveTask();
 
-            task = null;
+        dTaskSlot.AddPerson(this);
+    }
+
+    public void __TaskSlot(DTaskSlot dtaskSlot)
+    {
+        taskSlot = dtaskSlot;
+    }
+
+    public void RemoveTask()
+    {
+        if (taskSlot != null)
+        {
+            taskSlot.RemovePerson();
+            taskSlot = null;
         }
         else
         {
-            throw new TaskNotFoundException("Person ID: " + id + " Task: " + dTask.Name);
+            throw new TaskNotFoundException("Person ID: " + id);
         }
     }
 
-    public void ClearTask()
-    {
-        RemoveTask(task);
-    }
-        
+    #endregion
+
+    #region Properties
 
     public int ID
     {
@@ -66,12 +73,18 @@ public class DPerson : TurnUpdatable
 
     public DTask Task
     {
-        get { return task; }
-        set { task = value; }
+        get{ return taskSlot == null ? null : taskSlot.Task; }
+    }
+
+    public DTaskSlot TaskSlot
+    {
+        get { return taskSlot; }
     }
 
     public DCity City
     {
         get { return city; }
     }
+
+    #endregion
 }

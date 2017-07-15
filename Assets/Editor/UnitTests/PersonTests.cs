@@ -42,11 +42,11 @@ public class PersonTests
 
         person.SetTask(task);
         Assert.That(person.Task, Is.EqualTo(task));
-        Assert.That(task.ListOfPeople.Contains(person), Is.True);
+        Assert.That(task.ContainsPerson(person), Is.True);
 
-        person.RemoveTask(task);
+        person.RemoveTask();
         Assert.That(person.Task, Is.Null);
-        Assert.That(task.ListOfPeople.Contains(person), Is.False);
+        Assert.That(task.ContainsPerson(person), Is.False);
     }
 
     [Test]
@@ -62,12 +62,12 @@ public class PersonTests
         var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
         Assert.That(person.Task, Is.EqualTo(task));
-        Assert.That(task.ListOfPeople.Contains(person), Is.True);
+        Assert.That(task.ContainsPerson(person), Is.True);
 
         person.SetTask(task2);
         Assert.That(person.Task, Is.EqualTo(task2));
-        Assert.That(task2.ListOfPeople.Contains(person), Is.True);
-        Assert.That(task.ListOfPeople.Contains(person), Is.False);
+        Assert.That(task2.ContainsPerson(person), Is.True);
+        Assert.That(task.ContainsPerson(person), Is.False);
     }
 
     [Test]
@@ -80,11 +80,11 @@ public class PersonTests
 
         var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
-        person.RemoveTask(task);
+        person.RemoveTask();
 
         Assert.Throws<TaskNotFoundException>(() =>
         {
-            person.RemoveTask(task);
+            person.RemoveTask();
         });
     }    
 }

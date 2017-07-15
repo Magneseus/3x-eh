@@ -100,8 +100,9 @@ public class TaskController : MonoBehaviour {
                 currentPosition.x += xOffset;
                 go.transform.position = currentPosition;
 
-                // Set the parent TaskController
+                // Set the parent TaskController & task slot
                 go.GetComponent<TaskTraySingle>().taskController = this;
+                go.GetComponent<TaskTraySingle>().taskSlot = dTask.GetTaskSlot(i);
                 go.GetComponent<TaskTraySingle>().UpdateSprite();
 
                 listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
