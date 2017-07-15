@@ -21,6 +21,7 @@ public class DBuilding : TurnUpdatable {
     private String buildingName;
     private DBuildingStatus status;
     public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
+    private DTask_Assess assessTask;
 
     private float percentInfected;
     private float percentDamaged;
@@ -37,7 +38,7 @@ public class DBuilding : TurnUpdatable {
         this.percentAssessed = 0.0f;
 
         // Add an assess task by default
-        DTask assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
+        this.assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
         
         city.AddBuilding(this);
     }
@@ -158,7 +159,11 @@ public class DBuilding : TurnUpdatable {
         percentAssessed = Mathf.Clamp01(percentAssessed + assessAmount);
 
         if (percentAssessed == 1.0f)
+        {
             status = DBuildingStatus.ASSESSED;
+            assessTask.DisableTask();
+            buildingController.ReorganizeTaskControllers();
+        }
     }
 
     public float LevelAssessed

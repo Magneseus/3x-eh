@@ -85,15 +85,16 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
     #endregion
 
     #region TaskController Functions
+
     public void SetTaskControllerVisibility(bool visibility)
     {
         taskControllerVisible = visibility;
 
         foreach (TaskController tc in taskControllers)
         {
-            if(visibility)
+            if (visibility)
                 tc.UpdateSprite();
-            tc.gameObject.SetActive(visibility);
+            tc.gameObject.SetActive(visibility && tc.dTask.Enabled);
         }
     }
 
@@ -105,22 +106,43 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
         }
 
         // Add to the list
-        taskControllers.Add(taskController);
+        if (!taskControllers.Contains(taskController))
+            taskControllers.Add(taskController);
 
-        // Shift it down slightly
-        Vector3 taskControllerPos = taskController.transform.position;
-        taskControllerPos.y -= TaskTraySingle.WIDTH_CONST * taskControllers.Count;
-        taskController.transform.position = taskControllerPos;
-
-        // Set it to the current activity
-        taskController.enabled = taskControllerVisible;
+        ReorganizeTaskControllers();
     }
 
     public void RemoveTaskController(TaskController taskController)
     {
-        //TODO: Reorganize existing task controllers (shouldn't ever be used though...)
         taskControllers.Remove(taskController);
+        ReorganizeTaskControllers();
     }
+
+    public void ReorganizeTaskControllers()
+    {
+        int index = 0;
+        foreach (TaskController tc in taskControllers)
+        {
+            if (tc.dTask.Enabled)
+            {
+                // Shift it down slightly
+                Vector3 taskControllerPos = tc.transform.parent.position;
+                taskControllerPos.y -= TaskTraySingle.WIDTH_CONST * (index + 1);
+                tc.transform.position = taskControllerPos;
+
+                // Set it to the current activity
+                tc.gameObject.SetActive(taskControllerVisible);
+
+                // Increment counter
+                index++;
+            }
+            else
+            {
+                tc.gameObject.SetActive(false);
+            }
+        }
+    }
+
     #endregion
 
     internal void ConnectToDataEngine(DGame dGame, string cityName, string buildingName)

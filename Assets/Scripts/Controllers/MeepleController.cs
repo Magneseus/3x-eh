@@ -26,7 +26,7 @@ public class MeepleController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        
 	}
 
     internal void ConnectToDataEngine(DGame dGame, string cityName)

@@ -32,12 +32,6 @@ public class DTask_Assess : DTask
                 building.Assess(assessAmount);
             }
         }
-
-        // Check if we've fully assessed the building, and if so disable task
-        if (building.Assessed)
-        {
-            DisableTask();
-        }
     }
 
     #region Accessors
