@@ -9,6 +9,7 @@ public class TaskTraySingle : MonoBehaviour {
 
     public static readonly float WIDTH_CONST = 3.25f / 4.0f;
     public TaskController taskController;
+    public DTaskSlot taskSlot;
     private SpriteRenderer spriteRenderer;
 
     void Awake()
@@ -39,11 +40,11 @@ public class TaskTraySingle : MonoBehaviour {
 
     internal void UpdateSprite()
     {
-        if (taskController.dTask.Infected)
+        if (taskSlot.Infected)
         {
             spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/food-infected");
         }
-        else if (taskController.dTask.Damaged)
+        else if (taskSlot.Damaged)
         {
             spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/food-damaged");
         }
