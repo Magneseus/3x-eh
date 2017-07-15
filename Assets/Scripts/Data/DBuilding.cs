@@ -16,6 +16,8 @@ public class DBuilding : TurnUpdatable {
 
     private float percentInfected;
     private float percentDamaged;
+    public bool discovered;
+    private float percentAssessed;
 
     public DBuilding(DCity city, string buildingName, BuildingController buildingController)
     {
@@ -23,6 +25,10 @@ public class DBuilding : TurnUpdatable {
         this.city = city;
         this.buildingName = buildingName;
         this.buildingController = buildingController;
+
+        //TODO: Change the default discovery to false, as it will be false for almost all buildings
+        this.discovered = true;
+        this.percentAssessed = 0.0f;
         
         city.AddBuilding(this);
     }
@@ -107,7 +113,22 @@ public class DBuilding : TurnUpdatable {
         get { return id; }
     }
 
-    #region Assessment Components   
+    #region Assessment Components
+
+    public void Assess(float assessAmount)
+    {
+        percentAssessed = Mathf.Clamp01(percentAssessed + assessAmount);
+    }
+
+    public float LevelAssessed
+    {
+        get { return percentAssessed; }
+    }
+
+    public bool Assessed
+    {
+        get { return percentAssessed == 1.0f; }
+    }
 
     public float LevelDamaged
     {

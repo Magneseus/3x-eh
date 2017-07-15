@@ -18,20 +18,18 @@ public class DTask_Assess : DTask
     public override void TurnUpdate(int numDaysPassed)
     {
         // NOT IMPLEMENTED YET
-        //if (listOfPeople.Count > 0)
-        //{
+        if (listOfPeople.Count > 0)
+        {
+            // TODO: Make this into a exponential scale or something
+            for (int i = 0; i < listOfPeople.Count; ++i)
+                building.Assess(0.1f);
+        }
 
-
-        //    TODO: Make this into a exponential scale or something
-        //    for (int i = 0; i < listOfPeople.Count; ++i)
-        //        building.Assess(0.1f);
-        //}
-
-        //Check if we've fully assessed the building, and if so disable task
-        //if (building.Assessed)
-        //{
-        //    DisableTask();
-        //}
+        // Check if we've fully assessed the building, and if so disable task
+        if (building.Assessed)
+        {
+            DisableTask();
+        }
     }
 
     #region Accessors
