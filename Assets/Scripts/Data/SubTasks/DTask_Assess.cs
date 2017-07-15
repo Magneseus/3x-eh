@@ -9,7 +9,7 @@ public class DTask_Assess : DTask
     public const float DEFAULT_ASSESS_AMOUNT = 0.1f;
     private float assessAmount;
 
-    public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName)
+    public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName, 0.0f)
     {
         this.assessAmount = assessAmount;
 

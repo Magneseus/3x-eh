@@ -103,7 +103,7 @@ public class MeepleController : MonoBehaviour {
             }
 
             // If the closest tray is full, reset
-            if (closestTray.taskSlot.Person != null)
+            if (closestTray.taskSlot.Person != null && closestTray.taskSlot.Enabled)
             {
                 // Reset position
                 this.transform.parent = returnParent;

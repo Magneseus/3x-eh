@@ -89,12 +89,13 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
     public void SetTaskControllerVisibility(bool visibility)
     {
         taskControllerVisible = visibility;
+        ReorganizeTaskControllers();
 
         foreach (TaskController tc in taskControllers)
         {
             if (visibility)
                 tc.UpdateSprite();
-            tc.gameObject.SetActive(visibility && tc.dTask.Enabled);
+            tc.gameObject.SetActive(visibility && tc.dTask.Enabled && tc.dTask.CalculateAssessmentLevels() > 0);
         }
     }
 
@@ -123,7 +124,7 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
         int index = 0;
         foreach (TaskController tc in taskControllers)
         {
-            if (tc.dTask.Enabled)
+            if (tc.dTask.Enabled && tc.dTask.CalculateAssessmentLevels() > 0)
             {
                 // Shift it down slightly
                 Vector3 taskControllerPos = tc.transform.parent.position;

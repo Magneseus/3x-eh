@@ -8,6 +8,7 @@ public class DTaskSlot : TurnUpdatable
 
     private float structuralDamage;
     private float fungalDamage;
+    private bool taskSlotEnabled;
 
     public DTaskSlot(DTask dTask, DPerson dPerson=null)
     {
@@ -16,6 +17,8 @@ public class DTaskSlot : TurnUpdatable
 
         structuralDamage = Random.Range(Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG);
         fungalDamage = Random.Range(Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
+
+        taskSlotEnabled = true;
     }
 
     public void TurnUpdate(int numDaysPassed)
@@ -33,7 +36,7 @@ public class DTaskSlot : TurnUpdatable
 
     public void AddPerson(DPerson dPerson)
     {
-        if (person == null)
+        if (person == null && taskSlotEnabled)
         {
             person = dPerson;
             dPerson.__TaskSlot(this);
@@ -73,7 +76,7 @@ public class DTaskSlot : TurnUpdatable
 
     public bool IsFunctioning()
     {
-        if (!Infected && !Damaged && person != null)
+        if (!Infected && !Damaged && person != null && taskSlotEnabled)
             return true;
 
         return false;
@@ -111,6 +114,12 @@ public class DTaskSlot : TurnUpdatable
     public bool Infected
     {
         get { return fungalDamage != Constants.TASK_MIN_FUNGAL_DMG; }
+    }
+
+    public bool Enabled
+    {
+        get { return taskSlotEnabled; }
+        set { taskSlotEnabled = value; }
     }
 
     #endregion

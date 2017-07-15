@@ -28,7 +28,8 @@
             "name": "Food Storage",
             "amount": 100
           },
-          "maxPeople": 1
+          "maxPeople": 1,
+          "fullAssess": 0.4
         }
       ]
     },
@@ -52,7 +53,8 @@
             "name": "Food",
             "amount": 10
           },
-          "maxPeople": 2
+          "maxPeople": 2,
+          "fullAssess": 0.7
         },
         {
           "name": "Food Storage Management",
@@ -60,7 +62,8 @@
             "name": "Food Storage",
             "amount": 20
           },
-          "maxPeople": 1
+          "maxPeople": 1,
+          "fullAssess": 0.4
         }
       ]
     }
