@@ -11,9 +11,8 @@ public class DTask_Assess : DTask
 
     public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName)
     {
-        // This will need to be changed to ForceClean and ForceRepair
-        this.LevelDamaged = Constants.TASK_MIN_STRUCTURAL_DMG;
-        this.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
+        ForceClean();
+        ForceFixed();
     }
 
     public DTask_Assess(DBuilding dBuilding) : this(dBuilding, DEFAULT_ASSESS_AMOUNT, 4, "default_assess_task")
@@ -21,12 +20,13 @@ public class DTask_Assess : DTask
 
     public override void TurnUpdate(int numDaysPassed)
     {
-        // NOT IMPLEMENTED YET
-        if (listOfPeople.Count > 0)
+        foreach (DTaskSlot taskSlot in slotList)
         {
+            taskSlot.TurnUpdate(numDaysPassed);
+
             // TODO: Make this into a exponential scale or something
-            for (int i = 0; i < listOfPeople.Count; ++i)
-                building.Assess(0.1f);
+            if (taskSlot.IsFunctioning())
+                building.Assess(assessAmount);
         }
 
         // Check if we've fully assessed the building, and if so disable task
