@@ -1,0 +1,94 @@
+{
+  "name": "Ottawa",
+  "buildings": [
+    {
+      "name": "Town Hall",
+      "position": {
+        "x": [ 0, 0 ],
+        "y": [ 0, 0 ]
+      }
+    },
+    {
+      "name": "Apartment Building",
+      "position": {
+        "x": [ -5, 5 ],
+        "y": [ -3, 3 ]
+      }
+    },
+    {
+      "name": "Derelict Building",
+      "position": {
+        "x": [ -5, 5 ],
+        "y": [ -3, 3 ]
+      },
+      "tasks": [
+        {
+          "name": "Food Storage Management",
+          "resource": {
+            "name": "Food Storage",
+            "amount": 100
+          },
+          "maxPeople": 1
+        }
+      ]
+    },
+    {
+      "name": "Library",
+      "position": {
+        "x": [ -5, 5 ],
+        "y": [ -3, 3 ]
+      }
+    },
+    {
+      "name": "Grocery Store",
+      "position": {
+        "x": [ -5, 5 ],
+        "y": [ -3, 3 ]
+      },
+      "tasks": [
+        {
+          "name": "Food Production",
+          "resource": {
+            "name": "Food",
+            "amount": 10
+          },
+          "maxPeople": 2
+        },
+        {
+          "name": "Food Storage Management",
+          "resource": {
+            "name": "Food Storage",
+            "amount": 20
+          },
+          "maxPeople": 1
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "name": "Food",
+      "amount": 0
+    },
+    {
+      "name": "Fuel",
+      "amount": 0
+    },
+    {
+      "name": "Materials",
+      "amount": 0
+    },
+    {
+      "name": "Medicine",
+      "amount": 0
+    }
+  ],
+  "edges":[
+    "Toronto",
+    "Montreal"
+  ],
+  "position": {
+    "x": 245,
+    "y": -294
+  }
+}
