@@ -36,10 +36,11 @@ public class DBuilding : TurnUpdatable {
         
         this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
-
         // Add an assess task by default
-        this.assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
-        
+	this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
+	
+
+			
         city.AddBuilding(this);
     }
 
@@ -122,6 +123,11 @@ public class DBuilding : TurnUpdatable {
     {
         get { return id; }
     }
+
+	public BuildingController Controller
+	{
+		get { return buildingController; }
+	}
 
     #region Assessment Components
 

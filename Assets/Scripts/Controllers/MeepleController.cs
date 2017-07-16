@@ -31,7 +31,8 @@ public class MeepleController : MonoBehaviour {
 
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
-        dPerson= new DPerson(dGame.Cities[cityName], this);
+        dPerson = new DPerson(dGame.Cities[cityName], this);
+	//dPerson.MoveToTownHall();
     }
 
     #region MouseOver Functions
@@ -127,6 +128,12 @@ public class MeepleController : MonoBehaviour {
 
         if (oldParentTray != null)
             oldParentTray.taskController.DecreaseMouseOverCount();
+    }
+    public void SetParentTrayAndTransfrom (TaskTraySingle parentTray)
+    {
+	this.parentTray = parentTray; 
+	transform.parent = parentTray.transform; 
+	transform.localPosition = new Vector3(0, 0, -3); 
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

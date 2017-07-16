@@ -82,7 +82,12 @@ public class GameController : MonoBehaviour
             JSONNode yPos = building["position"]["y"].AsArray;
 
             BuildingController bControl = CreateBuilding(cityJson["name"], building["name"], new Vector3(Random.Range(xPos[0], xPos[1]), Random.Range(yPos[0], yPos[1]), 1));
-
+			DTask_Idle idleTask = new DTask_Idle(bControl.dBuilding,"Idle Merson");
+			if (building["name"].Equals("Town Hall")) {
+				TaskController newTaskController = AttachTaskController(
+					idleTask,bControl);
+				bControl.dBuilding.Assess(1.0f);
+			}
             // Load in all the tasks for this building
             foreach (JSONNode task in building["tasks"].AsArray)
             {

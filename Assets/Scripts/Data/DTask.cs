@@ -63,14 +63,15 @@ public class DTask : TurnUpdatable
 
     #region Person Management
 
-    public void AddPerson(DPerson dPerson)
+    public virtual void AddPerson(DPerson dPerson)
     {
         if (numPeople >= maxPeople)
         {
             throw new TaskFullException(taskName);
         }
         else if (ContainsPerson(dPerson))
-        {
+	{
+	    
             throw new PersonAlreadyAddedException(taskName);
         }
         else
@@ -172,7 +173,7 @@ public class DTask : TurnUpdatable
             return maxPeople;
 
         int numEnabled = Mathf.FloorToInt(Mathf.Clamp01(building.LevelAssessed / fullAssessRequirement) * (float)maxPeople);
-        Debug.Log(taskName + " : " + numEnabled);
+        //Debug.Log(taskName + " : " + numEnabled);
         
         for (int i = 0; i < slotList.Count; i++)
         {
