@@ -9,11 +9,14 @@ public class TaskTraySingle : MonoBehaviour {
 
     public static readonly float WIDTH_CONST = 3.25f / 4.0f;
     public TaskController taskController;
+    public DTaskSlot taskSlot;
     private SpriteRenderer spriteRenderer;
+    private BoxCollider2D boxCollider;
 
     void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     // Use this for initialization
@@ -23,7 +26,8 @@ public class TaskTraySingle : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
+        spriteRenderer.gameObject.SetActive(taskSlot.Enabled);
+        boxCollider.enabled = taskSlot.Enabled;
 	}
 
     #region MouseOver Functions
@@ -39,11 +43,11 @@ public class TaskTraySingle : MonoBehaviour {
 
     internal void UpdateSprite()
     {
-        if (taskController.dTask.Infected)
+        if (taskSlot.Infected)
         {
             spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/food-infected");
         }
-        else if (taskController.dTask.Damaged)
+        else if (taskSlot.Damaged)
         {
             spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/food-damaged");
         }

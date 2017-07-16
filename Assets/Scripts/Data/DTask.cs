@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
@@ -10,84 +9,124 @@ public class DTask : TurnUpdatable
 
     protected int id;
     protected string taskName;
-    protected int maxPeople;
     protected DBuilding building;
-    protected List<DPerson> listOfPeople;
+
+    protected int maxPeople;
+    protected int numPeople;
+    protected List<DTaskSlot> slotList;
+
+    protected float fullAssessRequirement;
     protected DResource output;
     protected bool taskEnabled;
 
-    private float structuralDamage;
-    private float fungalDamage;
 
-
-    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName)
+    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement)
     {
-        listOfPeople = new List<DPerson>();
+        slotList = new List<DTaskSlot>();
 
         id = NEXT_ID++;
         taskName = dName;
         building = dBuilding;
         output = dOutput;
         maxPeople = dMaxPeople;
+        numPeople = 0;
+        fullAssessRequirement = dFullAssessRequirement;
 
-        
-        structuralDamage = Random.Range(Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG);
-        fungalDamage = Random.Range(Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
+        CalculateAssessmentLevels();
+
+        for (int i = 0; i < dMaxPeople; i++)
+        {
+            // Create all task slots
+            slotList.Add(new DTaskSlot(this));
+        }
 
         taskEnabled = true;
         dBuilding.AddTask(this);
     }
 
-    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task")
+    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task", 0.0f)
     {
     }
 
     public virtual void TurnUpdate(int numDaysPassed)
     {
-        for (int i=0; i<listOfPeople.Count; i++)
+        CalculateAssessmentLevels();
+
+        foreach (DTaskSlot taskSlot in slotList)
         {
-            if (Infected)
-                Repair(Constants.TEMP_REPAIR_AMOUNT);
-            else if (Damaged)
-                Repair(Constants.TEMP_REPAIR_AMOUNT);
-            else
+            taskSlot.TurnUpdate(numDaysPassed);
+
+            if (taskSlot.IsFunctioning())
                 building.OutputResource(output);
         }
     }
 
+    #region Person Management
+
     public void AddPerson(DPerson dPerson)
     {
-        if (listOfPeople.Count >= maxPeople)
+        if (numPeople >= maxPeople)
         {
             throw new TaskFullException(taskName);
         }
-        else if (listOfPeople.Contains(dPerson))
+        else if (ContainsPerson(dPerson))
         {
             throw new PersonAlreadyAddedException(taskName);
         }
         else
         {
-            listOfPeople.Add(dPerson);
-
-            if (dPerson.Task != this)
+            foreach (DTaskSlot taskSlot in slotList)
             {
-                dPerson.SetTask(this);
+                if (taskSlot.Person == null && taskSlot.Enabled)
+                {
+                    if (dPerson.Task != null)
+                        dPerson.RemoveTask();
+
+                    taskSlot.AddPerson(dPerson);
+                    return;
+                }
             }
         }
     }
 
     public void RemovePerson(DPerson dPerson)
     {
-        if (listOfPeople.Contains(dPerson))
+        foreach (DTaskSlot taskSlot in slotList)
         {
-            listOfPeople.Remove(dPerson);
-            dPerson.RemoveTask(this);
+            if (taskSlot.Person == dPerson)
+            {
+                taskSlot.RemovePerson();
+                numPeople--;
+
+                return;
+            }
         }
-        else
-        {
-            throw new PersonNotFoundException(taskName);
-        }
+        
+        throw new PersonNotFoundException(taskName);
     }
+
+    public bool ContainsPerson(DPerson dPerson)
+    {
+        foreach (DTaskSlot taskSlot in slotList)
+        {
+            if (taskSlot.Person == dPerson)
+                return true;
+        }
+
+        return false;
+    }
+
+    public void RaisePersonCount()
+    {
+        numPeople++;
+    }
+
+    public void LowerPersonCount()
+    {
+        numPeople--;
+    }
+
+    #endregion
 
     public void EnableTask()
     {
@@ -97,60 +136,108 @@ public class DTask : TurnUpdatable
     public void DisableTask()
     {
         // Remove people from task
-        while (ListOfPeople.Count > 0)
+        foreach (DTaskSlot taskSlot in slotList)
         {
-            ListOfPeople[0].ClearTask();
+            taskSlot.RemovePerson();
         }
 
         // Disable task
         taskEnabled = false;
     }
-    public void Repair(float amount)
+
+    public void ForceClean()
     {
-        if(Infected)
+        foreach (DTaskSlot taskSlot in slotList)
         {
-            fungalDamage -= amount;
-            fungalDamage = Mathf.Clamp(fungalDamage, Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
+            taskSlot.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
         }
-        else if(Damaged)
+    }
+
+    public void ForceFixed()
+    {
+        foreach (DTaskSlot taskSlot in slotList)
         {
-            structuralDamage -= amount;
-            structuralDamage = Mathf.Clamp(structuralDamage, Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG);
+            taskSlot.LevelDamaged = Constants.TASK_MIN_STRUCTURAL_DMG;
         }
+    }
+
+    public DTaskSlot GetTaskSlot(int index)
+    {
+        return slotList[index];
+    }
+
+    public int CalculateAssessmentLevels()
+    {
+        if (fullAssessRequirement == 0.0f)
+            return maxPeople;
+
+        int numEnabled = Mathf.FloorToInt(Mathf.Clamp01(building.LevelAssessed / fullAssessRequirement) * (float)maxPeople);
+        Debug.Log(taskName + " : " + numEnabled);
+        
+        for (int i = 0; i < slotList.Count; i++)
+        {
+            if (i <= numEnabled-1)
+            {
+                slotList[i].Enabled = true;
+            }
+            else
+            {
+                slotList[i].Enabled = false;
+            }
+        }
+
+        return numEnabled;
     }
 
     #region Properties
     public float LevelDamaged
     {
-        get { return structuralDamage; }
-        set { structuralDamage = Mathf.Clamp(value, Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG); }
+        get
+        {
+            float avgDamage = 0.0f;
+            foreach (DTaskSlot taskSlot in slotList)
+            {
+                avgDamage += taskSlot.LevelDamaged;
+            }
+            avgDamage /= maxPeople;
+
+            return avgDamage;
+        }
     }
 
     public float LevelInfected
     {
-        get { return fungalDamage; }
-        set { fungalDamage = Mathf.Clamp(value, Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG); }
+        get
+        {
+            float avgInfection = 0.0f;
+            foreach (DTaskSlot taskSlot in slotList)
+            {
+                avgInfection += taskSlot.LevelInfected;
+            }
+            avgInfection /= maxPeople;
+
+            return avgInfection;
+        }
     }
 
     public bool Damaged
     {
-        get { return structuralDamage != Constants.TASK_MIN_STRUCTURAL_DMG; }
+        get { return LevelDamaged != Constants.TASK_MIN_STRUCTURAL_DMG; }
     }
 
     public bool Infected
     {
-        get { return fungalDamage != Constants.TASK_MIN_FUNGAL_DMG; }
+        get { return LevelInfected != Constants.TASK_MIN_FUNGAL_DMG; }
+    }
+
+    public int NumPeople
+    {
+        get { return numPeople; }
     }
 
     public int MaxPeople
     {
         get { return maxPeople; }
-        set { maxPeople = value; }
-    }
-
-    public List<DPerson> ListOfPeople
-    {
-        get { return listOfPeople; }
     }
 
     public string Name

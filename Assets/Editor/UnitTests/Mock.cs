@@ -16,8 +16,9 @@ namespace Assets.Editor.UnitTests
         public static DTask CleanTask(DBuilding building, DResource resource)
         {
             var task = new DTask(building, resource);
-            task.LevelDamaged = Constants.TASK_MIN_STRUCTURAL_DMG;
-            task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
+
+            task.ForceClean();
+            task.ForceFixed();
 
             return task;
         }

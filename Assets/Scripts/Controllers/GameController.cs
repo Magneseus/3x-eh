@@ -89,6 +89,7 @@ public class GameController : MonoBehaviour
                 // TODO: Check for "special" tasks, like assess/explore/etc.
                 string taskName = task["name"];
                 int maxPeople = task["maxPeople"];
+                float fullAssessmentRequirement = task["fullAssess"];
 
                 // Load in the resource output for this task
                 DResource taskResource = DResource.Create(
@@ -99,7 +100,8 @@ public class GameController : MonoBehaviour
                     bControl.dBuilding,
                     taskResource,
                     maxPeople,
-                    taskName);
+                    taskName,
+                    fullAssessmentRequirement);
 
                 // Generate the task controller and attach it
                 TaskController newTaskController = AttachTaskController(newTask, bControl);
@@ -128,6 +130,12 @@ public class GameController : MonoBehaviour
         buildingController.ConnectToDataEngine(dGame, cityName, buildingName);
 
         buildingController.transform.position = position;
+
+        // Generate all predefined tasks
+        foreach (var kvp in buildingController.dBuilding.Tasks)
+        {
+            TaskController newTaskController = AttachTaskController(kvp.Value, buildingController);
+        }
 
         return buildingController;
     }
