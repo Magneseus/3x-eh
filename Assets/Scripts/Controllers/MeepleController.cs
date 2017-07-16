@@ -136,9 +136,12 @@ public class MeepleController : MonoBehaviour {
     }
     public void SetParentTrayAndTransfrom (TaskTraySingle parentTray)
     {
-	this.parentTray = parentTray; 
-	transform.parent = parentTray.transform; 
-	transform.localPosition = new Vector3(0, 0, -3); 
+        this.parentTray = parentTray;
+
+        if (parentTray != null)
+            transform.parent = parentTray.transform;
+
+        ResetLocalPosition();
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

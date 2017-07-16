@@ -65,8 +65,6 @@ public class TaskTests
         Assert.That(task.ContainsPerson(person), Is.True);
 
         task.RemovePerson(person);
-		Assert.That(person.Task, Is.EqualTo(townHall.getIdleTask()));
-		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.True);
 		Assert.That(task.ContainsPerson(person), Is.False);
     }
 

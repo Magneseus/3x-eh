@@ -50,7 +50,27 @@ public class PersonTests
         person.RemoveTask();
         Assert.That(person.Task, Is.Null);
         Assert.That(task.ContainsPerson(person), Is.False);
-		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.True);
+    }
+
+    [Test]
+    public void PersonSendToIdleTask()
+    {
+        var resource = DResource.Create("Test Resource", 1);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+        var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
+        var task = new DTask(building, resource);
+
+        var person = new DPerson(city, Mock.Component<MeepleController>());
+        Assert.That(person.Task, Is.Null);
+
+        person.SetTask(task);
+        Assert.That(person.Task, Is.EqualTo(task));
+        Assert.That(task.ContainsPerson(person), Is.True);
+
+        person.MoveToTownHall();
+        Assert.That(task.ContainsPerson(person), Is.False);
+        Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.True);
     }
 
     [Test]
