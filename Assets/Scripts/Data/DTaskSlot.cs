@@ -54,13 +54,11 @@ public class DTaskSlot : TurnUpdatable
     public void RemovePerson()
     {
         if (person != null)
-        {
+		{
             person.__TaskSlot(null);
             person = null;
-			Debug.Log(task.Name+": "+task.NumPeople);
             task.LowerPersonCount();
         }
-		Debug.Log(task.Name+": "+task.NumPeople);
     }
 
     #endregion

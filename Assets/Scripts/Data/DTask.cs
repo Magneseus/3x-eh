@@ -173,7 +173,6 @@ public class DTask : TurnUpdatable
             return maxPeople;
 
         int numEnabled = Mathf.FloorToInt(Mathf.Clamp01(building.LevelAssessed / fullAssessRequirement) * (float)maxPeople);
-        //Debug.Log(taskName + " : " + numEnabled);
         
         for (int i = 0; i < slotList.Count; i++)
         {

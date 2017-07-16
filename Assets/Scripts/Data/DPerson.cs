@@ -31,15 +31,18 @@ public class DPerson : TurnUpdatable
     public void SetTask(DTask dTask)
     {
         if (taskSlot != null && Task != dTask)
-            RemoveTask();
+
+				RemoveTask();
+
+			
 
         dTask.AddPerson(this);
     }
 
     public void SetTaskSlot(DTaskSlot dTaskSlot)
     {
-        if (taskSlot != null)
-            RemoveTask();
+		if(taskSlot != null)
+            	RemoveTask();
 
         dTaskSlot.AddPerson(this);
     }
@@ -50,7 +53,7 @@ public class DPerson : TurnUpdatable
 
         if (taskSlot == null)
         {
-            MoveToTownHall();
+				MoveToTownHall();
         }
     }
 
@@ -58,10 +61,11 @@ public class DPerson : TurnUpdatable
     {
         if (taskSlot != null)
         {
-            taskSlot.RemovePerson();
-            taskSlot = null;
+				taskSlot.RemovePerson();
+				taskSlot = null;
 
-            //MoveToTownHall();
+           	// MoveToTownHall();
+
         }
         else
         {
@@ -69,17 +73,27 @@ public class DPerson : TurnUpdatable
         }
     }
 
-    public void MoveToTownHall()
+
+	public void MoveToTownHall()
     {
         //TODO: When the empty building is made / townhall, move to that instead of global parent
-
-	DTask townHallIdle = city.Buildings[0].Tasks[1];
-	Debug.Log(townHallIdle.Name);
-	townHallIdle.AddPerson(this);
-	meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
-
-     	meepleController.gameObject.SetActive(true);
+		DTask townHallIdle = null;
+		DBuilding townHall = null;
+		foreach(DBuilding dBuilding in city.Buildings.Values) {
+			if(dBuilding.Name.Equals("Town Hall"))
+				townHall = dBuilding;
+		}
+		foreach(DTask dTask in townHall.Tasks.Values) {
+			if(dTask.Name.Equals("Idle Merson")) {
+				townHallIdle = dTask;
+			}
+		}
+		SetTask(townHallIdle);
+		meepleController.transform.parent = null;
+		meepleController.gameObject.SetActive(true);
     }
+
+
 
     #endregion
 

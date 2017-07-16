@@ -2,10 +2,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
+using System;
 
 public class TaskTests
 {
     private string CITY_NAME = "Test City";
+	private string TOWN_HALL = "Town Hall";
 
     [TearDown]
     public void TearDown()
@@ -48,7 +50,8 @@ public class TaskTests
     public void TaskAddAndRemovePerson()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+		var city = new DCity(CITY_NAME, Mock.Component<CityController> ());
+		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
@@ -56,13 +59,16 @@ public class TaskTests
 
         Assert.That(person.Task, Is.Null);
 
+		Assert.That (townHall.Tasks.Count, Is.EqualTo (2));
+
         task.AddPerson(person);
         Assert.That(person.Task, Is.EqualTo(task));
         Assert.That(task.ContainsPerson(person), Is.True);
 
         task.RemovePerson(person);
-        Assert.That(person.Task, Is.Null);
-        Assert.That(task.ContainsPerson(person), Is.False);
+		Assert.That(person.Task, Is.EqualTo(townHall.getIdleTask()));
+		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.True);
+		Assert.That(task.ContainsPerson(person), Is.False);
     }
 
     [Test]
@@ -70,6 +76,7 @@ public class TaskTests
     {
         var resource = DResource.Create("Test Resource", 1);
         var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());

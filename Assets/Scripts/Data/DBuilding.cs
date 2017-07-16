@@ -37,10 +37,12 @@ public class DBuilding : TurnUpdatable {
         this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
         // Add an assess task by default
-	this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
-	
+		if(buildingName.Equals("Town Hall")) {
+			DTask_Idle idleTask = new DTask_Idle(this, "Idle Merson");
+		} 
+		
+		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
 
-			
         city.AddBuilding(this);
     }
 
@@ -84,6 +86,16 @@ public class DBuilding : TurnUpdatable {
             throw new TaskNotFoundException("Task is not assigned to this building");
         }
     }
+
+	public DTask_Idle getIdleTask()
+	{
+		if(Name.Equals("Town Hall"))
+			foreach(DTask dTask in tasks.Values){
+				if(dTask.Name.Equals("Idle Merson"))
+					return (DTask_Idle)dTask;
+			}
+		return null;		
+	}
 
     public void AddTask(DTask task)
     {
