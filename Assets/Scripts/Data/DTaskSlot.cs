@@ -62,6 +62,17 @@ public class DTaskSlot : TurnUpdatable
         }
     }
 
+    public void MoveToTownHall()
+    {
+        if (person != null)
+        {
+            person.MoveToTownHall();
+
+            person = null;
+            task.LowerPersonCount();
+        }
+    }
+
     #endregion
 
     public void Repair(float amount)

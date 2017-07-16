@@ -19,11 +19,14 @@ public class DCity : TurnUpdatable
     //map of canada vars
     // private List<string> edges;
 
+    public DBuilding townHall;
+
     public DCity(string cityName, CityController cityController, List<string> linkedCityKeys = null)
     {
         name = cityName;
         this.cityController = cityController;
         age = 0;
+        townHall = null;
 
         if (linkedCityKeys == null)
         {
@@ -49,6 +52,9 @@ public class DCity : TurnUpdatable
         else
         {
             buildings.Add(dBuilding.ID, dBuilding);
+
+            if (dBuilding.Name == "Town Hall")
+                townHall = dBuilding;
         }
     }
 

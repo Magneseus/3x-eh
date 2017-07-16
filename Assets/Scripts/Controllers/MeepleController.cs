@@ -32,7 +32,12 @@ public class MeepleController : MonoBehaviour {
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
         dPerson = new DPerson(dGame.Cities[cityName], this);
-	//dPerson.MoveToTownHall();
+	    //dPerson.MoveToTownHall();
+    }
+
+    public void ResetLocalPosition()
+    {
+        this.transform.localPosition = new Vector3(0, 0, -3);
     }
 
     #region MouseOver Functions
@@ -86,7 +91,7 @@ public class MeepleController : MonoBehaviour {
         {
             // Reset position
             this.transform.parent = returnParent;
-            this.transform.localPosition = new Vector3(0, 0, -3);
+            ResetLocalPosition();
         }
         else
         {
