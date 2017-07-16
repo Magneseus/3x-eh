@@ -73,14 +73,15 @@ public class DPerson : TurnUpdatable
         }
     }
 
-	public void RemoveFromTownHall()
+	/*public void RemoveFromTownHall()
 	{
 		if(taskSlot != null) {
+			taskSlot.Person = null;
 			taskSlot = null;
 		}
 		else
 			throw new TaskNotFoundException("Person ID: " + id);
-	}
+	}*/
 
 	public void MoveToTownHall()
     {
@@ -97,6 +98,7 @@ public class DPerson : TurnUpdatable
 			}
 		}
 		SetTask(townHallIdle);
+		//TO DO Meeoplecontroller
 		meepleController.transform.parent = null;
 		meepleController.gameObject.SetActive(true);
     }

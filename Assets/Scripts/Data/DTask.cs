@@ -67,6 +67,7 @@ public class DTask : TurnUpdatable
     {
         if (numPeople >= maxPeople)
         {
+			
             throw new TaskFullException(taskName);
         }
         else if (ContainsPerson(dPerson))
@@ -80,8 +81,8 @@ public class DTask : TurnUpdatable
             {
                 if (taskSlot.Person == null && taskSlot.Enabled)
                 {
-                    if (dPerson.Task != null)
-                        dPerson.RemoveTask();
+						if(dPerson.Task != null)
+                        	dPerson.RemoveTask();
 
                     taskSlot.AddPerson(dPerson);
                     return;
@@ -97,8 +98,7 @@ public class DTask : TurnUpdatable
             if (taskSlot.Person == dPerson)
             {
                 taskSlot.RemovePerson();
-                numPeople--;
-
+			
                 return;
             }
         }
