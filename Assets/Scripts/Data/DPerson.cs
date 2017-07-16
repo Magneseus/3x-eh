@@ -73,6 +73,14 @@ public class DPerson : TurnUpdatable
         }
     }
 
+	public void RemoveFromTownHall()
+	{
+		if(taskSlot != null) {
+			taskSlot = null;
+		}
+		else
+			throw new TaskNotFoundException("Person ID: " + id);
+	}
 
 	public void MoveToTownHall()
     {

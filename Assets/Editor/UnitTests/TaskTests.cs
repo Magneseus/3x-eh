@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
-using System;
 
 public class TaskTests
 {

@@ -224,10 +224,12 @@ public class CityTests
         person.SetTask(task_A);
         city.TurnUpdate(1);
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT));
+		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.False);
 
         person.SetTask(task_B);
         city.TurnUpdate(1);
-        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));                
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));
+		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.False);
     }
 
     [Test]

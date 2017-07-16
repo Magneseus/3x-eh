@@ -41,7 +41,8 @@ public class DTaskSlot : TurnUpdatable
          	person = dPerson;
 			if(dPerson.Task != null)
 				dPerson.Task.RemovePerson(dPerson);
-			
+			if(dPerson.Task != null)
+				Debug.Log("Hello");
             dPerson.__TaskSlot(this);
             task.RaisePersonCount();
         }
@@ -53,8 +54,10 @@ public class DTaskSlot : TurnUpdatable
 
     public void RemovePerson()
     {
+		
         if (person != null)
 		{
+			
             person.__TaskSlot(null);
             person = null;
             task.LowerPersonCount();
@@ -90,6 +93,7 @@ public class DTaskSlot : TurnUpdatable
     public DPerson Person
     {
         get { return person; }
+		set { person = value;}
     }
 
     public DTask Task
