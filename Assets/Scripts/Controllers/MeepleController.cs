@@ -26,7 +26,7 @@ public class MeepleController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        
 	}
 
     internal void ConnectToDataEngine(DGame dGame, string cityName)
@@ -103,7 +103,7 @@ public class MeepleController : MonoBehaviour {
             }
 
             // If the closest tray is full, reset
-            if (closestTray.taskSlot.Person != null)
+            if (closestTray.taskSlot.Person != null && closestTray.taskSlot.Enabled)
             {
                 // Reset position
                 this.transform.parent = returnParent;
@@ -111,13 +111,13 @@ public class MeepleController : MonoBehaviour {
             }
             else
             {
+                // Set the new task
+                dPerson.SetTaskSlot(closestTray.taskSlot);
+
                 // Set the new parent transform
                 this.transform.parent = closestTray.transform;
                 this.transform.localPosition = new Vector3(0, 0, -3);
                 this.parentTray = closestTray;
-
-                // Set the new task
-                dPerson.SetTaskSlot(closestTray.taskSlot);
             }
         }
 

@@ -15,11 +15,12 @@ public class DTask : TurnUpdatable
     protected int numPeople;
     protected List<DTaskSlot> slotList;
 
+    protected float fullAssessRequirement;
     protected DResource output;
     protected bool taskEnabled;
 
 
-    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName)
+    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement)
     {
         slotList = new List<DTaskSlot>();
 
@@ -29,6 +30,9 @@ public class DTask : TurnUpdatable
         output = dOutput;
         maxPeople = dMaxPeople;
         numPeople = 0;
+        fullAssessRequirement = dFullAssessRequirement;
+
+        CalculateAssessmentLevels();
 
         for (int i = 0; i < dMaxPeople; i++)
         {
@@ -40,12 +44,14 @@ public class DTask : TurnUpdatable
         dBuilding.AddTask(this);
     }
 
-    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task")
+    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task", 0.0f)
     {
     }
 
     public virtual void TurnUpdate(int numDaysPassed)
     {
+        CalculateAssessmentLevels();
+
         foreach (DTaskSlot taskSlot in slotList)
         {
             taskSlot.TurnUpdate(numDaysPassed);
@@ -71,7 +77,7 @@ public class DTask : TurnUpdatable
         {
             foreach (DTaskSlot taskSlot in slotList)
             {
-                if (taskSlot.Person == null)
+                if (taskSlot.Person == null && taskSlot.Enabled)
                 {
                     if (dPerson.Task != null)
                         dPerson.RemoveTask();
@@ -158,6 +164,29 @@ public class DTask : TurnUpdatable
     public DTaskSlot GetTaskSlot(int index)
     {
         return slotList[index];
+    }
+
+    public int CalculateAssessmentLevels()
+    {
+        if (fullAssessRequirement == 0.0f)
+            return maxPeople;
+
+        int numEnabled = Mathf.FloorToInt(Mathf.Clamp01(building.LevelAssessed / fullAssessRequirement) * (float)maxPeople);
+        Debug.Log(taskName + " : " + numEnabled);
+        
+        for (int i = 0; i < slotList.Count; i++)
+        {
+            if (i <= numEnabled-1)
+            {
+                slotList[i].Enabled = true;
+            }
+            else
+            {
+                slotList[i].Enabled = false;
+            }
+        }
+
+        return numEnabled;
     }
 
     #region Properties

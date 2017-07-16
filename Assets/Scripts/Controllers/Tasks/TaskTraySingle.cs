@@ -11,10 +11,12 @@ public class TaskTraySingle : MonoBehaviour {
     public TaskController taskController;
     public DTaskSlot taskSlot;
     private SpriteRenderer spriteRenderer;
+    private BoxCollider2D boxCollider;
 
     void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     // Use this for initialization
@@ -24,7 +26,8 @@ public class TaskTraySingle : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
+        spriteRenderer.gameObject.SetActive(taskSlot.Enabled);
+        boxCollider.enabled = taskSlot.Enabled;
 	}
 
     #region MouseOver Functions

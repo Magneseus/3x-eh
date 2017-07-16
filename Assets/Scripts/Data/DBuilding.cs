@@ -6,17 +6,25 @@ using UnityEngine;
 
 public class DBuilding : TurnUpdatable {
 
+    public enum DBuildingStatus
+    {
+        UNDISCOVERED,
+        DISCOVERED,
+        ASSESSED,
+    }
+
     private static int NEXT_ID = 0;
     private BuildingController buildingController;
 
     private int id;
     private DCity city;
     private String buildingName;
+    private DBuildingStatus status;
     public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
+    private DTask_Assess assessTask;
 
     private float percentInfected;
     private float percentDamaged;
-    public bool discovered;
     private float percentAssessed;
 
     public DBuilding(DCity city, string buildingName, BuildingController buildingController)
@@ -25,13 +33,12 @@ public class DBuilding : TurnUpdatable {
         this.city = city;
         this.buildingName = buildingName;
         this.buildingController = buildingController;
-
-        //TODO: Change the default discovery to false, as it will be false for almost all buildings
-        this.discovered = true;
+        
+        this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
 
         // Add an assess task by default
-        DTask assessTask = new DTask_Assess(this, 0.2f, 2, "Assess Building");
+        this.assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
         
         city.AddBuilding(this);
     }
@@ -118,9 +125,45 @@ public class DBuilding : TurnUpdatable {
 
     #region Assessment Components
 
+    public DBuildingStatus Status
+    {
+        get { return status; }
+    }
+
+    public string StatusAsString
+    {
+        get
+        {
+            switch (status)
+            {
+                case DBuildingStatus.UNDISCOVERED:
+                    return "Undiscovered";
+                case DBuildingStatus.DISCOVERED:
+                    return "Discovered";
+                case DBuildingStatus.ASSESSED:
+                    return "Assessed";
+            }
+
+            return "Unknown";
+        }
+    }
+
+    public void Discover()
+    {
+        if (status == DBuildingStatus.UNDISCOVERED)
+            status = DBuildingStatus.DISCOVERED;
+    }
+
     public void Assess(float assessAmount)
     {
         percentAssessed = Mathf.Clamp01(percentAssessed + assessAmount);
+
+        if (percentAssessed == 1.0f)
+        {
+            status = DBuildingStatus.ASSESSED;
+            assessTask.DisableTask();
+            buildingController.ReorganizeTaskControllers();
+        }
     }
 
     public float LevelAssessed
@@ -154,6 +197,8 @@ public class DBuilding : TurnUpdatable {
     }
     #endregion
 }
+
+#region Exceptions
 
 public class TaskNotFoundException : Exception
 {
@@ -192,3 +237,5 @@ public class TaskAlreadyAddedException : Exception
     {
     }
 }
+
+#endregion
