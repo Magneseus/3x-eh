@@ -32,7 +32,8 @@ public class MeepleController : MonoBehaviour {
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
         dPerson = new DPerson(dGame.Cities[cityName], this);
-	    //dPerson.MoveToTownHall();
+	   // dPerson.MoveToTownHall();
+
     }
 
     public void ResetLocalPosition()
@@ -91,7 +92,7 @@ public class MeepleController : MonoBehaviour {
         {
             // Reset position
             this.transform.parent = returnParent;
-            ResetLocalPosition();
+			dPerson.MoveToTownHall();
         }
         else
         {

@@ -69,7 +69,8 @@ public class DPerson : TurnUpdatable
 	public void MoveToTownHall()
     {
         // Move to town hall in data
-        RemoveTask();
+		if(Task !=null)
+        	RemoveTask();
         city.townHall.getIdleTask().AddPerson(this);
 
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
