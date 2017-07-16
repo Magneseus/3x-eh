@@ -21,7 +21,6 @@ public class DTask_Idle : DTask {
 			taskSlot.TurnUpdate(numDaysPassed);
 				
 		}
-		maxPeople = numPeople + 1;
 	}
 
 
