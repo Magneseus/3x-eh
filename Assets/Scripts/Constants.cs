@@ -24,4 +24,7 @@ public static class Constants {
     public static float TASK_MIN_FUNGAL_DMG = 0.0f;
     public static float TASK_MAX_FUNGAL_DMG = 1.0f;
     #endregion
+
+    public static int MERSON_INFECTION_MIN = 0;
+    public static int MERSON_INFECTION_MAX = 2;
 }

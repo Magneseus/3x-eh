@@ -8,6 +8,7 @@ public class DPerson : TurnUpdatable
     private MeepleController meepleController;
     
     private int id;
+    private int infectionLevel;
     private DCity city;
     private DTaskSlot taskSlot;
 
@@ -17,6 +18,7 @@ public class DPerson : TurnUpdatable
         city = dCity;
         meepleController = mController;
         taskSlot = null;
+        infectionLevel = 0;
 
         city.AddPerson(this);
     }
@@ -25,6 +27,18 @@ public class DPerson : TurnUpdatable
     {
 
     }
+
+    #region Infection
+    public void IncreaseInfection()
+    {        
+        infectionLevel = Mathf.Clamp(infectionLevel++, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX);
+    }
+
+    public void DecreaseInfection()
+    {
+        infectionLevel = Mathf.Clamp(infectionLevel--, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX);
+    }
+    #endregion
 
     #region Task Management
 
@@ -98,6 +112,11 @@ public class DPerson : TurnUpdatable
     public DCity City
     {
         get { return city; }
+    }
+
+    public int Infection
+    {
+        get { return infectionLevel; }        
     }
 
     #endregion
