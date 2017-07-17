@@ -43,6 +43,9 @@ public class DBuilding : TurnUpdatable {
 		
 		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
 
+        percentDamaged = 0.0f;
+        percentInfected = 0.0f;
+
         city.AddBuilding(this);
     }
 
