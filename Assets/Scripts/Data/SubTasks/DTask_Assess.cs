@@ -29,7 +29,8 @@ public class DTask_Assess : DTask
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
             {
-                building.Assess(assessAmount);
+                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;                                
+                building.Assess(assessAmount * Constants.MERSON_INFECTION_TASK_MODIFIER);
             }
         }
     }

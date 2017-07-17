@@ -57,7 +57,11 @@ public class DTask : TurnUpdatable
             taskSlot.TurnUpdate(numDaysPassed);
 
             if (taskSlot.IsFunctioning())
-                building.OutputResource(output);
+            {
+                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
+                building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier)));                
+            }
+                
         }
     }
 
