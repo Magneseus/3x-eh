@@ -31,15 +31,18 @@ public class DPerson : TurnUpdatable
     public void SetTask(DTask dTask)
     {
         if (taskSlot != null && Task != dTask)
-            RemoveTask();
+
+				RemoveTask();
+
+			
 
         dTask.AddPerson(this);
     }
 
     public void SetTaskSlot(DTaskSlot dTaskSlot)
     {
-        if (taskSlot != null)
-            RemoveTask();
+		if(taskSlot != null)
+            	RemoveTask();
 
         dTaskSlot.AddPerson(this);
     }
@@ -47,11 +50,6 @@ public class DPerson : TurnUpdatable
     public void __TaskSlot(DTaskSlot dtaskSlot)
     {
         taskSlot = dtaskSlot;
-
-        if (taskSlot == null)
-        {
-            MoveToTownHall();
-        }
     }
 
     public void RemoveTask()
@@ -60,8 +58,6 @@ public class DPerson : TurnUpdatable
         {
             taskSlot.RemovePerson();
             taskSlot = null;
-
-            MoveToTownHall();
         }
         else
         {
@@ -69,12 +65,18 @@ public class DPerson : TurnUpdatable
         }
     }
 
-    public void MoveToTownHall()
+
+	public void MoveToTownHall()
     {
-        //TODO: When the empty building is made / townhall, move to that instead of global parent
-        meepleController.transform.parent = null;
-        meepleController.gameObject.SetActive(true);
+        // Move to town hall in data
+		if(Task !=null)
+        	RemoveTask();
+        city.townHall.getIdleTask().AddPerson(this);
+
+        meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
+
+
 
     #endregion
 

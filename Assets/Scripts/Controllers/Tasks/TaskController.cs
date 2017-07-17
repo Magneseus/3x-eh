@@ -103,6 +103,7 @@ public class TaskController : MonoBehaviour {
                 // Set the parent TaskController & task slot
                 go.GetComponent<TaskTraySingle>().taskController = this;
                 go.GetComponent<TaskTraySingle>().taskSlot = dTask.GetTaskSlot(i);
+				dTask.GetTaskSlot(i).TaskTraySlot = go.GetComponent<TaskTraySingle>();
                 go.GetComponent<TaskTraySingle>().UpdateSprite();
 
                 listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());

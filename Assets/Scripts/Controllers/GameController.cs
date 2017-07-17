@@ -82,10 +82,12 @@ public class GameController : MonoBehaviour
             JSONNode yPos = building["position"]["y"].AsArray;
 
             BuildingController bControl = CreateBuilding(cityJson["name"], building["name"], new Vector3(Random.Range(xPos[0], xPos[1]), Random.Range(yPos[0], yPos[1]), 1));
-
+			if(building["name"].Equals("Town Hall"))
+				bControl.dBuilding.Assess(1.0f);
             // Load in all the tasks for this building
             foreach (JSONNode task in building["tasks"].AsArray)
             {
+				
                 // TODO: Check for "special" tasks, like assess/explore/etc.
                 string taskName = task["name"];
                 int maxPeople = task["maxPeople"];
@@ -102,7 +104,6 @@ public class GameController : MonoBehaviour
                     maxPeople,
                     taskName,
                     fullAssessmentRequirement);
-
                 // Generate the task controller and attach it
                 TaskController newTaskController = AttachTaskController(newTask, bControl);
             }
@@ -133,7 +134,7 @@ public class GameController : MonoBehaviour
 
         // Generate all predefined tasks
         foreach (var kvp in buildingController.dBuilding.Tasks)
-        {
+		{
             TaskController newTaskController = AttachTaskController(kvp.Value, buildingController);
         }
 

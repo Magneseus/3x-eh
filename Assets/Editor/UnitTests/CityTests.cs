@@ -7,6 +7,7 @@ public class CityTests
 {
     private string CITY_NAME = "Test City";
     private string LINKED_CITY_NAME = "Linked City";
+	private string TOWN_HALL = "Town Hall";
     private string BUILDING_NAME = "Test Building";
     private string BUILDING_NAME_2 = "Other Test Building";
 
@@ -51,12 +52,17 @@ public class CityTests
         var city = new DCity(CITY_NAME, Mock.Component<CityController>());
         Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
 
-        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
-        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 1));
-        Assert.That(building.City, Is.EqualTo(city));
+		var building = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+		Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 1));
+		Assert.That(building.City, Is.EqualTo(city));
+
+        var building1 = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 2));
+        Assert.That(building1.City, Is.EqualTo(city));
+
 
         var building2 = new DBuilding(city, BUILDING_NAME_2, Mock.Component<BuildingController>());
-        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 2));
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 3));
         Assert.That(building2.City, Is.EqualTo(city));
     }    
 
@@ -201,6 +207,7 @@ public class CityTests
         var resource_B = DResource.Create(RESOURCE_NAME, RESOURCE_B_AMOUNT);
 
         var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task_A = Mock.CleanTask(building, resource_A);
         var task_B = Mock.CleanTask(building, resource_B);
@@ -217,10 +224,12 @@ public class CityTests
         person.SetTask(task_A);
         city.TurnUpdate(1);
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT));
+		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.False);
 
         person.SetTask(task_B);
         city.TurnUpdate(1);
-        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));                
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));
+		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.False);
     }
 
     [Test]
