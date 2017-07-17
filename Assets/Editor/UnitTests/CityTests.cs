@@ -105,6 +105,23 @@ public class CityTests
         Assert.That(city.People.Count, Is.EqualTo(1));
         Assert.That(person.City, Is.EqualTo(city));
     }
+	[Test]
+	public void ExplorationLevel()
+	{
+		var startLevelExploration = 0.0f;
+		var numberOfDaysPassed = 7;
+		var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+		var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+
+		Assert.That(city.ExplorationLevel, Is.EqualTo(startLevelExploration));
+
+		building.Discover();
+
+		city.TurnUpdate(numberOfDaysPassed);
+
+		Assert.That(city.ExplorationLevel, Is.EqualTo(1.0f));
+	}
     
     [Test]
     public void AddPerson()

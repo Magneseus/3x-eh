@@ -24,6 +24,7 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
 	// Update is called once per frame
 	void Update () {
+		gameObject.SetActive(!(dBuilding.Status==DBuilding.DBuildingStatus.UNDISCOVERED));
 
 	}
 

@@ -16,6 +16,7 @@ public class DCity : TurnUpdatable
 
     private int age;
     private string name;
+	private float explorationLevel;
     //map of canada vars
     // private List<string> edges;
 
@@ -27,6 +28,7 @@ public class DCity : TurnUpdatable
         this.cityController = cityController;
         age = 0;
         townHall = null;
+		explorationLevel = 0.0f;
 
         if (linkedCityKeys == null)
         {
@@ -71,6 +73,8 @@ public class DCity : TurnUpdatable
             entry.Value.TurnUpdate(numDaysPassed);
 
         age += numDaysPassed;
+		explorationLevel = CalculateExploration();
+
     }
 
     public void AddPerson(DPerson dPerson)
@@ -105,6 +109,22 @@ public class DCity : TurnUpdatable
             throw new InsufficientResourceException(resource.ID.ToString());
         }
     }
+
+
+	private float CalculateExploration()
+	{
+		float countDiscovered = 0.0f;
+		foreach(DBuilding dBuilding in buildings.Values) 
+		{
+			if(dBuilding != townHall)
+				if(!(dBuilding.Status == DBuilding.DBuildingStatus.UNDISCOVERED))
+					countDiscovered++;
+		}
+		if(countDiscovered > 0)
+			return countDiscovered / (float)(buildings.Count - 1);
+		else
+			return countDiscovered;
+	}
 
     public DResource GetResource(string name)
     {
@@ -149,6 +169,7 @@ public class DCity : TurnUpdatable
     }
 
     #region Properties
+
     public Dictionary<int, DBuilding> Buildings
     {
         get { return buildings; }
@@ -175,6 +196,11 @@ public class DCity : TurnUpdatable
         get { return name; }
         set { name = value; }
     }
+
+	public float ExplorationLevel
+	{
+		get { return explorationLevel;}
+	}
 
     public int Age
     {

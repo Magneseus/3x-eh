@@ -139,7 +139,7 @@ public class TaskController : MonoBehaviour {
 			go.GetComponent<TaskTraySingle>().taskSlot = dTask.GetTaskSlot(listOfTraySingles.Count);
 			dTask.GetTaskSlot(listOfTraySingles.Count).TaskTraySlot = go.GetComponent<TaskTraySingle>();
 			go.GetComponent<TaskTraySingle>().UpdateSprite();
-			Debug.Log("Add Slot");
+
 			listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
 		//OrganizeSlot();
 
@@ -149,7 +149,7 @@ public class TaskController : MonoBehaviour {
 		GameObject slot = listOfTraySingles[listOfTraySingles.Count - 1].gameObject;
 		listOfTraySingles.RemoveAt(listOfTraySingles.Count-1);
 		Destroy(slot);
-		Debug.Log("Remove Slot");
+
 		//OrganizeSlot();
 	}
 	private void OrganizeSlot()
