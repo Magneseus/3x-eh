@@ -38,7 +38,7 @@ public class DBuilding : TurnUpdatable {
         this.percentAssessed = 0.0f;
         // Add an assess task by default
 		if(buildingName.Equals("Town Hall")) {
-			DTask_Idle idleTask = new DTask_Idle(this, "Idle Merson");
+			DTask idleTask = new DTask_Idle(this, "Idle Merson");
 		} 
 		
 		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
