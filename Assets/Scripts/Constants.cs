@@ -18,6 +18,7 @@ public static class Constants {
 
     #region Task Constants
     public static float TEMP_REPAIR_AMOUNT = 0.2f;
+    public static float DEFAULT_ASSESS_AMOUNT = 0.1f;
 
     public static float TASK_MIN_STRUCTURAL_DMG = 0.0f;
     public static float TASK_MAX_STRUCTURAL_DMG = 1.0f;

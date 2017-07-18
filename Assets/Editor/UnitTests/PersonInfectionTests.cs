@@ -100,7 +100,7 @@ public class PersonInfectionTests
     }
 
     [Test]
-    public void LevelOneReduceTaskRepair()
+    public void LevelOneReduceTaskFungalRepair()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
         var city = new DCity(CITY_NAME, Mock.Component<CityController>());
@@ -115,16 +115,65 @@ public class PersonInfectionTests
         task.AddPerson(person);
         Assert.That(person.Task, Is.EqualTo(task));
         Assert.That(task.ContainsPerson(person), Is.True);
-
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
+        
         var taskSlot = task.GetTaskSlot(0);
         taskSlot.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
+        task.TurnUpdate(1);
+
+        Assert.That(taskSlot.LevelInfected, Is.EqualTo(Constants.TASK_MAX_FUNGAL_DMG - Constants.TEMP_REPAIR_AMOUNT * Constants.MERSON_INFECTION_TASK_MODIFIER));
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void LevelOneReduceTaskStructureRepair()
+    {
+        var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = new DTask(building, resource);        
+
+        var person = new DPerson(city, Mock.Component<MeepleController>())
+        {
+            Infection = Constants.MERSON_INFECTION_MIN + 1
+        };
+
+        task.AddPerson(person);
+        Assert.That(person.Task, Is.EqualTo(task));
+        Assert.That(task.ContainsPerson(person), Is.True);
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
+        
+        var taskSlot = task.GetTaskSlot(0);
+        taskSlot.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG; 
+        taskSlot.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
+        task.TurnUpdate(1);
+
+        Assert.That(taskSlot.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_STRUCTURAL_DMG - Constants.TEMP_REPAIR_AMOUNT * Constants.MERSON_INFECTION_TASK_MODIFIER));
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void LevelOneReduceTaskAssess()
+    {
+        var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = new DTask_Assess(building);
+
+        var person = new DPerson(city, Mock.Component<MeepleController>())
+        {
+            Infection = Constants.MERSON_INFECTION_MIN + 1
+        };
+
+        task.AddPerson(person);
+        Assert.That(person.Task, Is.EqualTo(task));
+        Assert.That(task.ContainsPerson(person), Is.True);
+        Assert.That(task.AssessAmount, Is.EqualTo(Constants.DEFAULT_ASSESS_AMOUNT));
+        Assert.That(building.Assessed, Is.False);
+        Assert.That(building.LevelAssessed, Is.EqualTo(0));
 
         task.TurnUpdate(1);
 
-        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.LessThan(task.Output.Amount));
+        Assert.That(building.LevelAssessed, Is.EqualTo(Constants.DEFAULT_ASSESS_AMOUNT * Constants.MERSON_INFECTION_TASK_MODIFIER));        
     }
-
-
-
-
 }
