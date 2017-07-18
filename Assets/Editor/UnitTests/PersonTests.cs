@@ -2,10 +2,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
+using System;
 
 public class PersonTests
 {
     private string CITY_NAME = "Test City";
+    DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
     [TearDown]
     public void TearDown()
@@ -22,7 +24,7 @@ public class PersonTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var person = new DPerson(city, Mock.Component<MeepleController>());
 
         Assert.That(person.City, Is.EqualTo(city));
@@ -33,7 +35,7 @@ public class PersonTests
     public void PersonSetAndRemoveTask()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
@@ -54,7 +56,7 @@ public class PersonTests
     {
         var resource = DResource.Create("Test Resource", 1);
         var resource2 = DResource.Create("Test Resource 2", 2);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
         var task2 = new DTask(building, resource2);
@@ -74,7 +76,7 @@ public class PersonTests
     public void PersonVerifyTaskNotFoundException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
