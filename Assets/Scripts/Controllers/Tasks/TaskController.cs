@@ -25,7 +25,9 @@ public class TaskController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(dTask == dTask.Building.getIdleTask()||dTask.Name.Equals("Explore")) {
+        taskText.text = dTask.Name;
+
+        if (dTask == dTask.Building.getIdleTask()||dTask.Name.Equals("Explore")) {
 			Resize();
 		}
 		
@@ -81,8 +83,6 @@ public class TaskController : MonoBehaviour {
             float xOffset =
                     ((float)(0) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) *
                     TaskTraySingle.WIDTH_CONST;
-
-            taskText.text = dTask.Name;
 
             Vector3 newTaskTextPos = this.transform.position;
             newTaskTextPos.x += xOffset;

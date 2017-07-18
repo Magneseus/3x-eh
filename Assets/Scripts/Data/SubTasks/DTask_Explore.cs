@@ -5,10 +5,8 @@ using System.Runtime.Serialization;
 using UnityEngine;
 
 
-
 public class DTask_Explore : DTask
 {
-
     float exploreAmount;
 
     public DTask_Explore(DBuilding dBuilding, float exploreAmount, string dName) : base(dBuilding, null, 1, dName, 1.0f)
@@ -18,6 +16,7 @@ public class DTask_Explore : DTask
         ForceFixed();
         Reszie();
     }
+
     public override void TurnUpdate(int numDaysPassed)
     {
         foreach (DTaskSlot taskSlot in slotList)
@@ -27,10 +26,39 @@ public class DTask_Explore : DTask
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
             {
-                building.City.Explore(exploreAmount);
+                if (taskName == "Explore")
+                {
+                    building.City.Explore(exploreAmount);
+                }
+                else if (taskName == "Scavenge")
+                {
+                    // TODO: Once random events are in place, proper scavenge task here
+                    float rand = UnityEngine.Random.Range(0.0f, 1.0f);
+                    int randAmt = Mathf.RoundToInt(UnityEngine.Random.Range(10.0f, 50.0f));
+
+                    if (rand > 0.4f && rand < 0.7f)
+                    {
+                        building.OutputResource(DResource.Create("Materials", randAmt));
+                    }
+                    else if (rand >= 0.7f && rand < 0.9f)
+                    {
+                        building.OutputResource(DResource.Create("Fuel", randAmt));
+                    }
+                    else if (rand >= 0.9f)
+                    {
+                        building.OutputResource(DResource.Create("Medicine", randAmt));
+                    }
+                }
             }
         }
+
+        // If we've finished exploring, convert to Scavenge task
+        if (building.City.CalculateExploration() == 1.0f)
+        {
+            this.taskName = "Scavenge";
+        }
     }
+
     public void AddPerson(DPerson dPerson, DTaskSlot taskSlot)
     {
         if (numPeople >= maxPeople)
@@ -55,6 +83,7 @@ public class DTask_Explore : DTask
             }
         }
     }
+
     public override void RemovePerson(DPerson dPerson)
     {
         base.RemovePerson(dPerson);

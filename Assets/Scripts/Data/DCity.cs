@@ -110,15 +110,20 @@ public class DCity : TurnUpdatable
     }
 
 
-	private float CalculateExploration()
+	public float CalculateExploration()
 	{
 		float countDiscovered = 0.0f;
 		foreach(DBuilding dBuilding in buildings.Values) 
 		{
-			if(dBuilding != townHall)
-				if(!(dBuilding.Status == DBuilding.DBuildingStatus.UNDISCOVERED))
-					countDiscovered++;
+            if (dBuilding != townHall)
+            {
+                if (dBuilding.Status != DBuilding.DBuildingStatus.UNDISCOVERED)
+				{
+                    countDiscovered++;
+                }
+            }
 		}
+
 		if(countDiscovered > 0)
 			return countDiscovered / (float)(buildings.Count - 1);
 		else

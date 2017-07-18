@@ -21,6 +21,9 @@ public class DBuilding : TurnUpdatable {
     private String buildingName;
     private DBuildingStatus status;
     public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
+
+    private DTask_Explore exploreTask;
+    private DTask_Idle idleTask;
     private DTask_Assess assessTask;
 
     private float percentInfected;
@@ -38,8 +41,8 @@ public class DBuilding : TurnUpdatable {
         this.percentAssessed = 0.0f;
         // Add an assess task by default
 		if(buildingName.Equals("Town Hall")) {
-			DTask idleTask = new DTask_Idle(this, "Idle Merson");
-            DTask exploreTask = new DTask_Explore(this, 0.1f, "Explore");
+			this.idleTask = new DTask_Idle(this, "Idle Merson");
+            this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
         } 
 		
 		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
@@ -97,22 +100,11 @@ public class DBuilding : TurnUpdatable {
 
 	public DTask_Idle getIdleTask()
 	{
-		if(Name.Equals("Town Hall"))
-			foreach(DTask dTask in tasks.Values){
-				if(dTask.Name.Equals("Idle Merson"))
-					return (DTask_Idle)dTask;
-			}
-		return null;		
+        return idleTask;	
 	}
     public DTask_Explore getExploreTask()
     {
-        if (Name.Equals("Town Hall"))
-            foreach (DTask dTask in tasks.Values)
-            {
-                if (dTask.Name.Equals("Explore"))
-                    return (DTask_Explore)dTask;
-            }
-        return null;
+        return exploreTask;
     }
 
     public void AddTask(DTask task)
