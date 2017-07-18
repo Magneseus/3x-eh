@@ -105,7 +105,7 @@ public class PersonInfectionTests
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
         var city = new DCity(CITY_NAME, Mock.Component<CityController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
-        var task = new DTask(building, resource);
+        var task = new DTask(building, resource);        
 
         var person = new DPerson(city, Mock.Component<MeepleController>())
         {
@@ -115,7 +115,9 @@ public class PersonInfectionTests
         task.AddPerson(person);
         Assert.That(person.Task, Is.EqualTo(task));
         Assert.That(task.ContainsPerson(person), Is.True);
-        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
+
+        var taskSlot = task.GetTaskSlot(0);
+        taskSlot.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
 
         task.TurnUpdate(1);
 
