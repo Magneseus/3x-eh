@@ -38,8 +38,9 @@ public class DBuilding : TurnUpdatable {
         this.percentAssessed = 0.0f;
         // Add an assess task by default
 		if(buildingName.Equals("Town Hall")) {
-			DTask_Idle idleTask = new DTask_Idle(this, "Idle Merson");
-		} 
+			DTask idleTask = new DTask_Idle(this, "Idle Merson");
+            DTask exploreTask = new DTask_Explore(this, 0.1f, "Explore");
+        } 
 		
 		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
 
@@ -57,7 +58,11 @@ public class DBuilding : TurnUpdatable {
             if (entry.Value.Enabled)
                 entry.Value.TurnUpdate(numDaysPassed);
         }
-        CalculateDamages();        
+        CalculateDamages();
+        if ((status == DBuildingStatus.UNDISCOVERED))
+            buildingController.gameObject.SetActive(false);
+        else
+            buildingController.gameObject.SetActive(true);
     }
 
     private void CalculateDamages()
@@ -99,6 +104,16 @@ public class DBuilding : TurnUpdatable {
 			}
 		return null;		
 	}
+    public DTask_Explore getExploreTask()
+    {
+        if (Name.Equals("Town Hall"))
+            foreach (DTask dTask in tasks.Values)
+            {
+                if (dTask.Name.Equals("Explore"))
+                    return (DTask_Explore)dTask;
+            }
+        return null;
+    }
 
     public void AddTask(DTask task)
     {

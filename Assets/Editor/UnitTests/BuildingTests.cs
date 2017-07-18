@@ -32,7 +32,7 @@ public class BuildingTests
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
 
 		Assert.That(townHall.City.Name, Is.EqualTo(city.Name));
-		Assert.That(townHall.Tasks.Count, Is.EqualTo(2));
+		Assert.That(townHall.Tasks.Count, Is.EqualTo(3));
 		Assert.That(townHall.Name, Is.EqualTo(TOWN_HALL));
 
         Assert.That(building.City.Name, Is.EqualTo(city.Name));

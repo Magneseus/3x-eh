@@ -34,17 +34,19 @@ public class DPerson : TurnUpdatable
 
 				RemoveTask();
 
-			
-
         dTask.AddPerson(this);
     }
 
     public void SetTaskSlot(DTaskSlot dTaskSlot)
     {
 		if(taskSlot != null)
-            	RemoveTask();
-
-        dTaskSlot.AddPerson(this);
+			Task.RemovePerson(this);
+		if(dTaskSlot.Task==city.townHall.getIdleTask())
+			((DTask_Idle)dTaskSlot.Task).AddPerson(this, dTaskSlot);
+        else if (dTaskSlot.Task.Name.Equals("Explore"))
+            ((DTask_Explore)dTaskSlot.Task).AddPerson(this, dTaskSlot);
+        else
+        	dTaskSlot.AddPerson(this);
     }
 
     public void __TaskSlot(DTaskSlot dtaskSlot)

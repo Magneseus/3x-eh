@@ -90,7 +90,7 @@ public class DTask : TurnUpdatable
         }
     }
 
-    public void RemovePerson(DPerson dPerson)
+	public virtual void RemovePerson(DPerson dPerson)
     {
         foreach (DTaskSlot taskSlot in slotList)
         {

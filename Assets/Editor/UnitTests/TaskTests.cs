@@ -58,7 +58,7 @@ public class TaskTests
 
         Assert.That(person.Task, Is.Null);
 
-		Assert.That (townHall.Tasks.Count, Is.EqualTo (2));
+		Assert.That (townHall.Tasks.Count, Is.EqualTo (3));
 
         task.AddPerson(person);
         Assert.That(person.Task, Is.EqualTo(task));
