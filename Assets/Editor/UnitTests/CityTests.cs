@@ -113,12 +113,12 @@ public class CityTests
 		var city = new DCity(CITY_NAME, Mock.Component<CityController>());
 		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
 		var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
 
-		Assert.That(city.ExplorationLevel, Is.EqualTo(startLevelExploration));
-
-		building.Discover();
-
-		city.TurnUpdate(numberOfDaysPassed);
+        Assert.That(city.ExplorationLevel, Is.EqualTo(startLevelExploration));
+        townHall.getExploreTask().AddPerson(person);
+        for(int i=0;i<10;i++)
+		    city.TurnUpdate(numberOfDaysPassed);
 
 		Assert.That(city.ExplorationLevel, Is.EqualTo(1.0f));
 	}

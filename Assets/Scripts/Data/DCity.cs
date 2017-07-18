@@ -181,15 +181,12 @@ public class DCity : TurnUpdatable
                 if ((dBuilding.Status == DBuilding.DBuildingStatus.UNDISCOVERED))
                 {
                     UnExploredBuildings.Add(dBuilding);
-                    Debug.Log(dBuilding.Name);
                 }
         }
-        Debug.Log(explorationLevel*100+"%");
         if (explorationLevel - offsetPercentage * (explorableBuildings - UnExploredBuildings.Count) >= offsetPercentage)
         {
             int index = UnityEngine.Random.Range(0, UnExploredBuildings.Count - 1);
             UnExploredBuildings[index].Discover();
-            Debug.Log("Discvored: "+UnExploredBuildings[index].Name);
         }
         
     }

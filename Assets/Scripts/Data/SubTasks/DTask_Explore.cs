@@ -28,7 +28,6 @@ public class DTask_Explore : DTask
             if (taskSlot.IsFunctioning())
             {
                 building.City.Explore(exploreAmount);
-                Debug.Log(exploreAmount);
             }
         }
     }

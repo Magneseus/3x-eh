@@ -63,7 +63,6 @@ public class DBuilding : TurnUpdatable {
             buildingController.gameObject.SetActive(false);
         else
             buildingController.gameObject.SetActive(true);
-        Debug.Log(Status == DBuilding.DBuildingStatus.ASSESSED);
     }
 
     private void CalculateDamages()
@@ -105,6 +104,16 @@ public class DBuilding : TurnUpdatable {
 			}
 		return null;		
 	}
+    public DTask_Explore getExploreTask()
+    {
+        if (Name.Equals("Town Hall"))
+            foreach (DTask dTask in tasks.Values)
+            {
+                if (dTask.Name.Equals("Explore"))
+                    return (DTask_Explore)dTask;
+            }
+        return null;
+    }
 
     public void AddTask(DTask task)
     {
