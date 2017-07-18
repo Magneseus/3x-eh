@@ -2,10 +2,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
+using System;
 
 public class TaskTests
 {
     private string CITY_NAME = "Test City";
+    DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
     [TearDown]
     public void TearDown()
@@ -23,7 +25,7 @@ public class TaskTests
     public void InitializesDefaultValues()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 3, "test name", 0.0f);
 
@@ -48,7 +50,7 @@ public class TaskTests
     public void TaskAddAndRemovePerson()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
@@ -69,7 +71,7 @@ public class TaskTests
     public void TaskVerifyPersonNotFoundException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
@@ -93,7 +95,7 @@ public class TaskTests
     public void TaskVerifyPersonAlreadyAddedException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
@@ -110,7 +112,7 @@ public class TaskTests
     public void TaskVerifyTaskFullException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "temp", 0.0f);
         var person = new DPerson(city, Mock.Component<MeepleController>());
@@ -130,7 +132,7 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "test", 0.0f);
         var taskSlot = task.GetTaskSlot(0);
@@ -147,7 +149,7 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "test", 0.0f);
         var taskSlot = task.GetTaskSlot(0);
@@ -163,7 +165,7 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "test", 0.0f);
         var taskSlot = task.GetTaskSlot(0);
@@ -184,7 +186,7 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG * -2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "test", 0.0f);
         var taskSlot = task.GetTaskSlot(0);
@@ -200,7 +202,7 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG * 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "test", 0.0f);
         var taskSlot = task.GetTaskSlot(0);
@@ -217,7 +219,7 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG * -2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "test", 0.0f);
         var taskSlot = task.GetTaskSlot(0);
@@ -232,7 +234,7 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG * 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource, 1, "test", 0.0f);
         var taskSlot = task.GetTaskSlot(0);
