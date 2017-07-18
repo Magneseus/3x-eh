@@ -31,12 +31,12 @@ public class DPerson : TurnUpdatable
     #region Infection
     public void IncreaseInfection()
     {        
-        infectionLevel = Mathf.Clamp(infectionLevel++, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX);
+        infectionLevel = Mathf.Clamp(++infectionLevel, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX);
     }
 
     public void DecreaseInfection()
     {
-        infectionLevel = Mathf.Clamp(infectionLevel--, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX);
+        infectionLevel = Mathf.Clamp(--infectionLevel, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX);
     }
     #endregion
 
@@ -116,7 +116,8 @@ public class DPerson : TurnUpdatable
 
     public int Infection
     {
-        get { return infectionLevel; }        
+        get { return infectionLevel; }
+        set { infectionLevel = Mathf.Clamp(value, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX); }
     }
 
     #endregion
