@@ -25,7 +25,7 @@ public class TaskController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(dTask == dTask.Building.getIdleTask()) {
+		if(dTask == dTask.Building.getIdleTask()||dTask.Name.Equals("Explore")) {
 			Resize();
 		}
 		

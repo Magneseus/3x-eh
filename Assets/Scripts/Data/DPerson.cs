@@ -43,7 +43,9 @@ public class DPerson : TurnUpdatable
 			Task.RemovePerson(this);
 		if(dTaskSlot.Task==city.townHall.getIdleTask())
 			((DTask_Idle)dTaskSlot.Task).AddPerson(this, dTaskSlot);
-		else
+        else if (dTaskSlot.Task.Name.Equals("Explore"))
+            ((DTask_Explore)dTaskSlot.Task).AddPerson(this, dTaskSlot);
+        else
         	dTaskSlot.AddPerson(this);
     }
 

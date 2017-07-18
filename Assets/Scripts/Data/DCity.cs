@@ -73,7 +73,6 @@ public class DCity : TurnUpdatable
             entry.Value.TurnUpdate(numDaysPassed);
 
         age += numDaysPassed;
-		explorationLevel = CalculateExploration();
 
     }
 
@@ -166,6 +165,33 @@ public class DCity : TurnUpdatable
     public bool isLinkedTo(string cityKey)
     {
         return linkedCityKeys.Contains(cityKey);
+    }
+
+    public void Explore(float exploreAmount)
+    {
+        explorationLevel = Mathf.Clamp01(explorationLevel + exploreAmount);
+        
+        float explorableBuildings = buildings.Count - 1.0f;
+        float offsetPercentage = 1.0f / explorableBuildings;
+        
+        List<DBuilding> UnExploredBuildings = new List<DBuilding>();
+        foreach(DBuilding dBuilding in buildings.Values)
+        {
+            if (dBuilding != townHall)
+                if ((dBuilding.Status == DBuilding.DBuildingStatus.UNDISCOVERED))
+                {
+                    UnExploredBuildings.Add(dBuilding);
+                    Debug.Log(dBuilding.Name);
+                }
+        }
+        Debug.Log(explorationLevel*100+"%");
+        if (explorationLevel - offsetPercentage * (explorableBuildings - UnExploredBuildings.Count) >= offsetPercentage)
+        {
+            int index = UnityEngine.Random.Range(0, UnExploredBuildings.Count - 1);
+            UnExploredBuildings[index].Discover();
+            Debug.Log("Discvored: "+UnExploredBuildings[index].Name);
+        }
+        
     }
 
     #region Properties
