@@ -29,7 +29,6 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
             gameObject.SetActive(false);
         else
             gameObject.SetActive(true);
-        Debug.Log(dBuilding.Status == DBuilding.DBuildingStatus.ASSESSED);
 
     }
 
