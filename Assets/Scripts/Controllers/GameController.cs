@@ -90,10 +90,16 @@ public class GameController : MonoBehaviour
         {
             //TODO: Check if building has a set position?
 
-            // Pull a random building location from the list
-            int randIndex = Mathf.RoundToInt(Random.Range(0, possibleBuildingLocations.Count - 1));
-            Vector2 location = possibleBuildingLocations[randIndex];
-            possibleBuildingLocations.RemoveAt(randIndex);
+            Vector2 location = new Vector2(0, 0);
+
+            // Temporary fix for townhall placement
+            if (!building["name"].Equals("Town Hall"))
+            {
+                // Pull a random building location from the list
+                int randIndex = Mathf.RoundToInt(Random.Range(0, possibleBuildingLocations.Count - 1));
+                location = possibleBuildingLocations[randIndex];
+                possibleBuildingLocations.RemoveAt(randIndex);
+            }
 
             BuildingController bControl = CreateBuilding(cityJson["name"], building["name"], new Vector3(location.x, location.y, 1));
 			if(building["name"].Equals("Town Hall"))
