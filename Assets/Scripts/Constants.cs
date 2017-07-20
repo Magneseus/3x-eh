@@ -41,4 +41,10 @@ public static class Constants {
     public static int MERSON_SPRING_FALL_INFECTION_MODIFIER = 1;
     public static float MERSON_INFECTION_TASK_MODIFIER = 0.5f;
     #endregion
+
+    #region City Constants
+    public static float CITY_MIN_HEALTH = 0.0f;
+    public static float CITY_MAX_HEALTH = 1.0f;
+
+    #endregion
 }
