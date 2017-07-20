@@ -33,7 +33,7 @@ public class ResourceDisplay : MonoBehaviour {
             Fuel.text = "Fuel: " + dCity.GetResource("Fuel").Amount;
             Materials.text = "Materials: " + dCity.GetResource("Materials").Amount;
             Medicine.text = "Medicine: " + dCity.GetResource("Medicine").Amount;
-            Shelter.text = "Shelter: " + dCity.GetResource("Shelter").Amount;
+            Shelter.text = "Shelter: " + dCity.GetResource("Shelter").Amount + " (-" + dCity.ShelterConsumedPerTurn() + ")";
         }
     }
 }

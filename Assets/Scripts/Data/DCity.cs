@@ -16,6 +16,7 @@ public class DCity : TurnUpdatable
     private int age;
     private string name;
     private int shelterTier;
+    private DResource shelterResource;
 
 	private float explorationLevel;
     public DBuilding townHall;
@@ -63,17 +64,40 @@ public class DCity : TurnUpdatable
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
+        // Set shelter resource to zero, cannot accumulate shelter
+        if (shelterResource != null)
+            shelterResource.Amount = 0;
+
+        // BUILDING UPDATE
         foreach (var entry in buildings)
             entry.Value.TurnUpdate(numDaysPassed);
 
+        // RESOURCE UPDATE
         foreach (var entry in resources)
             entry.Value.TurnUpdate(numDaysPassed);
 
+        // PERSON UPDATE
         foreach (var entry in people)
             entry.Value.TurnUpdate(numDaysPassed);
 
-        age += numDaysPassed;
+        if (shelterResource != null)
+        {
+            // Shelter calculations
+            int shelterResourceAmt = shelterResource.Amount;
+            shelterResourceAmt = shelterResourceAmt - ShelterConsumedPerTurn();
+            // TODO: Deal with negative shelter amounts
+        }
 
+
+        age += numDaysPassed;
+    }
+
+    // TODO: Account for infection in people
+    public int ShelterConsumedPerTurn()
+    {
+        int amountShelterPerPerson = Mathf.RoundToInt(Mathf.Pow(2.0f, ShelterTier - 1));
+
+        return amountShelterPerPerson * people.Count;
     }
 
     public void UpdateSeason(DateTime currentDate)
@@ -100,6 +124,9 @@ public class DCity : TurnUpdatable
         {
             resources.Add(resource.ID, DResource.Create(resource, resource.Amount));
         }
+
+        if (resource.Name.Equals("Shelter"))
+            shelterResource = resources[resource.ID];
     }
 
     public void ConsumeResource(DResource resource)
