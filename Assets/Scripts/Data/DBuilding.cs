@@ -33,42 +33,56 @@ public class DBuilding : TurnUpdatable {
         this.city = city;
         this.buildingName = buildingName;
         this.buildingController = buildingController;
-        
+
         this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
 
         // Add an assess task by default
         this.assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
-        
+
         city.AddBuilding(this);
     }
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
-    { 
+    {
         foreach (var entry in tasks)
-        {            
+        {
             if (entry.Value.Enabled)
                 entry.Value.TurnUpdate(numDaysPassed);
         }
-        CalculateDamages();        
+        CalculateDamages();
     }
 
-    private void CalculateDamages()
+    public void CalculateDamages()
     {
         int numberOfTasks = 0;
         float totalDamaged = 0.0f;
         float totalInfected = 0.0f;
-
+        int numPeople = 0;
+        int cumulativeInfectionLevel = 0;
         foreach (var entry in tasks)
         {
             //calculate %
             totalDamaged += entry.Value.LevelDamaged;
             totalInfected += entry.Value.LevelInfected;
             numberOfTasks++;
+            if(entry.Value.SlotList != null)
+            foreach (var task in entry.Value.SlotList)
+            // foreach (var person in task.Value)
+                if(task.Person != null) {
+                  cumulativeInfectionLevel += task.Person.Infection;
+                  numPeople++;
+                }
         }
+        if(numPeople != 0)
+          cumulativeInfectionLevel /= numPeople;
+        if(numberOfTasks != 0)
+          totalInfected /= numberOfTasks;
+// Arbitrary weighting alert
+          percentInfected = Mathf.Clamp(totalInfected
+          + (cumulativeInfectionLevel*0.25f),0, 1);
 
-        percentInfected = totalInfected / numberOfTasks;
         percentDamaged = totalDamaged / numberOfTasks;
     }
 
@@ -178,13 +192,18 @@ public class DBuilding : TurnUpdatable {
 
     public float LevelDamaged
     {
-        get { return percentDamaged; }        
+      get {
+            CalculateDamages();
+            return percentDamaged;
+          }
     }
 
     public float LevelInfected
     {
-        get { return percentInfected; }
-    }   
+        get {
+          CalculateDamages();
+          return percentInfected; }
+    }
 
     public bool Damaged
     {

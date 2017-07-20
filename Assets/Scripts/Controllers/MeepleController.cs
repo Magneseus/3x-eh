@@ -23,10 +23,10 @@ public class MeepleController : MonoBehaviour {
         boxCollider = GetComponent<Collider2D>();
         parentTray = null;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-        
+
 	}
 
     internal void ConnectToDataEngine(DGame dGame, string cityName)
@@ -118,6 +118,9 @@ public class MeepleController : MonoBehaviour {
                 this.transform.parent = closestTray.transform;
                 this.transform.localPosition = new Vector3(0, 0, -3);
                 this.parentTray = closestTray;
+                parentTray.taskController.buildingController.dBuilding.CalculateDamages();
+                oldParentTray.taskController.buildingController.dBuilding.CalculateDamages();
+
             }
         }
 
