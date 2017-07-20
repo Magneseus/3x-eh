@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
-using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
+using System;
 
 public class CityTests
 {
@@ -10,6 +10,7 @@ public class CityTests
 	private string TOWN_HALL = "Town Hall";
     private string BUILDING_NAME = "Test Building";
     private string BUILDING_NAME_2 = "Other Test Building";
+    private DateTime[] defaultSeasonStartDates = {new DateTime(2017,4,1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1)};
 
     [TearDown]
     public void TearDown()
@@ -26,7 +27,7 @@ public class CityTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         Assert.That(city.Buildings, Is.Not.Null);
         Assert.That(city.Resources, Is.Not.Null);
         Assert.That(city.People, Is.Not.Null);
@@ -38,7 +39,7 @@ public class CityTests
     public void Name()
     {
         var newName = "Test123";
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>())
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now)
         {
             Name = newName
         };
@@ -49,7 +50,7 @@ public class CityTests
     public void AddBuilding()
     {
         var startingBuildingCount = 0;
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
 
 		var building = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
@@ -70,7 +71,7 @@ public class CityTests
     public void AddSameBuildingTwice()
     {
         var startingBuildingCount = 0;
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
 
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
@@ -87,7 +88,7 @@ public class CityTests
     public void AddResource()
     {
         var resource = DResource.Create("Test", 0);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
 
         Assert.That(city.Resources.Count, Is.EqualTo(0));
 
@@ -98,7 +99,7 @@ public class CityTests
     [Test]
     public void CountPeople()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         Assert.That(city.People.Count, Is.EqualTo(0));
 
         var person = new DPerson(city, Mock.Component<MeepleController>());
@@ -127,7 +128,7 @@ public class CityTests
     public void AddPerson()
     {
         var startCount = 0;
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
 
         Assert.That(city.People.Count, Is.EqualTo(startCount));        
         
@@ -144,7 +145,7 @@ public class CityTests
     public void AddSamePersonTwice()
     {
         var startCount = 0;
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
 
         Assert.That(city.People.Count, Is.EqualTo(startCount));
 
@@ -161,7 +162,7 @@ public class CityTests
     [Test]
     public void TurnUpdateDaysPassed()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var numberOfDaysPassed = 7;
 
         for (var i = 0; i < 10; i++)
@@ -179,7 +180,7 @@ public class CityTests
         var zero = 0;
         var output = DResource.Create(resourceName, outputAmount);
 
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = Mock.CleanTask(building, output);
         var person = new DPerson(city, Mock.Component<MeepleController>());
@@ -198,7 +199,7 @@ public class CityTests
         var outputAmount = 2;
         var output = DResource.Create(resourceName, outputAmount);
 
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = Mock.CleanTask(building, output);
 
@@ -223,8 +224,8 @@ public class CityTests
         var resource_A = DResource.Create(RESOURCE_NAME, RESOURCE_A_AMOUNT);
         var resource_B = DResource.Create(RESOURCE_NAME, RESOURCE_B_AMOUNT);
 
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
-		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+				var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task_A = Mock.CleanTask(building, resource_A);
         var task_B = Mock.CleanTask(building, resource_B);
@@ -255,17 +256,17 @@ public class CityTests
         List<string> linkedCities = new List<string>();
         linkedCities.Add(LINKED_CITY_NAME);
 
-        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>(), linkedCities);
+        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now, linkedCities);
         Assert.That(city.LinkedCityKeys, Is.EqualTo(linkedCities));
 
-        DCity unlinkedCity = new DCity(CITY_NAME, Mock.Component<CityController>());
+        DCity unlinkedCity = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         Assert.IsEmpty(unlinkedCity.LinkedCityKeys);
     }
 
     [Test]
     public void AddsLinkedCity()
     {
-        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         city.linkToCity(LINKED_CITY_NAME);
         Assert.True(city.LinkedCityKeys.Contains(LINKED_CITY_NAME));
     }
@@ -280,7 +281,7 @@ public class CityTests
         for(int i = 0; i < numCities; i++)
             linkedCities.Add(LINKED_CITY_NAME + i.ToString());
 
-        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>(), linkedCities);
+        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now, linkedCities);
 
         foreach(string cityKey in city.getAllLinkedCityKeys())
         {

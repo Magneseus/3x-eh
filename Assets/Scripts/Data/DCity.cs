@@ -11,38 +11,37 @@ public class DCity : TurnUpdatable
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
     private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
-    //private Dictionary<int, DCity> linkedCityKeys = new Dictionary<int, DCity>();
     private List<string> linkedCityKeys = new List<string>();
 
     private int age;
     private string name;
-	private float explorationLevel;
+
+	  private float explorationLevel;
+    public DBuilding townHall;
+
+    private DSeasons._season season;
+    private DateTime[] seasonStartDates = new DateTime[4];
     //map of canada vars
     // private List<string> edges;
 
-    public DBuilding townHall;
-
-    public DCity(string cityName, CityController cityController, List<string> linkedCityKeys = null)
+    public DCity(string cityName, CityController cityController, DateTime[] seasonDates, DateTime currentDate, List<string> linkedCityKeys = null)
     {
         name = cityName;
         this.cityController = cityController;
         age = 0;
         townHall = null;
-		explorationLevel = 0.0f;
+    		explorationLevel = 0.0f;
 
-        if (linkedCityKeys == null)
-        {
-            this.linkedCityKeys = new List<string>();
-        }
-        else
-        {
-            this.linkedCityKeys = new List<string>();
+        InitialLinkedCities(linkedCityKeys);
+        seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season);
+    }
 
+    private void InitialLinkedCities(List<string> linkedCityKeys)
+    {
+        this.linkedCityKeys = new List<string>();
+        if (linkedCityKeys != null)
             foreach (string cityKey in linkedCityKeys)
-            {
                 this.linkedCityKeys.Add(cityKey);
-            }
-        }
     }
 
     public void AddBuilding(DBuilding dBuilding)
@@ -74,6 +73,11 @@ public class DCity : TurnUpdatable
 
         age += numDaysPassed;
 
+    }
+
+    public void UpdateSeason(DateTime currentDate)
+    {
+        seasonStartDates = DSeasons.UpdateSeasonStatus(seasonStartDates, currentDate, ref season);
     }
 
     public void AddPerson(DPerson dPerson)
