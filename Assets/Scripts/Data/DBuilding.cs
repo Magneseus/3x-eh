@@ -79,9 +79,8 @@ public class DBuilding : TurnUpdatable {
           cumulativeInfectionLevel /= numPeople;
         if(numberOfTasks != 0)
           totalInfected /= numberOfTasks;
-// Arbitrary weighting alert
           percentInfected = Mathf.Clamp(totalInfected
-          + (cumulativeInfectionLevel*0.25f),0, 1);
+          + (cumulativeInfectionLevel*Constants.BUILDING_MERSON_INFECTION_WEIGHT),Constants.BUILDING_MIN_FUNGAL_DMG, Constants.BUILDING_MAX_FUNGAL_DMG);
 
         percentDamaged = totalDamaged / numberOfTasks;
     }
