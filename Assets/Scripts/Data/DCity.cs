@@ -15,14 +15,14 @@ public class DCity : TurnUpdatable
 
     private int age;
     private string name;
+    private int shelterTier;
 
-	  private float explorationLevel;
+	private float explorationLevel;
     public DBuilding townHall;
 
     private DSeasons._season season;
     private DateTime[] seasonStartDates = new DateTime[4];
-    //map of canada vars
-    // private List<string> edges;
+
 
     public DCity(string cityName, CityController cityController, DateTime[] seasonDates, DateTime currentDate, List<string> linkedCityKeys = null)
     {
@@ -30,7 +30,8 @@ public class DCity : TurnUpdatable
         this.cityController = cityController;
         age = 0;
         townHall = null;
-    		explorationLevel = 0.0f;
+        explorationLevel = 0.0f;
+        shelterTier = 1;
 
         InitialLinkedCities(linkedCityKeys);
         seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season);
@@ -243,6 +244,22 @@ public class DCity : TurnUpdatable
     {
         get { return cityController; }
     }
+
+    public int ShelterTier
+    {
+        get { return shelterTier; }
+    }
+
+    public void RaiseShelterTier()
+    {
+        shelterTier = Mathf.Clamp(shelterTier + 1, 1, 5);
+    }
+
+    public void LowerShelterTier()
+    {
+        shelterTier = Mathf.Clamp(shelterTier - 1, 1, 5);
+    }
+
     #endregion
 }
 
