@@ -111,8 +111,8 @@ public class CityTests
 	{
 		var startLevelExploration = 0.0f;
 		var numberOfDaysPassed = 7;
-		var city = new DCity(CITY_NAME, Mock.Component<CityController>());
-		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
 		var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var person = new DPerson(city, Mock.Component<MeepleController>());
 
