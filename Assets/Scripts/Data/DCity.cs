@@ -15,6 +15,10 @@ public class DCity : TurnUpdatable
 
     private int age;
     private string name;
+
+	  private float explorationLevel;
+    public DBuilding townHall;
+
     private DSeasons._season season;
     private DateTime[] seasonStartDates = new DateTime[4];
     //map of canada vars
@@ -25,6 +29,8 @@ public class DCity : TurnUpdatable
         name = cityName;
         this.cityController = cityController;
         age = 0;
+        townHall = null;
+    		explorationLevel = 0.0f;
 
         InitialLinkedCities(linkedCityKeys);
         seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season);
@@ -47,6 +53,9 @@ public class DCity : TurnUpdatable
         else
         {
             buildings.Add(dBuilding.ID, dBuilding);
+
+            if (dBuilding.Name == "Town Hall")
+                townHall = dBuilding;
         }
     }
 
@@ -63,6 +72,7 @@ public class DCity : TurnUpdatable
             entry.Value.TurnUpdate(numDaysPassed);
 
         age += numDaysPassed;
+
     }
 
     public void UpdateSeason(DateTime currentDate)
@@ -102,6 +112,27 @@ public class DCity : TurnUpdatable
             throw new InsufficientResourceException(resource.ID.ToString());
         }
     }
+
+
+	public float CalculateExploration()
+	{
+		float countDiscovered = 0.0f;
+		foreach(DBuilding dBuilding in buildings.Values) 
+		{
+            if (dBuilding != townHall)
+            {
+                if (dBuilding.Status != DBuilding.DBuildingStatus.UNDISCOVERED)
+				{
+                    countDiscovered++;
+                }
+            }
+		}
+
+		if(countDiscovered > 0)
+			return countDiscovered / (float)(buildings.Count - 1);
+		else
+			return countDiscovered;
+	}
 
     public DResource GetResource(string name)
     {
@@ -145,7 +176,32 @@ public class DCity : TurnUpdatable
         return linkedCityKeys.Contains(cityKey);
     }
 
+    public void Explore(float exploreAmount)
+    {
+        explorationLevel = Mathf.Clamp01(explorationLevel + exploreAmount);
+        
+        float explorableBuildings = buildings.Count - 1.0f;
+        float offsetPercentage = 1.0f / explorableBuildings;
+        
+        List<DBuilding> UnExploredBuildings = new List<DBuilding>();
+        foreach(DBuilding dBuilding in buildings.Values)
+        {
+            if (dBuilding != townHall)
+                if ((dBuilding.Status == DBuilding.DBuildingStatus.UNDISCOVERED))
+                {
+                    UnExploredBuildings.Add(dBuilding);
+                }
+        }
+        if (explorationLevel - offsetPercentage * (explorableBuildings - UnExploredBuildings.Count) >= offsetPercentage)
+        {
+            int index = UnityEngine.Random.Range(0, UnExploredBuildings.Count - 1);
+            UnExploredBuildings[index].Discover();
+        }
+        
+    }
+
     #region Properties
+
     public Dictionary<int, DBuilding> Buildings
     {
         get { return buildings; }
@@ -172,6 +228,11 @@ public class DCity : TurnUpdatable
         get { return name; }
         set { name = value; }
     }
+
+	public float ExplorationLevel
+	{
+		get { return explorationLevel;}
+	}
 
     public int Age
     {

@@ -63,14 +63,15 @@ public class DTask : TurnUpdatable
 
     #region Person Management
 
-    public void AddPerson(DPerson dPerson)
+    public virtual void AddPerson(DPerson dPerson)
     {
         if (numPeople >= maxPeople)
         {
+			
             throw new TaskFullException(taskName);
         }
         else if (ContainsPerson(dPerson))
-        {
+	    {
             throw new PersonAlreadyAddedException(taskName);
         }
         else
@@ -79,7 +80,7 @@ public class DTask : TurnUpdatable
             {
                 if (taskSlot.Person == null && taskSlot.Enabled)
                 {
-                    if (dPerson.Task != null)
+					if(dPerson.Task != null)
                         dPerson.RemoveTask();
 
                     taskSlot.AddPerson(dPerson);
@@ -89,15 +90,14 @@ public class DTask : TurnUpdatable
         }
     }
 
-    public void RemovePerson(DPerson dPerson)
+	public virtual void RemovePerson(DPerson dPerson)
     {
         foreach (DTaskSlot taskSlot in slotList)
         {
             if (taskSlot.Person == dPerson)
             {
                 taskSlot.RemovePerson();
-                numPeople--;
-
+			
                 return;
             }
         }
@@ -138,7 +138,7 @@ public class DTask : TurnUpdatable
         // Remove people from task
         foreach (DTaskSlot taskSlot in slotList)
         {
-            taskSlot.RemovePerson();
+            taskSlot.MoveToTownHall();
         }
 
         // Disable task
@@ -172,7 +172,6 @@ public class DTask : TurnUpdatable
             return maxPeople;
 
         int numEnabled = Mathf.FloorToInt(Mathf.Clamp01(building.LevelAssessed / fullAssessRequirement) * (float)maxPeople);
-        Debug.Log(taskName + " : " + numEnabled);
         
         for (int i = 0; i < slotList.Count; i++)
         {

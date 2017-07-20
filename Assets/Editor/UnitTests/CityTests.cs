@@ -7,6 +7,7 @@ public class CityTests
 {
     private string CITY_NAME = "Test City";
     private string LINKED_CITY_NAME = "Linked City";
+	private string TOWN_HALL = "Town Hall";
     private string BUILDING_NAME = "Test Building";
     private string BUILDING_NAME_2 = "Other Test Building";
     private DateTime[] defaultSeasonStartDates = {new DateTime(2017,4,1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1)};
@@ -52,12 +53,17 @@ public class CityTests
         var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount));
 
-        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
-        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 1));
-        Assert.That(building.City, Is.EqualTo(city));
+		var building = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+		Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 1));
+		Assert.That(building.City, Is.EqualTo(city));
+
+        var building1 = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 2));
+        Assert.That(building1.City, Is.EqualTo(city));
+
 
         var building2 = new DBuilding(city, BUILDING_NAME_2, Mock.Component<BuildingController>());
-        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 2));
+        Assert.That(city.Buildings.Count, Is.EqualTo(startingBuildingCount + 3));
         Assert.That(building2.City, Is.EqualTo(city));
     }    
 
@@ -100,6 +106,23 @@ public class CityTests
         Assert.That(city.People.Count, Is.EqualTo(1));
         Assert.That(person.City, Is.EqualTo(city));
     }
+	[Test]
+	public void ExplorationLevel()
+	{
+		var startLevelExploration = 0.0f;
+		var numberOfDaysPassed = 7;
+		var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+		var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var person = new DPerson(city, Mock.Component<MeepleController>());
+
+        Assert.That(city.ExplorationLevel, Is.EqualTo(startLevelExploration));
+        townHall.getExploreTask().AddPerson(person);
+        for(int i=0;i<10;i++)
+		    city.TurnUpdate(numberOfDaysPassed);
+
+		Assert.That(city.ExplorationLevel, Is.EqualTo(1.0f));
+	}
     
     [Test]
     public void AddPerson()
@@ -202,6 +225,7 @@ public class CityTests
         var resource_B = DResource.Create(RESOURCE_NAME, RESOURCE_B_AMOUNT);
 
         var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+				var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task_A = Mock.CleanTask(building, resource_A);
         var task_B = Mock.CleanTask(building, resource_B);
@@ -218,10 +242,12 @@ public class CityTests
         person.SetTask(task_A);
         city.TurnUpdate(1);
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT));
+		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.False);
 
         person.SetTask(task_B);
         city.TurnUpdate(1);
-        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));                
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));
+		Assert.That(townHall.getIdleTask().ContainsPerson(person), Is.False);
     }
 
     [Test]

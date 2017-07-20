@@ -20,12 +20,17 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
         }
 
         SetTaskControllerVisibility(false);
+        
     }
 
 	// Update is called once per frame
 	void Update () {
+        if ((dBuilding.Status == DBuilding.DBuildingStatus.UNDISCOVERED))
+            gameObject.SetActive(false);
+        else
+            gameObject.SetActive(true);
 
-	}
+    }
 
     #region MouseOver Functions
 

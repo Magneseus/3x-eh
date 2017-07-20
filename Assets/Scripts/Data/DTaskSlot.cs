@@ -5,7 +5,7 @@ public class DTaskSlot : TurnUpdatable
 {
     private DTask task;
     private DPerson person;
-
+	private TaskTraySingle taskTraySlot;
     private float structuralDamage;
     private float fungalDamage;
     private bool taskSlotEnabled;
@@ -38,7 +38,10 @@ public class DTaskSlot : TurnUpdatable
     {
         if (person == null && taskSlotEnabled)
         {
-            person = dPerson;
+         	person = dPerson;
+			if(dPerson.Task != null)
+				dPerson.Task.RemovePerson(dPerson);
+			
             dPerson.__TaskSlot(this);
             task.RaisePersonCount();
         }
@@ -51,8 +54,19 @@ public class DTaskSlot : TurnUpdatable
     public void RemovePerson()
     {
         if (person != null)
-        {
+		{
             person.__TaskSlot(null);
+            person = null;
+            task.LowerPersonCount();
+        }
+    }
+
+    public void MoveToTownHall()
+    {
+        if (person != null)
+        {
+            person.MoveToTownHall();
+
             person = null;
             task.LowerPersonCount();
         }
@@ -87,6 +101,7 @@ public class DTaskSlot : TurnUpdatable
     public DPerson Person
     {
         get { return person; }
+		set { person = value;}
     }
 
     public DTask Task
@@ -121,6 +136,12 @@ public class DTaskSlot : TurnUpdatable
         get { return taskSlotEnabled; }
         set { taskSlotEnabled = value; }
     }
+
+	public TaskTraySingle TaskTraySlot
+	{
+		get { return taskTraySlot; }
+		set { taskTraySlot = value; }
+	}
 
     #endregion
 }
