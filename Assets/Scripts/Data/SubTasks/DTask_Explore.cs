@@ -22,7 +22,12 @@ public class DTask_Explore : DTask
         foreach (DTaskSlot taskSlot in slotList)
         {
             taskSlot.TurnUpdate(numDaysPassed);
-            float infectionModifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1f : Constants.MERSON_INFECTION_TASK_MODIFIER;
+
+            float infectionModifier = Constants.MERSON_INFECTION_TASK_MODIFIER;
+            if (taskSlot.Person != null && taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN)
+            {
+                infectionModifier = 1f;
+            }
 
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
