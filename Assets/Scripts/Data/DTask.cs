@@ -39,6 +39,10 @@ public class DTask : TurnUpdatable
             // Create all task slots
             slotList.Add(new DTaskSlot(this));
         }
+        if (taskName.Equals("Treat People"))
+        {
+            output = null;
+        }
 
         taskEnabled = true;
         dBuilding.AddTask(this);
@@ -59,7 +63,11 @@ public class DTask : TurnUpdatable
             if (taskSlot.IsFunctioning())
             {
                 float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
-                building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier)));                
+                building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier))); 
+                if(taskName.Equals("Treat People"))
+                {
+                    RandomalyTreatPeople();
+                }               
             }
                 
         }
@@ -191,6 +199,14 @@ public class DTask : TurnUpdatable
         }
 
         return numEnabled;
+    }
+    public void RandomalyTreatPeople()
+    {
+        if (building.City.People.Count > 0)
+        {
+            int index = Random.Range(0, building.City.People.Count - 1);
+            building.City.People[index].DecreaseInfection();
+        }
     }
 
     #region Properties
