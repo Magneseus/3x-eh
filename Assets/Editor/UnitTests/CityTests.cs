@@ -345,7 +345,7 @@ public class CityTests
     [Test]
     public void DeadOfWinter()
     {
-        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var numberOfDaysPassed = 3;
 
         // temp - creating default food resource needed for city.turnupdate to work
@@ -371,7 +371,7 @@ public class CityTests
     [Test]
     public void SeasonsAffectFoodProduction()
     {
-        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
 
         // temp - creating default food resource needed for city.turnupdate to work
         DResource.Create(Constants.FOOD_RESOURCE_NAME);
@@ -386,7 +386,7 @@ public class CityTests
     [Test]
     public void SeasonsAffectFoodConsumption()
     {
-        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var numberOfDaysPassed = 7;
 
         // temp - creating default food resource needed for city.turnupdate to work

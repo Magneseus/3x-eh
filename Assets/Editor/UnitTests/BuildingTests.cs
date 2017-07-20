@@ -112,7 +112,7 @@ public class BuildingTests
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
 
         var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
-				var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = Mock.CleanTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
