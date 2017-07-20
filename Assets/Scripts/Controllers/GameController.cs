@@ -74,18 +74,40 @@ public class GameController : MonoBehaviour
         CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH);
         cityController.ConnectToDataEngine(dGame, cityJson["name"]);
 
+        // Load in all the possible locations for buildings
+        List<Vector2> possibleBuildingLocations = new List<Vector2>();
+        foreach (JSONNode buildingLoc in cityJson["building_locations"].AsArray)
+        {
+            // Get the random positions available
+            float xPos = buildingLoc["x"].AsFloat;
+            float yPos = buildingLoc["y"].AsFloat;
+
+            possibleBuildingLocations.Add(new Vector2(xPos, yPos));
+        }
+
         // Load in all buildings for the city
         foreach(JSONNode building in cityJson["buildings"].AsArray)
         {
-            // Get the random positions available
-            JSONNode xPos = building["position"]["x"].AsArray;
-            JSONNode yPos = building["position"]["y"].AsArray;
+            //TODO: Check if building has a set position?
 
-            BuildingController bControl = CreateBuilding(cityJson["name"], building["name"], new Vector3(Random.Range(xPos[0], xPos[1]), Random.Range(yPos[0], yPos[1]), 1));
+            Vector2 location = new Vector2(0, 0);
 
+            // Temporary fix for townhall placement
+            if (!building["name"].Equals("Town Hall"))
+            {
+                // Pull a random building location from the list
+                int randIndex = Mathf.RoundToInt(Random.Range(0, possibleBuildingLocations.Count - 1));
+                location = possibleBuildingLocations[randIndex];
+                possibleBuildingLocations.RemoveAt(randIndex);
+            }
+
+            BuildingController bControl = CreateBuilding(cityJson["name"], building["name"], new Vector3(location.x, location.y, 1));
+			if(building["name"].Equals("Town Hall"))
+				bControl.dBuilding.Assess(1.0f);
             // Load in all the tasks for this building
             foreach (JSONNode task in building["tasks"].AsArray)
             {
+				
                 // TODO: Check for "special" tasks, like assess/explore/etc.
                 string taskName = task["name"];
                 int maxPeople = task["maxPeople"];
@@ -102,11 +124,11 @@ public class GameController : MonoBehaviour
                     maxPeople,
                     taskName,
                     fullAssessmentRequirement);
-
                 // Generate the task controller and attach it
                 TaskController newTaskController = AttachTaskController(newTask, bControl);
             }
         }
+
         foreach(JSONNode resource in cityJson["resources"].AsArray)
         {
             DResource r = DResource.Create(resource["name"], resource["amount"]);
@@ -133,7 +155,7 @@ public class GameController : MonoBehaviour
 
         // Generate all predefined tasks
         foreach (var kvp in buildingController.dBuilding.Tasks)
-        {
+		{
             TaskController newTaskController = AttachTaskController(kvp.Value, buildingController);
         }
 

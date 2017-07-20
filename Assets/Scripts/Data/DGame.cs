@@ -8,15 +8,15 @@ public class DGame
 {
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     private DateTime currentDate = new DateTime(2017,1,1);
+    private DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
     public DCity currentCity = null;
     int durationOfTurn = 7;
     int currentTurnNumber = 0;
 
-
     public DGame()
     {
-
+        
     }
 
     // Sets the specified city to be the current "active" city
@@ -42,13 +42,14 @@ public class DGame
 
     public void EndTurnUpdate()
     {
+        currentDate = currentDate.AddDays(durationOfTurn);
+        currentTurnNumber += 1;
+
         foreach (var kvp in cities)
         {
             kvp.Value.TurnUpdate(durationOfTurn);
+            kvp.Value.UpdateSeason(currentDate);
         }
-
-        currentDate = currentDate.AddDays(durationOfTurn);
-        currentTurnNumber += 1;
     }
 
     public void AddCity(DCity dCity)
@@ -82,9 +83,17 @@ public class DGame
     {
         get { return currentDate.ToShortDateString(); }
     }
+    public DateTime CurrentDate
+    {
+        get { return currentDate; }
+    }
     public int DaysTranspired
     {
         get { return TurnDuration * TurnNumber; }
+    }
+    public DateTime[] DefaultSeasonStartDates
+    {
+        get { return defaultSeasonStartDates; }
     }
 }
 

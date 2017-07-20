@@ -21,6 +21,9 @@ public class DBuilding : TurnUpdatable {
     private String buildingName;
     private DBuildingStatus status;
     public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
+
+    private DTask_Explore exploreTask;
+    private DTask_Idle idleTask;
     private DTask_Assess assessTask;
 
     private float percentInfected;
@@ -36,9 +39,17 @@ public class DBuilding : TurnUpdatable {
 
         this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
-
         // Add an assess task by default
-        this.assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
+
+		if(buildingName.Equals("Town Hall")) {
+			this.idleTask = new DTask_Idle(this, "Idle Merson");
+            this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
+        } 
+		
+		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
+
+        percentDamaged = 0.0f;
+        percentInfected = 0.0f;
 
         city.AddBuilding(this);
     }
@@ -52,6 +63,12 @@ public class DBuilding : TurnUpdatable {
                 entry.Value.TurnUpdate(numDaysPassed);
         }
         CalculateDamages();
+
+        if ((status == DBuildingStatus.UNDISCOVERED))
+            buildingController.gameObject.SetActive(false);
+        else
+            buildingController.gameObject.SetActive(true);
+
     }
 
     public void CalculateDamages()
@@ -97,6 +114,15 @@ public class DBuilding : TurnUpdatable {
         }
     }
 
+	public DTask_Idle getIdleTask()
+	{
+        return idleTask;	
+	}
+    public DTask_Explore getExploreTask()
+    {
+        return exploreTask;
+    }
+
     public void AddTask(DTask task)
     {
         if (tasks.ContainsKey(task.ID))
@@ -135,6 +161,11 @@ public class DBuilding : TurnUpdatable {
     {
         get { return id; }
     }
+
+	public BuildingController Controller
+	{
+		get { return buildingController; }
+	}
 
     #region Assessment Components
 

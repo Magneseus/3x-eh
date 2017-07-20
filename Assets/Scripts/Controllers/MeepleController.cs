@@ -31,7 +31,14 @@ public class MeepleController : MonoBehaviour {
 
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
-        dPerson= new DPerson(dGame.Cities[cityName], this);
+        dPerson = new DPerson(dGame.Cities[cityName], this);
+	   // dPerson.MoveToTownHall();
+
+    }
+
+    public void ResetLocalPosition()
+    {
+        this.transform.localPosition = new Vector3(0, 0, -3);
     }
 
     #region MouseOver Functions
@@ -85,7 +92,7 @@ public class MeepleController : MonoBehaviour {
         {
             // Reset position
             this.transform.parent = returnParent;
-            this.transform.localPosition = new Vector3(0, 0, -3);
+			dPerson.MoveToTownHall();
         }
         else
         {
@@ -130,6 +137,15 @@ public class MeepleController : MonoBehaviour {
 
         if (oldParentTray != null)
             oldParentTray.taskController.DecreaseMouseOverCount();
+    }
+    public void SetParentTrayAndTransfrom (TaskTraySingle parentTray)
+    {
+        this.parentTray = parentTray;
+
+        if (parentTray != null)
+            transform.parent = parentTray.transform;
+
+        ResetLocalPosition();
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
