@@ -15,14 +15,17 @@ public class DCity : TurnUpdatable
 
     private int age;
     private string name;
+    private int shelterTier;
+    private int fuelToShelterConversion;
+    private DResource shelterResource;
+    private DResource fuelResource;
 
-	  private float explorationLevel;
+	private float explorationLevel;
     public DBuilding townHall;
 
     private DSeasons._season season;
     private DateTime[] seasonStartDates = new DateTime[4];
-    //map of canada vars
-    // private List<string> edges;
+
 
     public DCity(string cityName, CityController cityController, DateTime[] seasonDates, DateTime currentDate, List<string> linkedCityKeys = null)
     {
@@ -30,7 +33,9 @@ public class DCity : TurnUpdatable
         this.cityController = cityController;
         age = 0;
         townHall = null;
-    		explorationLevel = 0.0f;
+        explorationLevel = 0.0f;
+        shelterTier = 1;
+        fuelToShelterConversion = 0;
 
         InitialLinkedCities(linkedCityKeys);
         seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season);
@@ -62,17 +67,59 @@ public class DCity : TurnUpdatable
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
+        // Set shelter resource to zero, cannot accumulate shelter
+        if (shelterResource != null)
+            shelterResource.Amount = 0;
+
+        // BUILDING UPDATE
         foreach (var entry in buildings)
             entry.Value.TurnUpdate(numDaysPassed);
 
+        // RESOURCE UPDATE
         foreach (var entry in resources)
+        {
             entry.Value.TurnUpdate(numDaysPassed);
 
+            // Remove fuel due to shelter conversion
+            if (entry.Value.Name.Equals("Fuel"))
+            {
+                entry.Value.Amount -= fuelToShelterConversion;
+            }
+        }
+
+        // PERSON UPDATE
         foreach (var entry in people)
             entry.Value.TurnUpdate(numDaysPassed);
 
-        age += numDaysPassed;
+        if (shelterResource != null)
+        {
+            // Shelter calculations
+            int shelterResourceAmt = shelterResource.Amount;
+            shelterResourceAmt = shelterResourceAmt - ShelterConsumedPerTurn();
+            // TODO: Deal with negative shelter amounts
+        }
 
+        if (fuelResource != null)
+        {
+            // Check if our fuel consumption is exceeding our current fuel stores
+            fuelToShelterConversion = fuelToShelterConversion < fuelResource.Amount ? fuelToShelterConversion : fuelResource.Amount;
+        }
+
+
+        age += numDaysPassed;
+    }
+
+    // TODO: Account for infection in people
+    public int ShelterConsumedPerTurn()
+    {
+        int amountShelterPerPerson = Mathf.RoundToInt(Mathf.Pow(2.0f, shelterTier - 1));
+
+        return amountShelterPerPerson * people.Count;
+    }
+
+    public int ShelterNetTier()
+    {
+        return Mathf.Clamp(shelterTier + fuelToShelterConversion, 1, 5);
     }
 
     public void UpdateSeason(DateTime currentDate)
@@ -99,6 +146,11 @@ public class DCity : TurnUpdatable
         {
             resources.Add(resource.ID, DResource.Create(resource, resource.Amount));
         }
+
+        if (resource.Name.Equals("Shelter"))
+            shelterResource = resources[resource.ID];
+        else if (resource.Name.Equals("Fuel"))
+            fuelResource = resources[resource.ID];
     }
 
     public void ConsumeResource(DResource resource)
@@ -243,6 +295,39 @@ public class DCity : TurnUpdatable
     {
         get { return cityController; }
     }
+
+    public int ShelterTier
+    {
+        get { return shelterTier; }
+    }
+
+    public void RaiseShelterTier()
+    {
+        shelterTier = Mathf.Clamp(shelterTier + 1, 1, 5);
+    }
+
+    public void LowerShelterTier()
+    {
+        shelterTier = Mathf.Clamp(shelterTier - 1, 1, 5);
+    }
+
+    public int FuelToShelterConversion
+    {
+        get { return fuelToShelterConversion; }
+    }
+
+    public void RaiseFuelConversion()
+    {
+        int cap = 4 < fuelResource.Amount ? 4 : fuelResource.Amount;
+        fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion + 1, 0, cap);
+    }
+
+    public void LowerFuelConversion()
+    {
+        int cap = 4 < fuelResource.Amount ? 4 : fuelResource.Amount;
+        fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion - 1, 0, cap);
+    }
+
     #endregion
 }
 

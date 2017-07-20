@@ -13,23 +13,34 @@
       "position": {
         "x": [ -5, 5 ],
         "y": [ -3, 3 ]
-      }
+      },
+      "tasks": [
+        {
+          "name": "Apartment Super",
+          "resource": {
+            "name": "Shelter",
+            "amount": 20
+          },
+          "maxPeople": 1,
+          "fullAssess": 0.6
+        }
+      ]
     },
     {
-      "name": "Derelict Building",
+      "name": "Gas Station",
       "position": {
         "x": [ -5, 5 ],
         "y": [ -3, 3 ]
       },
       "tasks": [
         {
-          "name": "Food Storage Management",
+          "name": "Fuel Pump",
           "resource": {
-            "name": "Food Storage",
-            "amount": 100
+            "name": "Fuel",
+            "amount": 4
           },
-          "maxPeople": 1,
-          "fullAssess": 0.4
+          "maxPeople": 2,
+          "fullAssess": 0.7
         }
       ]
     },
@@ -83,6 +94,10 @@
     },
     {
       "name": "Medicine",
+      "amount": 0
+    },
+    {
+      "name": "Shelter",
       "amount": 0
     }
   ],
