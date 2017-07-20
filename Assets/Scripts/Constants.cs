@@ -22,6 +22,10 @@ public static class Constants {
 
     public static float TASK_MIN_STRUCTURAL_DMG = 0.0f;
     public static float TASK_MAX_STRUCTURAL_DMG = 1.0f;
+    public static float BUILDING_MIN_FUNGAL_DMG = 0.0f;
+    public static float BUILDING_MAX_FUNGAL_DMG = 1.0f;
+    public static float
+    BUILDING_MERSON_INFECTION_WEIGHT = 0.25f;
     public static float TASK_MIN_FUNGAL_DMG = 0.0f;
     public static float TASK_MAX_FUNGAL_DMG = 1.0f;
     #endregion

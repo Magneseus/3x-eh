@@ -68,8 +68,9 @@ public class DTask : TurnUpdatable
                 {
                     RandomalyTreatPeople();
                 }               
+
             }
-                
+
         }
     }
 
@@ -113,7 +114,7 @@ public class DTask : TurnUpdatable
                 return;
             }
         }
-        
+
         throw new PersonNotFoundException(taskName);
     }
 
@@ -185,7 +186,7 @@ public class DTask : TurnUpdatable
 
         int numEnabled = Mathf.FloorToInt(Mathf.Clamp01(building.LevelAssessed / fullAssessRequirement) * (float)maxPeople);
         Debug.Log(taskName + " : " + numEnabled);
-        
+
         for (int i = 0; i < slotList.Count; i++)
         {
             if (i <= numEnabled-1)
@@ -284,6 +285,10 @@ public class DTask : TurnUpdatable
     public bool Enabled
     {
         get { return taskEnabled; }
+    }
+    public List<DTaskSlot> SlotList
+    {
+      get {return slotList;}
     }
     #endregion
 }
