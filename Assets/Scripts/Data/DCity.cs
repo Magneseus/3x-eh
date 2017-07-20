@@ -16,7 +16,9 @@ public class DCity : TurnUpdatable
     private int age;
     private string name;
     private int shelterTier;
+    private int fuelToShelterConversion;
     private DResource shelterResource;
+    private DResource fuelResource;
 
 	private float explorationLevel;
     public DBuilding townHall;
@@ -33,6 +35,7 @@ public class DCity : TurnUpdatable
         townHall = null;
         explorationLevel = 0.0f;
         shelterTier = 1;
+        fuelToShelterConversion = 0;
 
         InitialLinkedCities(linkedCityKeys);
         seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season);
@@ -74,7 +77,15 @@ public class DCity : TurnUpdatable
 
         // RESOURCE UPDATE
         foreach (var entry in resources)
+        {
             entry.Value.TurnUpdate(numDaysPassed);
+
+            // Remove fuel due to shelter conversion
+            if (entry.Value.Name.Equals("Fuel"))
+            {
+                entry.Value.Amount -= fuelToShelterConversion;
+            }
+        }
 
         // PERSON UPDATE
         foreach (var entry in people)
@@ -88,6 +99,12 @@ public class DCity : TurnUpdatable
             // TODO: Deal with negative shelter amounts
         }
 
+        if (fuelResource != null)
+        {
+            // Check if our fuel consumption is exceeding our current fuel stores
+            fuelToShelterConversion = fuelToShelterConversion < fuelResource.Amount ? fuelToShelterConversion : fuelResource.Amount;
+        }
+
 
         age += numDaysPassed;
     }
@@ -95,9 +112,14 @@ public class DCity : TurnUpdatable
     // TODO: Account for infection in people
     public int ShelterConsumedPerTurn()
     {
-        int amountShelterPerPerson = Mathf.RoundToInt(Mathf.Pow(2.0f, ShelterTier - 1));
+        int amountShelterPerPerson = Mathf.RoundToInt(Mathf.Pow(2.0f, shelterTier - 1));
 
         return amountShelterPerPerson * people.Count;
+    }
+
+    public int ShelterNetTier()
+    {
+        return Mathf.Clamp(shelterTier + fuelToShelterConversion, 1, 5);
     }
 
     public void UpdateSeason(DateTime currentDate)
@@ -127,6 +149,8 @@ public class DCity : TurnUpdatable
 
         if (resource.Name.Equals("Shelter"))
             shelterResource = resources[resource.ID];
+        else if (resource.Name.Equals("Fuel"))
+            fuelResource = resources[resource.ID];
     }
 
     public void ConsumeResource(DResource resource)
@@ -285,6 +309,23 @@ public class DCity : TurnUpdatable
     public void LowerShelterTier()
     {
         shelterTier = Mathf.Clamp(shelterTier - 1, 1, 5);
+    }
+
+    public int FuelToShelterConversion
+    {
+        get { return fuelToShelterConversion; }
+    }
+
+    public void RaiseFuelConversion()
+    {
+        int cap = 4 < fuelResource.Amount ? 4 : fuelResource.Amount;
+        fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion + 1, 0, cap);
+    }
+
+    public void LowerFuelConversion()
+    {
+        int cap = 4 < fuelResource.Amount ? 4 : fuelResource.Amount;
+        fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion - 1, 0, cap);
     }
 
     #endregion

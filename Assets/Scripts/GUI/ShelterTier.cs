@@ -36,7 +36,7 @@ public class ShelterTier : MonoBehaviour
     {
         if (gameController.dGame.currentCity != null)
         {
-            text.text = "Shelter Tier: " + gameController.dGame.currentCity.ShelterTier;
+            text.text = "Shelter Tier: " + gameController.dGame.currentCity.ShelterTier + " (+" + gameController.dGame.currentCity.FuelToShelterConversion + ")";
         }
     }
 
