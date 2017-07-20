@@ -23,6 +23,7 @@ public class CityTests
         Assert.Pass();
     }
 
+    #region Basic Methods
     [Test]
     public void InitializesDefaultValues()
     {
@@ -137,61 +138,6 @@ public class CityTests
     }
 
     [Test]
-    public void TurnUpdateDaysPassed()
-    {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
-        var numberOfDaysPassed = 7;
-
-        for (var i = 0; i < 10; i++)
-        {
-            Assert.That(city.Age, Is.EqualTo(i * numberOfDaysPassed));
-            city.TurnUpdate(numberOfDaysPassed);
-        }
-    }
-
-    [Test]
-    public void TurnUpdateSufficientResourcesSingleTurn()
-    {
-        var resourceName = "Test";
-        var outputAmount = 2;
-        var zero = 0;
-        var output = DResource.Create(resourceName, outputAmount);
-
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
-        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
-        var task = Mock.CleanTask(building, output);
-        var person = new DPerson(city, Mock.Component<MeepleController>());
-        person.SetTask(task);
-
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(zero));
-        Assert.DoesNotThrow(() => { city.TurnUpdate(1); });
-        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount));
-    }
-
-    [Test]
-    public void TurnUpdateSufficientResourcesMultipleTurns()
-    {
-        var numberOfTurns = 5;
-        var resourceName = "Test";
-        var outputAmount = 2;
-        var output = DResource.Create(resourceName, outputAmount);
-
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
-        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
-        var task = Mock.CleanTask(building, output);
-
-        var person = new DPerson(city, Mock.Component<MeepleController>());
-        person.SetTask(task);
-
-        for (var i=0; i<numberOfTurns; i++)
-        {
-            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount * i));
-            Assert.DoesNotThrow(() => { city.TurnUpdate(1); });
-            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount * (i+1)));
-        }
-    }   
-
-    [Test]
     public void ChangePersonToValidTask()
     {
         string RESOURCE_NAME = "Test Resource";
@@ -221,9 +167,77 @@ public class CityTests
 
         person.SetTask(task_B);
         city.TurnUpdate(1);
-        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));                
+        Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));
+    }
+    #endregion
+
+    #region Update Methods
+    [Test]
+    public void TurnUpdateDaysPassed()
+    {
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var numberOfDaysPassed = 7;
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
+        for (var i = 0; i < 10; i++)
+        {
+            Assert.That(city.Age, Is.EqualTo(i * numberOfDaysPassed));
+            city.TurnUpdate(numberOfDaysPassed);
+        }
     }
 
+    [Test]
+    public void TurnUpdateSufficientResourcesSingleTurn()
+    {
+        var resourceName = "Test";
+        var outputAmount = 2;
+        var zero = 0;
+        var output = DResource.Create(resourceName, outputAmount);
+
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = Mock.CleanTask(building, output);
+        var person = new DPerson(city, Mock.Component<MeepleController>());
+        person.SetTask(task);
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
+        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(zero));
+        Assert.DoesNotThrow(() => { city.TurnUpdate(1); });
+        Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount));
+    }
+
+    [Test]
+    public void TurnUpdateSufficientResourcesMultipleTurns()
+    {
+        var numberOfTurns = 5;
+        var resourceName = "Test";
+        var outputAmount = 2;
+        var output = DResource.Create(resourceName, outputAmount);
+
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = Mock.CleanTask(building, output);
+
+        var person = new DPerson(city, Mock.Component<MeepleController>());
+        person.SetTask(task);
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
+        for (var i=0; i<numberOfTurns; i++)
+        {
+            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount * i));
+            Assert.DoesNotThrow(() => { city.TurnUpdate(1); });
+            Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount * (i+1)));
+        }
+    }
+    #endregion
+
+    #region Linked Cities
     [Test]
     public void ConstructorLinksCities()
     {
@@ -264,4 +278,5 @@ public class CityTests
         }
         Assert.True(linkedCities.Count == 0);
     }
+#endregion
 }

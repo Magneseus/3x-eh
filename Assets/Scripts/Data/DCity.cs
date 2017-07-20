@@ -141,7 +141,7 @@ public class DCity : TurnUpdatable
 
     private void UpdatePeopleWinter(KeyValuePair<int, DPerson> entry, ref int exploringInWinter)
     {
-        if (entry.Value.Task.GetType() == typeof(DTask_Explore) && season == DSeasons._season.WINTER)
+        if (entry.Value.Task != null && entry.Value.Task.GetType() == typeof(DTask_Explore) && season == DSeasons._season.WINTER)
         {
             exploringInWinter++;
             DeadOfWinterCulling(entry);

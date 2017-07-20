@@ -137,9 +137,12 @@ public class TaskTests
         var task = new DTask(building, resource, 1, "test", 0.0f);
         var taskSlot = task.GetTaskSlot(0);
 
+        
         taskSlot.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
         taskSlot.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
         taskSlot.Repair(amount);
+        amount = Mathf.Clamp(amount * DSeasons.modRepairStructureSpeed[(int)city.Season], Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG);
+
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_STRUCTURAL_DMG - amount));
     }
 
@@ -156,6 +159,7 @@ public class TaskTests
 
         taskSlot.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
         taskSlot.Repair(amount);
+        amount = Mathf.Clamp(amount * DSeasons.modRepairFungusSpeed[(int)city.Season], Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
         Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MAX_FUNGAL_DMG - amount));
     }
 
@@ -174,6 +178,7 @@ public class TaskTests
         taskSlot.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
 
         taskSlot.Repair(amount);
+        amount = Mathf.Clamp(amount * DSeasons.modRepairFungusSpeed[(int)city.Season], Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
 
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_STRUCTURAL_DMG));
         Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MAX_FUNGAL_DMG - amount));
