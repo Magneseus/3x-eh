@@ -222,7 +222,7 @@ public class DCity : TurnUpdatable
     {
         if (resources.ContainsKey(resource.ID))
         {
-            resources[resource.ID].Amount += (int)(amount * SeasonResourceMod(resource));
+            resources[resource.ID].Amount += (int)(amount * SeasonResourceProduceMod(resource));
         }
         else
         {
@@ -231,7 +231,7 @@ public class DCity : TurnUpdatable
     }
 
     // todo - as resources are defined with constant names, include if checks here
-    public float SeasonResourceMod(DResource resource)
+    public float SeasonResourceProduceMod(DResource resource)
     {
         if (resource.Name == Constants.FOOD_RESOURCE_NAME)
             return DSeasons.modFoodProduction[(int)season];
@@ -242,12 +242,20 @@ public class DCity : TurnUpdatable
     {
         if (resources.ContainsKey(resource.ID) && resources[resource.ID].Amount >= amount)
         {
-            resources[resource.ID].Amount -= amount;
+           resources[resource.ID].Amount -= (int)(amount * SeasonResourceConsumedMod(resource));
         }
         else
         {
             throw new InsufficientResourceException(resource.ID.ToString());
         }
+    }
+
+    // todo - as resources are defined with constant names, include if checks here
+    public float SeasonResourceConsumedMod(DResource resource)
+    {
+        if (resource.Name == Constants.FOOD_RESOURCE_NAME)
+            return DSeasons.modFoodProduction[(int)season];
+        return 1f;
     }
 
     public void ConsumeResource(DResource resource)

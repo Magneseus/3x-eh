@@ -21,6 +21,20 @@ public class testing : MonoBehaviour {
     private void Awake()
     {
 
-        
+        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var numberOfDaysPassed = 7;
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+        int numFood = 50;
+        city.AddResource(city.GetResource(Constants.FOOD_RESOURCE_NAME), numFood);
+        Assert.That(city.GetResource(Constants.FOOD_RESOURCE_NAME).Amount, Is.EqualTo(numFood));
+        city.Season = DSeasons._season.WINTER;
+
+        int baseConsume = 10;
+
+        city.ConsumeResource(city.GetResource(Constants.FOOD_RESOURCE_NAME), baseConsume);
+        int expected = numFood - (int)(baseConsume * city.SeasonResourceConsumedMod(city.GetResource(Constants.FOOD_RESOURCE_NAME)));
+        Assert.That(city.GetResource(Constants.FOOD_RESOURCE_NAME).Amount, Is.EqualTo(expected));
     }
 }
