@@ -12,6 +12,7 @@ public class DPerson : TurnUpdatable
     private DCity city;
     private DBuilding building;
     private DTaskSlot taskSlot;
+    private bool isDead;
 
     public DPerson(DCity dCity, MeepleController mController)
     {
@@ -20,6 +21,7 @@ public class DPerson : TurnUpdatable
         meepleController = mController;
         taskSlot = null;
         infectionLevel = 0;
+        isDead = false;
 
         city.AddPerson(this);
     }
@@ -46,6 +48,7 @@ public class DPerson : TurnUpdatable
     public void Dies()
     {
         Object.Destroy(meepleController.gameObject);
+        isDead = true;
     }
 
     #region Task Management
@@ -53,8 +56,7 @@ public class DPerson : TurnUpdatable
     public void SetTask(DTask dTask)
     {
         if (taskSlot != null && Task != dTask)
-
-				RemoveTask();
+            RemoveTask();
 
         dTask.AddPerson(this);
     }
@@ -148,6 +150,11 @@ public class DPerson : TurnUpdatable
             }
         }
         set { infectionLevel = Mathf.Clamp(value, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX); }
+    }
+
+    public bool IsDead
+    {
+        get { return isDead; }
     }
 
     #endregion

@@ -78,6 +78,8 @@ public class DCity : TurnUpdatable
         deadOfWinterStartEnd = deadWinterDates;
         if (currentDate < deadOfWinterStartEnd[1] && currentDate >= deadOfWinterStartEnd[0])
             isDeadOfWinter = true;
+        else
+            isDeadOfWinter = false;
     }
 
     #region Update Calls
@@ -183,31 +185,41 @@ public class DCity : TurnUpdatable
     private void UpdatePeople(int numDaysPassed)
     {
         int exploringInWinter = 0;
-        foreach (var entry in people)
+
+        List<DPerson> listOfDeadPeople = new List<DPerson>();
+        foreach (var entry in people.Keys)
         {
-            entry.Value.TurnUpdate(numDaysPassed);
-            UpdatePeopleWinter(entry, ref exploringInWinter);
+            people[entry].TurnUpdate(numDaysPassed);
+            UpdatePeopleWinter(people[entry], ref exploringInWinter);
+
+            if (people[entry].IsDead)
+                listOfDeadPeople.Add(people[entry]);
         }
-        
+
+        // Remove dead people
+        foreach (var person in listOfDeadPeople)
+        {
+            people.Remove(person.ID);
+        }
+
         if (exploringInWinter > 1)
             health = Mathf.Clamp(health - DSeasons.reduceHealthExploringWinter, 0f, 1f);
     }
 
-    private void UpdatePeopleWinter(KeyValuePair<int, DPerson> entry, ref int exploringInWinter)
+    private void UpdatePeopleWinter(DPerson person, ref int exploringInWinter)
     {
-        if (entry.Value.Task != null && entry.Value.Task.GetType() == typeof(DTask_Explore) && season == DSeasons._season.WINTER)
+        if (person.Task != null && person.Task.GetType() == typeof(DTask_Explore) && season == DSeasons._season.WINTER)
         {
             exploringInWinter++;
-            DeadOfWinterCulling(entry);
+            DeadOfWinterCulling(person);
         }
     }
 
-    public void DeadOfWinterCulling(KeyValuePair<int,DPerson> entry)
+    public void DeadOfWinterCulling(DPerson person)
     {
         if (isDeadOfWinter)
         {
-            entry.Value.Dies();
-            people.Remove(entry.Key);
+            person.Dies();
         }
     }
     #endregion
