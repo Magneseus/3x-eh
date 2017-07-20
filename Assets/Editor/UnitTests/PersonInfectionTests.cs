@@ -176,4 +176,29 @@ public class PersonInfectionTests
 
         Assert.That(building.LevelAssessed, Is.EqualTo(Constants.DEFAULT_ASSESS_AMOUNT * Constants.MERSON_INFECTION_TASK_MODIFIER));        
     }
+    public void TreatTaskRandomlyReducesInfectionOfAPerson()
+    {
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = new DTask(building, null, 1, "Treat People",0.0f);
+
+        var person = new DPerson(city, Mock.Component<MeepleController>())
+        {
+            Infection = Constants.MERSON_INFECTION_MIN + 1
+        };
+
+
+        building.Assess(1.0f);
+        task.ForceClean();
+        task.ForceFixed();
+        task.AddPerson(person);
+        Assert.That(person.Task, Is.EqualTo(task));
+        Assert.That(task.ContainsPerson(person), Is.True);
+        Assert.That(person.Infection, Is.EqualTo(1));
+
+        task.TurnUpdate(1);
+
+        Assert.That(person.Infection, Is.EqualTo(0));
+
+    }
 }
