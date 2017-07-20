@@ -27,20 +27,20 @@
       ]
     },
     {
-      "name": "Derelict Building",
+      "name": "Gas Station",
       "position": {
         "x": [ -5, 5 ],
         "y": [ -3, 3 ]
       },
       "tasks": [
         {
-          "name": "Food Storage Management",
+          "name": "Fuel Pump",
           "resource": {
-            "name": "Food Storage",
-            "amount": 100
+            "name": "Fuel",
+            "amount": 4
           },
-          "maxPeople": 1,
-          "fullAssess": 0.4
+          "maxPeople": 2,
+          "fullAssess": 0.7
         }
       ]
     },
