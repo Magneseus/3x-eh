@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// using System;
 public class DPerson : TurnUpdatable
 {
     private static int NEXT_ID = 0;
     private MeepleController meepleController;
-    
+
     private int id;
     private int infectionLevel;
     private DCity city;
+    private DBuilding building;
     private DTaskSlot taskSlot;
 
     public DPerson(DCity dCity, MeepleController mController)
@@ -22,15 +23,18 @@ public class DPerson : TurnUpdatable
 
         city.AddPerson(this);
     }
-       
+
     public void TurnUpdate(int numDaysPassed)
     {
-
+      // Random random = new Random();
+      if(building != null && Random.value <= (building.LevelInfected +  Constants.MERSON_INFECTION_PROBABILITY))
+      IncreaseInfection();
+      Debug.Log("Merson: "+ id +" infectionLevel is -> "+ infectionLevel );
     }
 
     #region Infection
     public void IncreaseInfection()
-    {        
+    {
         infectionLevel = Mathf.Clamp(++infectionLevel, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX);
     }
 
@@ -112,7 +116,11 @@ public class DPerson : TurnUpdatable
     {
         get { return taskSlot; }
     }
-
+    public DBuilding Building
+    {
+        get { return building;}
+        set { building = value;}
+    }
     public DCity City
     {
         get { return city; }

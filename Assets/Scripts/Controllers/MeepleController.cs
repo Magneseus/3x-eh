@@ -87,7 +87,9 @@ public class MeepleController : MonoBehaviour {
     public void OnMouseUp()
     {
         TaskTraySingle oldParentTray = parentTray;
-
+        // DBuilding oldBuilding =
+        // (this.dPerson.Building == null) ?
+        // oldBuilding = null : oldBuilding = this.dPerson.Building;
         if (collisions.Count == 0)
         {
             // Reset position
@@ -125,8 +127,9 @@ public class MeepleController : MonoBehaviour {
                 this.transform.parent = closestTray.transform;
                 this.transform.localPosition = new Vector3(0, 0, -3);
                 this.parentTray = closestTray;
-                parentTray.taskController.buildingController.dBuilding.CalculateDamages();
-                oldParentTray.taskController.buildingController.dBuilding.CalculateDamages();
+                this.dPerson.Building = closestTray.taskController.buildingController.dBuilding;
+                this.dPerson.Building.CalculateDamages();
+                // oldBuilding.CalculateDamages();
 
             }
         }
