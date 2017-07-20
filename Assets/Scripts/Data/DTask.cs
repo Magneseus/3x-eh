@@ -39,6 +39,10 @@ public class DTask : TurnUpdatable
             // Create all task slots
             slotList.Add(new DTaskSlot(this));
         }
+        if (taskName.Equals("Treat People"))
+        {
+            output = null;
+        }
 
         taskEnabled = true;
         dBuilding.AddTask(this);
@@ -57,7 +61,16 @@ public class DTask : TurnUpdatable
             taskSlot.TurnUpdate(numDaysPassed);
 
             if (taskSlot.IsFunctioning())
-                building.OutputResource(output);
+            {
+                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
+                building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier))); 
+                if(taskName.Equals("Treat People"))
+                {
+                    RandomalyTreatPeople();
+                }               
+
+            }
+
         }
     }
 
@@ -75,14 +88,15 @@ public class DTask : TurnUpdatable
 
     #region Person Management
 
-    public void AddPerson(DPerson dPerson)
+    public virtual void AddPerson(DPerson dPerson)
     {
         if (numPeople >= maxPeople)
         {
+			
             throw new TaskFullException(taskName);
         }
         else if (ContainsPerson(dPerson))
-        {
+	    {
             throw new PersonAlreadyAddedException(taskName);
         }
         else
@@ -91,7 +105,7 @@ public class DTask : TurnUpdatable
             {
                 if (taskSlot.Person == null && taskSlot.Enabled)
                 {
-                    if (dPerson.Task != null)
+					if(dPerson.Task != null)
                         dPerson.RemoveTask();
 
                     taskSlot.AddPerson(dPerson);
@@ -101,19 +115,18 @@ public class DTask : TurnUpdatable
         }
     }
 
-    public void RemovePerson(DPerson dPerson)
+	public virtual void RemovePerson(DPerson dPerson)
     {
         foreach (DTaskSlot taskSlot in slotList)
         {
             if (taskSlot.Person == dPerson)
             {
                 taskSlot.RemovePerson();
-                numPeople--;
-
+			
                 return;
             }
         }
-        
+
         throw new PersonNotFoundException(taskName);
     }
 
@@ -150,7 +163,7 @@ public class DTask : TurnUpdatable
         // Remove people from task
         foreach (DTaskSlot taskSlot in slotList)
         {
-            taskSlot.RemovePerson();
+            taskSlot.MoveToTownHall();
         }
 
         // Disable task
@@ -184,8 +197,7 @@ public class DTask : TurnUpdatable
             return maxPeople;
 
         int numEnabled = Mathf.FloorToInt(Mathf.Clamp01(building.LevelAssessed / fullAssessRequirement) * (float)maxPeople);
-        Debug.Log(taskName + " : " + numEnabled);
-        
+
         for (int i = 0; i < slotList.Count; i++)
         {
             if (i <= numEnabled-1)
@@ -199,6 +211,14 @@ public class DTask : TurnUpdatable
         }
 
         return numEnabled;
+    }
+    public void RandomalyTreatPeople()
+    {
+        if (building.City.People.Count > 0)
+        {
+            int index = Random.Range(0, building.City.People.Count - 1);
+            building.City.People[index].DecreaseInfection();
+        }
     }
 
     #region Properties
@@ -276,6 +296,10 @@ public class DTask : TurnUpdatable
     public bool Enabled
     {
         get { return taskEnabled; }
+    }
+    public List<DTaskSlot> SlotList
+    {
+      get {return slotList;}
     }
     #endregion
 }

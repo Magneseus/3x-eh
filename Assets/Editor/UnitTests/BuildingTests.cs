@@ -8,6 +8,7 @@ using System;
 public class BuildingTests
 {
     private static string CITY_NAME = "Test City";
+	private static string TOWN_HALL = "Town Hall";
     private static string BUILDING_NAME = "Test Building";
     private static string RESOURCE_NAME = "Test Resource";
     private static int RESOURCE_START_AMOUNT = 3;
@@ -28,8 +29,14 @@ public class BuildingTests
     [Test]
     public void InitializesDefaultValues()
     {
+
         var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+				var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+
+				Assert.That(townHall.City.Name, Is.EqualTo(city.Name));
+				Assert.That(townHall.Tasks.Count, Is.EqualTo(3));
+				Assert.That(townHall.Name, Is.EqualTo(TOWN_HALL));
 
         Assert.That(building.City.Name, Is.EqualTo(city.Name));
         Assert.That(building.Tasks.Count, Is.EqualTo(1));
@@ -103,7 +110,9 @@ public class BuildingTests
     public void DisablingTasks()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
+
         var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+				var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = Mock.CleanTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -15,6 +15,14 @@ public class DCity : TurnUpdatable
 
     private int age;
     private string name;
+    private int shelterTier;
+    private int fuelToShelterConversion;
+    private DResource shelterResource;
+    private DResource fuelResource;
+
+	private float explorationLevel;
+    public DBuilding townHall;
+
     private DSeasons._season season;
     private DateTime[] seasonStartDates = new DateTime[4];
     private DateTime[] deadOfWinterStartEnd = new DateTime[2];
@@ -46,6 +54,10 @@ public class DCity : TurnUpdatable
         name = cityName;
         this.cityController = cityController;
         age = 0;
+        townHall = null;
+        explorationLevel = 0.0f;
+        shelterTier = 1;
+        fuelToShelterConversion = 0;
 
         InitialLinkedCities(linkedCityKeys);
         deadOfWinterStartEnd = deadWinterDates;
@@ -65,19 +77,61 @@ public class DCity : TurnUpdatable
         deadOfWinterStartEnd = deadWinterDates;
         if (currentDate < deadOfWinterStartEnd[1] && currentDate >= deadOfWinterStartEnd[0])
             isDeadOfWinter = true;
+            
+        if (buildings.ContainsKey(dBuilding.ID))
+        {
+            throw new BuildingAlreadyAddedException(string.Format("City '{0}' already has building '{1}'", name, dBuilding.Name));
+        }
+        else
+        {
+            buildings.Add(dBuilding.ID, dBuilding);
+
+            if (dBuilding.Name == "Town Hall")
+                townHall = dBuilding;
+        }
     }
-#endregion
 
     #region Update Calls
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
+        // Set shelter resource to zero, cannot accumulate shelter
+        if (shelterResource != null)
+            shelterResource.Amount = 0;
+        
         UpdateBuildings(numDaysPassed);
         UpdateResources(numDaysPassed);
         UpdatePeople(numDaysPassed);
         UpdateCity();
+        
+        if (shelterResource != null)
+        {
+            // Shelter calculations
+            int shelterResourceAmt = shelterResource.Amount;
+            shelterResourceAmt = shelterResourceAmt - ShelterConsumedPerTurn();
+            // TODO: Deal with negative shelter amounts
+        }
+
+        if (fuelResource != null)
+        {
+            // Check if our fuel consumption is exceeding our current fuel stores
+            fuelToShelterConversion = fuelToShelterConversion < fuelResource.Amount ? fuelToShelterConversion : fuelResource.Amount;
+        }
 
         age += numDaysPassed;
+    }
+    
+    // TODO: Account for infection in people
+    public int ShelterConsumedPerTurn()
+    {
+        int amountShelterPerPerson = Mathf.RoundToInt(Mathf.Pow(2.0f, shelterTier - 1));
+
+        return amountShelterPerPerson * people.Count;
+    }
+
+    public int ShelterNetTier()
+    {
+        return Mathf.Clamp(shelterTier + fuelToShelterConversion, 1, 5);
     }
 
     public void UpdateSeason(DateTime currentDate)
@@ -103,7 +157,7 @@ public class DCity : TurnUpdatable
             BuildingSeasonalEffects(entry.Value, numDaysPassed);
         }
     }
-
+    
     private void BuildingSeasonalEffects(DBuilding building, int numDaysPassed)
     {
         switch (season)
@@ -126,9 +180,17 @@ public class DCity : TurnUpdatable
     private void UpdateResources(int numDaysPassed)
     {
         foreach (var entry in resources)
+        {
             entry.Value.TurnUpdate(numDaysPassed);
+            
+            // Remove fuel due to shelter conversion
+            if (entry.Value.Name.Equals("Fuel"))
+            {
+                entry.Value.Amount -= fuelToShelterConversion;
+            }
+        }
     }
-
+    
     private void UpdatePeople(int numDaysPassed)
     {
         int exploringInWinter = 0;
@@ -137,6 +199,7 @@ public class DCity : TurnUpdatable
             entry.Value.TurnUpdate(numDaysPassed);
             UpdatePeopleWinter(entry, ref exploringInWinter);
         }
+        
         if (exploringInWinter > 1)
             health = Mathf.Clamp(health - DSeasons.reduceHealthExploringWinter, 0f, 1f);
     }
@@ -228,6 +291,11 @@ public class DCity : TurnUpdatable
         {
             resources.Add(resource.ID, DResource.Create(resource, amount));
         }
+
+        if (resource.Name.Equals("Shelter"))
+            shelterResource = resources[resource.ID];
+        else if (resource.Name.Equals("Fuel"))
+            fuelResource = resources[resource.ID];
     }
 
     // todo - as resources are defined with constant names, include if checks here
@@ -262,6 +330,26 @@ public class DCity : TurnUpdatable
     {
         ConsumeResource(resource, resource.Amount);
     }
+
+	public float CalculateExploration()
+	{
+		float countDiscovered = 0.0f;
+		foreach(DBuilding dBuilding in buildings.Values) 
+		{
+            if (dBuilding != townHall)
+            {
+                if (dBuilding.Status != DBuilding.DBuildingStatus.UNDISCOVERED)
+				{
+                    countDiscovered++;
+                }
+            }
+		}
+
+		if(countDiscovered > 0)
+			return countDiscovered / (float)(buildings.Count - 1);
+		else
+			return countDiscovered;
+	}
 
     public DResource GetResource(string name)
     {
@@ -309,7 +397,32 @@ public class DCity : TurnUpdatable
     }
 #endregion
 
+    public void Explore(float exploreAmount)
+    {
+        explorationLevel = Mathf.Clamp01(explorationLevel + exploreAmount);
+        
+        float explorableBuildings = buildings.Count - 1.0f;
+        float offsetPercentage = 1.0f / explorableBuildings;
+        
+        List<DBuilding> UnExploredBuildings = new List<DBuilding>();
+        foreach(DBuilding dBuilding in buildings.Values)
+        {
+            if (dBuilding != townHall)
+                if ((dBuilding.Status == DBuilding.DBuildingStatus.UNDISCOVERED))
+                {
+                    UnExploredBuildings.Add(dBuilding);
+                }
+        }
+        if (explorationLevel - offsetPercentage * (explorableBuildings - UnExploredBuildings.Count) >= offsetPercentage)
+        {
+            int index = UnityEngine.Random.Range(0, UnExploredBuildings.Count - 1);
+            UnExploredBuildings[index].Discover();
+        }
+        
+    }
+
     #region Properties
+
     public Dictionary<int, DBuilding> Buildings
     {
         get { return buildings; }
@@ -343,6 +456,11 @@ public class DCity : TurnUpdatable
         set { name = value; }
     }
 
+	public float ExplorationLevel
+	{
+		get { return explorationLevel;}
+	}
+
     public int Age
     {
         get { return age; }
@@ -352,7 +470,7 @@ public class DCity : TurnUpdatable
     {
         get { return cityController; }
     }
-
+    
     public DSeasons._season Season
     {
         get { return season; }
@@ -376,6 +494,39 @@ public class DCity : TurnUpdatable
         get { return isDeadOfWinter; }
         set { isDeadOfWinter = value; }
     }
+    
+    public int ShelterTier
+    {
+        get { return shelterTier; }
+    }
+
+    public void RaiseShelterTier()
+    {
+        shelterTier = Mathf.Clamp(shelterTier + 1, 1, 5);
+    }
+
+    public void LowerShelterTier()
+    {
+        shelterTier = Mathf.Clamp(shelterTier - 1, 1, 5);
+    }
+
+    public int FuelToShelterConversion
+    {
+        get { return fuelToShelterConversion; }
+    }
+
+    public void RaiseFuelConversion()
+    {
+        int cap = 4 < fuelResource.Amount ? 4 : fuelResource.Amount;
+        fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion + 1, 0, cap);
+    }
+
+    public void LowerFuelConversion()
+    {
+        int cap = 4 < fuelResource.Amount ? 4 : fuelResource.Amount;
+        fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion - 1, 0, cap);
+    }
+
     #endregion
 }
 

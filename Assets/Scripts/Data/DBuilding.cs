@@ -21,6 +21,9 @@ public class DBuilding : TurnUpdatable {
     private String buildingName;
     private DBuildingStatus status;
     public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
+
+    private DTask_Explore exploreTask;
+    private DTask_Idle idleTask;
     private DTask_Assess assessTask;
 
     private float percentInfected;
@@ -33,27 +36,42 @@ public class DBuilding : TurnUpdatable {
         this.city = city;
         this.buildingName = buildingName;
         this.buildingController = buildingController;
-        
+
         this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
-
         // Add an assess task by default
-        this.assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
-        
+
+		if(buildingName.Equals("Town Hall")) {
+			this.idleTask = new DTask_Idle(this, "Idle Merson");
+            this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
+        } 
+		
+		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
+
+        percentDamaged = 0.0f;
+        percentInfected = 0.0f;
+
         city.AddBuilding(this);
     }
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
-    { 
+    {
         foreach (var entry in tasks)
-        {            
+        {
             if (entry.Value.Enabled)
                 entry.Value.TurnUpdate(numDaysPassed);
         }
-        CalculateDamages();        
+        CalculateDamages();
+
+        if ((status == DBuildingStatus.UNDISCOVERED))
+            buildingController.gameObject.SetActive(false);
+        else
+            buildingController.gameObject.SetActive(true);
+
     }
 
+  
     public void SpringEffects()
     {
 
@@ -85,22 +103,35 @@ public class DBuilding : TurnUpdatable {
         foreach (var entry in tasks)
             entry.Value.FungusGrows();
     }
-
-    private void CalculateDamages()
+  
+    public void CalculateDamages()
     {
         int numberOfTasks = 0;
         float totalDamaged = 0.0f;
         float totalInfected = 0.0f;
-
+        int numPeople = 0;
+        int cumulativeInfectionLevel = 0;
         foreach (var entry in tasks)
         {
             //calculate %
             totalDamaged += entry.Value.LevelDamaged;
             totalInfected += entry.Value.LevelInfected;
             numberOfTasks++;
+            if(entry.Value.SlotList != null)
+            foreach (var task in entry.Value.SlotList)
+            // foreach (var person in task.Value)
+                if(task.Person != null) {
+                  cumulativeInfectionLevel += task.Person.Infection;
+                  numPeople++;
+                }
         }
+        if(numPeople != 0)
+          cumulativeInfectionLevel /= numPeople;
+        if(numberOfTasks != 0)
+          totalInfected /= numberOfTasks;
+          percentInfected = Mathf.Clamp(totalInfected
+          + (cumulativeInfectionLevel*Constants.BUILDING_MERSON_INFECTION_WEIGHT),Constants.BUILDING_MIN_FUNGAL_DMG, Constants.BUILDING_MAX_FUNGAL_DMG);
 
-        percentInfected = totalInfected / numberOfTasks;
         percentDamaged = totalDamaged / numberOfTasks;
     }
 
@@ -114,6 +145,15 @@ public class DBuilding : TurnUpdatable {
         {
             throw new TaskNotFoundException("Task is not assigned to this building");
         }
+    }
+
+	public DTask_Idle getIdleTask()
+	{
+        return idleTask;	
+	}
+    public DTask_Explore getExploreTask()
+    {
+        return exploreTask;
     }
 
     public void AddTask(DTask task)
@@ -154,6 +194,11 @@ public class DBuilding : TurnUpdatable {
     {
         get { return id; }
     }
+
+	public BuildingController Controller
+	{
+		get { return buildingController; }
+	}
 
     #region Assessment Components
 
@@ -215,13 +260,20 @@ public class DBuilding : TurnUpdatable {
 
     public float LevelDamaged
     {
-        get { return percentDamaged; }        
+      get {
+            CalculateDamages();
+            return percentDamaged;
+          }
     }
 
     public float LevelInfected
     {
-        get { return Mathf.Clamp(percentInfected * SeasonalInfectionMod(), 0f, 1f); }
-    }   
+        get
+        {
+          CalculateDamages();
+          return Mathf.Clamp(percentInfected * SeasonalInfectionMod(), 0f, 1f);
+        }
+    }
 
     public bool Damaged
     {

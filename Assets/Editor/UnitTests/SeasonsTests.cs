@@ -98,7 +98,8 @@ public class SeasonsTests
     [Test]
     public void AdjustsSeasonBasedOnDate()
     {
-        DateTime[] startDates = defaultSeasonStartDates;
+        DateTime[] startDates = new DateTime[defaultSeasonStartDates.Length];
+        Array.Copy(defaultSeasonStartDates, startDates, defaultSeasonStartDates.Length);
         DSeasons._season season = DSeasons._season.NUMELEMENTS;
         DateTime date = startDates[1].AddDays(1);
 
