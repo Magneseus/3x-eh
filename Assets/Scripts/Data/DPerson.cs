@@ -29,7 +29,6 @@ public class DPerson : TurnUpdatable
       // Random random = new Random();
       if(building != null && Random.value <= (building.LevelInfected +  Constants.MERSON_INFECTION_PROBABILITY))
       IncreaseInfection();
-      Debug.Log("Merson: "+ id +" infectionLevel is -> "+ infectionLevel );
     }
 
     #region Infection
