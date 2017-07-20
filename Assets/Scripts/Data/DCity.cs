@@ -328,6 +328,11 @@ public class DCity : TurnUpdatable
         fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion - 1, 0, cap);
     }
 
+    public DSeasons._season CurrentSeason
+    {
+        get { return season; }
+    }
+
     #endregion
 }
 
