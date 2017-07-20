@@ -51,6 +51,32 @@ public static class DSeasons
         return result;
     }
 
+    public static bool StartDeadOfWinter(ref DateTime[] deadOfWinter, DateTime currentDate)
+    {
+        if (currentDate > deadOfWinter[0])
+        {
+            deadOfWinter[0].AddYears(1);
+            if(currentDate > deadOfWinter[1])
+            {
+                deadOfWinter[1].AddYears(1);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static bool EndDeadOfWinter(ref DateTime[] deadOfWinter, DateTime currentDate)
+    {
+            deadOfWinter[0].AddYears(1);
+            if (currentDate > deadOfWinter[1])
+            {
+                deadOfWinter[1].AddYears(1);
+                return true;
+            }
+            return false;
+    }
+
     public static DateTime SetNextSeasonDate(DateTime currentStartDate)
     {
         return currentStartDate.AddYears(1);
@@ -73,10 +99,11 @@ public static class DSeasons
 
     public static DateTime[] InitialDeadOfWinterDates(DateTime[] deadWinterDates, DateTime currentDate)
     {
-        for (int i = 0; i < deadWinterDates.Length; i++)
-            if (currentDate > deadWinterDates[i])
-                deadWinterDates[i].AddYears(1);
-        return deadWinterDates;
+        DateTime[] newDates = deadWinterDates;
+        for (int i = 0; i < newDates.Length; i++)
+            if (currentDate > newDates[i])
+                newDates[i].AddYears(1);
+        return newDates;
     }
 
     public static DateTime[] InitialCurrentYearSeasonDates(DateTime[] seasonDates, DateTime currentDate)

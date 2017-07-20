@@ -48,8 +48,8 @@ public class DCity : TurnUpdatable
         age = 0;
 
         InitialLinkedCities(linkedCityKeys);
-        seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season, ref deadWinterDates);
-        
+        deadOfWinterStartEnd = deadWinterDates;
+        seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season, ref deadOfWinterStartEnd);
     }
 
     private void InitialLinkedCities(List<string> linkedCityKeys)
@@ -83,13 +83,15 @@ public class DCity : TurnUpdatable
     public void UpdateSeason(DateTime currentDate)
     {
         seasonStartDates = DSeasons.UpdateSeasonStatus(seasonStartDates, currentDate, ref season);
+        UpdateDeadOfWinter(currentDate);
     }
 
     public void UpdateDeadOfWinter(DateTime currentDate)
     {
-        if (season == DSeasons._season.WINTER &&
-            currentDate < deadOfWinterStartEnd[1] && currentDate >= deadOfWinterStartEnd[0])
-            isDeadOfWinter = true;
+        if (!isDeadOfWinter)
+            isDeadOfWinter = DSeasons.StartDeadOfWinter(ref deadOfWinterStartEnd, currentDate);
+        else
+            isDeadOfWinter = DSeasons.EndDeadOfWinter(ref deadOfWinterStartEnd, currentDate);
     }
 
     #region Update Other Elements
@@ -212,10 +214,15 @@ public class DCity : TurnUpdatable
 
     public void AddResource(DResource resource)
     {
-        int amount = (int)(resource.Amount * SeasonResourceMod(resource));
+        //int amount = (int)(resource.Amount * SeasonResourceMod(resource));
+        AddResource(resource, 0);
+    }
+
+    public void AddResource(DResource resource, int amount)
+    {
         if (resources.ContainsKey(resource.ID))
         {
-            resources[resource.ID].Amount += amount;
+            resources[resource.ID].Amount += (int)(amount * SeasonResourceMod(resource));
         }
         else
         {
@@ -298,6 +305,12 @@ public class DCity : TurnUpdatable
     public Dictionary<int, DBuilding> Buildings
     {
         get { return buildings; }
+    }
+
+    public float Health
+    {
+        get { return health; }
+        set { health = value; }
     }
 
     public Dictionary<int, DResource> Resources

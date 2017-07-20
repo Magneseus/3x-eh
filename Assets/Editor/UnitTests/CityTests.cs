@@ -235,6 +235,44 @@ public class CityTests
             Assert.That(city.GetResource(resourceName).Amount, Is.EqualTo(outputAmount * (i+1)));
         }
     }
+
+    [Test]
+    public void FoodPassivelyConsumed()
+    {
+        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var numberOfDaysPassed = 7;
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+        int numFood = 50;
+        city.AddResource(city.GetResource(Constants.FOOD_RESOURCE_NAME), numFood);
+        Assert.That(city.GetResource(Constants.FOOD_RESOURCE_NAME).Amount, Is.EqualTo(numFood));
+        int newFood = city.GetResource(Constants.FOOD_RESOURCE_NAME).Amount;
+
+        for (var i = 0; i < 10; i++)
+        {
+            city.TurnUpdate(numberOfDaysPassed);
+            newFood = city.GetResource(Constants.FOOD_RESOURCE_NAME).Amount;
+            Assert.That(newFood, Is.LessThan(numFood));
+            numFood = newFood;
+        }
+    }
+
+    [Test]
+    public void FoodDeficitLowersHealth()
+    {
+        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var numberOfDaysPassed = 7;
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
+        float health = 0.5f;
+        city.Health = health;
+
+        city.TurnUpdate(numberOfDaysPassed);
+        Assert.That(city.Health, Is.LessThan(health));
+    }
     #endregion
 
     #region Linked Cities
@@ -278,5 +316,49 @@ public class CityTests
         }
         Assert.True(linkedCities.Count == 0);
     }
-#endregion
+    #endregion
+
+    #region Seasons
+
+    [Test]
+    public void DeadOfWinter()
+    {
+        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var numberOfDaysPassed = 3;
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
+
+        DateTime date = city.DeadOfWinterDates[0].AddDays(-1);
+        city.TurnUpdate(numberOfDaysPassed);
+        date = date.AddDays(numberOfDaysPassed);
+        city.UpdateSeason(date);
+
+        Assert.IsTrue(city.IsDeadOfWinter);
+
+        date = city.DeadOfWinterDates[1].AddDays(-1);
+        city.TurnUpdate(numberOfDaysPassed);
+        date = date.AddDays(numberOfDaysPassed);
+        city.UpdateSeason(date);
+
+        Assert.IsFalse(city.IsDeadOfWinter);
+    }
+
+
+    [Test]
+    public void SeasonsAffectFoodProduction()
+    {
+        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
+        int food = 5;
+        city.Season = DSeasons._season.WINTER;
+        city.AddResource(city.GetResource(Constants.FOOD_RESOURCE_NAME), food);
+        int expectedAmount = (int)(food * city.SeasonResourceMod(city.GetResource(Constants.FOOD_RESOURCE_NAME)));
+        Assert.That(city.GetResource(Constants.FOOD_RESOURCE_NAME).Amount, Is.EqualTo(expectedAmount));
+    }
+    #endregion
 }
