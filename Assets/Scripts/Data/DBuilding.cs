@@ -36,10 +36,11 @@ public class DBuilding : TurnUpdatable {
         this.city = city;
         this.buildingName = buildingName;
         this.buildingController = buildingController;
-        
+
         this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
         // Add an assess task by default
+
 		if(buildingName.Equals("Town Hall")) {
 			this.idleTask = new DTask_Idle(this, "Idle Merson");
             this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
@@ -55,34 +56,49 @@ public class DBuilding : TurnUpdatable {
 
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
-    { 
+    {
         foreach (var entry in tasks)
-        {            
+        {
             if (entry.Value.Enabled)
                 entry.Value.TurnUpdate(numDaysPassed);
         }
         CalculateDamages();
+
         if ((status == DBuildingStatus.UNDISCOVERED))
             buildingController.gameObject.SetActive(false);
         else
             buildingController.gameObject.SetActive(true);
+
     }
 
-    private void CalculateDamages()
+    public void CalculateDamages()
     {
         int numberOfTasks = 0;
         float totalDamaged = 0.0f;
         float totalInfected = 0.0f;
-
+        int numPeople = 0;
+        int cumulativeInfectionLevel = 0;
         foreach (var entry in tasks)
         {
             //calculate %
             totalDamaged += entry.Value.LevelDamaged;
             totalInfected += entry.Value.LevelInfected;
             numberOfTasks++;
+            if(entry.Value.SlotList != null)
+            foreach (var task in entry.Value.SlotList)
+            // foreach (var person in task.Value)
+                if(task.Person != null) {
+                  cumulativeInfectionLevel += task.Person.Infection;
+                  numPeople++;
+                }
         }
+        if(numPeople != 0)
+          cumulativeInfectionLevel /= numPeople;
+        if(numberOfTasks != 0)
+          totalInfected /= numberOfTasks;
+          percentInfected = Mathf.Clamp(totalInfected
+          + (cumulativeInfectionLevel*Constants.BUILDING_MERSON_INFECTION_WEIGHT),Constants.BUILDING_MIN_FUNGAL_DMG, Constants.BUILDING_MAX_FUNGAL_DMG);
 
-        percentInfected = totalInfected / numberOfTasks;
         percentDamaged = totalDamaged / numberOfTasks;
     }
 
@@ -206,13 +222,18 @@ public class DBuilding : TurnUpdatable {
 
     public float LevelDamaged
     {
-        get { return percentDamaged; }        
+      get {
+            CalculateDamages();
+            return percentDamaged;
+          }
     }
 
     public float LevelInfected
     {
-        get { return percentInfected; }
-    }   
+        get {
+          CalculateDamages();
+          return percentInfected; }
+    }
 
     public bool Damaged
     {

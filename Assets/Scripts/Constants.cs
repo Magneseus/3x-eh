@@ -18,10 +18,22 @@ public static class Constants {
 
     #region Task Constants
     public static float TEMP_REPAIR_AMOUNT = 0.2f;
+    public static float DEFAULT_ASSESS_AMOUNT = 0.1f;
 
     public static float TASK_MIN_STRUCTURAL_DMG = 0.0f;
     public static float TASK_MAX_STRUCTURAL_DMG = 1.0f;
+    public static float BUILDING_MIN_FUNGAL_DMG = 0.0f;
+    public static float BUILDING_MAX_FUNGAL_DMG = 1.0f;
+    public static float
+    BUILDING_MERSON_INFECTION_WEIGHT = 0.25f;
     public static float TASK_MIN_FUNGAL_DMG = 0.0f;
     public static float TASK_MAX_FUNGAL_DMG = 1.0f;
+    #endregion
+
+    #region Merson Infection
+    public static int MERSON_INFECTION_MIN = 0;
+    public static int MERSON_INFECTION_MAX = 2;
+
+    public static float MERSON_INFECTION_TASK_MODIFIER = 0.5f;
     #endregion
 }

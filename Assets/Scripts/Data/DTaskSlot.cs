@@ -23,12 +23,10 @@ public class DTaskSlot : TurnUpdatable
 
     public void TurnUpdate(int numDaysPassed)
     {
-        if (person != null)
+        if (person != null && (Infected || Damaged))
         {
-            if (Infected)
-                Repair(Constants.TEMP_REPAIR_AMOUNT);
-            else if (Damaged)
-                Repair(Constants.TEMP_REPAIR_AMOUNT);
+            float modifier = person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
+            Repair(Constants.TEMP_REPAIR_AMOUNT * modifier);            
         }
     }
 

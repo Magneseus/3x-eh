@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class DTask_Assess : DTask
 {
-    public const float DEFAULT_ASSESS_AMOUNT = 0.1f;
     private float assessAmount;
 
     public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName, 0.0f)
@@ -17,7 +16,7 @@ public class DTask_Assess : DTask
         ForceFixed();
     }
 
-    public DTask_Assess(DBuilding dBuilding) : this(dBuilding, DEFAULT_ASSESS_AMOUNT, 4, "Assess")
+    public DTask_Assess(DBuilding dBuilding) : this(dBuilding, Constants.DEFAULT_ASSESS_AMOUNT, 4, "Assess")
     {}
 
     public override void TurnUpdate(int numDaysPassed)
@@ -29,7 +28,8 @@ public class DTask_Assess : DTask
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
             {
-                building.Assess(assessAmount);
+                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;                                
+                building.Assess(assessAmount * Constants.MERSON_INFECTION_TASK_MODIFIER);
             }
         }
     }
