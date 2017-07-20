@@ -13,7 +13,18 @@
       "position": {
         "x": [ -5, 5 ],
         "y": [ -3, 3 ]
-      }
+      },
+      "tasks": [
+        {
+          "name": "Apartment Super",
+          "resource": {
+            "name": "Shelter",
+            "amount": 20
+          },
+          "maxPeople": 1,
+          "fullAssess": 0.6
+        }
+      ]
     },
     {
       "name": "Derelict Building",
@@ -84,6 +95,10 @@
     {
       "name": "Medicine",
       "amount": 0
+    },
+    {
+      "name": "Shelter",
+      "amount":  0
     }
   ],
   "edges":[

@@ -128,6 +128,7 @@ public class GameController : MonoBehaviour
                 TaskController newTaskController = AttachTaskController(newTask, bControl);
             }
         }
+
         foreach(JSONNode resource in cityJson["resources"].AsArray)
         {
             DResource r = DResource.Create(resource["name"], resource["amount"]);
