@@ -22,19 +22,20 @@ public class DTask_Explore : DTask
         foreach (DTaskSlot taskSlot in slotList)
         {
             taskSlot.TurnUpdate(numDaysPassed);
+            float infectionModifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1f : Constants.MERSON_INFECTION_TASK_MODIFIER;
 
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
             {
                 if (taskName == "Explore")
                 {
-                    building.City.Explore(exploreAmount);
+                    building.City.Explore(exploreAmount * infectionModifier);
                 }
                 else if (taskName == "Scavenge")
                 {
                     // TODO: Once random events are in place, proper scavenge task here
                     float rand = UnityEngine.Random.Range(0.0f, 1.0f);
-                    int randAmt = Mathf.RoundToInt(UnityEngine.Random.Range(10.0f, 50.0f));
+                    int randAmt = Mathf.RoundToInt(UnityEngine.Random.Range(10.0f, 50.0f) * infectionModifier);
 
                     if (rand > 0.4f && rand < 0.7f)
                     {
