@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -25,9 +25,31 @@ public class DCity : TurnUpdatable
 
     private DSeasons._season season;
     private DateTime[] seasonStartDates = new DateTime[4];
+    private DateTime[] deadOfWinterStartEnd = new DateTime[2];
+    private bool isDeadOfWinter = false;
 
+    public static float health = 0.5f;
+    public static int foodConsumption = 1;
+    public static float notEnoughFoodHealthDecay = 0.8f;
+
+    #region Constructors and Init
+    public DCity(string cityName, CityController cityController)
+    {
+        Init(cityName, cityController, DSeasons.DefaultStartDates(), new DateTime(2017,1,1), DSeasons.DefaultDeadOfWinterDates(), null);
+    }
+
+    public DCity(string cityName, CityController cityController, DateTime currentDate)
+    {
+        Init(cityName, cityController, DSeasons.DefaultStartDates(), currentDate, DSeasons.DefaultDeadOfWinterDates(), null);
+    }
 
     public DCity(string cityName, CityController cityController, DateTime[] seasonDates, DateTime currentDate, List<string> linkedCityKeys = null)
+    {
+        Init(cityName, cityController, seasonDates, currentDate, DSeasons.DefaultDeadOfWinterDates(), linkedCityKeys);
+    }
+
+    private void Init(string cityName, CityController cityController, DateTime[] seasonDates, DateTime currentDate, 
+         DateTime[] deadWinterDates, List<string> linkedCityKeys)
     {
         name = cityName;
         this.cityController = cityController;
@@ -38,7 +60,8 @@ public class DCity : TurnUpdatable
         fuelToShelterConversion = 0;
 
         InitialLinkedCities(linkedCityKeys);
-        seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season);
+        deadOfWinterStartEnd = deadWinterDates;
+        seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season, ref deadOfWinterStartEnd);
     }
 
     private void InitialLinkedCities(List<string> linkedCityKeys)
@@ -49,8 +72,12 @@ public class DCity : TurnUpdatable
                 this.linkedCityKeys.Add(cityKey);
     }
 
-    public void AddBuilding(DBuilding dBuilding)
+    private void InitialDeadOfWinter(DateTime currentDate, DateTime[] deadWinterDates)
     {
+        deadOfWinterStartEnd = deadWinterDates;
+        if (currentDate < deadOfWinterStartEnd[1] && currentDate >= deadOfWinterStartEnd[0])
+            isDeadOfWinter = true;
+            
         if (buildings.ContainsKey(dBuilding.ID))
         {
             throw new BuildingAlreadyAddedException(string.Format("City '{0}' already has building '{1}'", name, dBuilding.Name));
@@ -64,33 +91,19 @@ public class DCity : TurnUpdatable
         }
     }
 
+    #region Update Calls
     // TurnUpdate is called once per Turn
     public void TurnUpdate(int numDaysPassed)
     {
         // Set shelter resource to zero, cannot accumulate shelter
         if (shelterResource != null)
             shelterResource.Amount = 0;
-
-        // BUILDING UPDATE
-        foreach (var entry in buildings)
-            entry.Value.TurnUpdate(numDaysPassed);
-
-        // RESOURCE UPDATE
-        foreach (var entry in resources)
-        {
-            entry.Value.TurnUpdate(numDaysPassed);
-
-            // Remove fuel due to shelter conversion
-            if (entry.Value.Name.Equals("Fuel"))
-            {
-                entry.Value.Amount -= fuelToShelterConversion;
-            }
-        }
-
-        // PERSON UPDATE
-        foreach (var entry in people)
-            entry.Value.TurnUpdate(numDaysPassed);
-
+        
+        UpdateBuildings(numDaysPassed);
+        UpdateResources(numDaysPassed);
+        UpdatePeople(numDaysPassed);
+        UpdateCity();
+        
         if (shelterResource != null)
         {
             // Shelter calculations
@@ -105,10 +118,9 @@ public class DCity : TurnUpdatable
             fuelToShelterConversion = fuelToShelterConversion < fuelResource.Amount ? fuelToShelterConversion : fuelResource.Amount;
         }
 
-
         age += numDaysPassed;
     }
-
+    
     // TODO: Account for infection in people
     public int ShelterConsumedPerTurn()
     {
@@ -125,6 +137,133 @@ public class DCity : TurnUpdatable
     public void UpdateSeason(DateTime currentDate)
     {
         seasonStartDates = DSeasons.UpdateSeasonStatus(seasonStartDates, currentDate, ref season);
+        UpdateDeadOfWinter(currentDate);
+    }
+
+    public void UpdateDeadOfWinter(DateTime currentDate)
+    {
+        if (!isDeadOfWinter)
+            isDeadOfWinter = DSeasons.StartDeadOfWinter(ref deadOfWinterStartEnd, currentDate);
+        else
+            isDeadOfWinter = DSeasons.EndDeadOfWinter(ref deadOfWinterStartEnd, currentDate);
+    }
+
+    #region Update Other Elements
+    private void UpdateBuildings(int numDaysPassed)
+    {
+        foreach (var entry in buildings)
+        {
+            entry.Value.TurnUpdate(numDaysPassed);
+            BuildingSeasonalEffects(entry.Value, numDaysPassed);
+        }
+    }
+    
+    private void BuildingSeasonalEffects(DBuilding building, int numDaysPassed)
+    {
+        switch (season)
+        {
+            case DSeasons._season.SPRING:
+                building.SpringEffects();
+                break;
+            case DSeasons._season.SUMMER:
+                building.SummerEffects();
+                break;
+            case DSeasons._season.FALL:
+                building.FallEffects();
+                break;
+            case DSeasons._season.WINTER:
+                building.WinterEffects();
+                break;
+        }
+    }
+
+    private void UpdateResources(int numDaysPassed)
+    {
+        foreach (var entry in resources)
+        {
+            entry.Value.TurnUpdate(numDaysPassed);
+            
+            // Remove fuel due to shelter conversion
+            if (entry.Value.Name.Equals("Fuel"))
+            {
+                entry.Value.Amount -= fuelToShelterConversion;
+            }
+        }
+    }
+    
+    private void UpdatePeople(int numDaysPassed)
+    {
+        int exploringInWinter = 0;
+        foreach (var entry in people)
+        {
+            entry.Value.TurnUpdate(numDaysPassed);
+            UpdatePeopleWinter(entry, ref exploringInWinter);
+        }
+        
+        if (exploringInWinter > 1)
+            health = Mathf.Clamp(health - DSeasons.reduceHealthExploringWinter, 0f, 1f);
+    }
+
+    private void UpdatePeopleWinter(KeyValuePair<int, DPerson> entry, ref int exploringInWinter)
+    {
+        if (entry.Value.Task != null && entry.Value.Task.GetType() == typeof(DTask_Explore) && season == DSeasons._season.WINTER)
+        {
+            exploringInWinter++;
+            DeadOfWinterCulling(entry);
+        }
+    }
+
+    public void DeadOfWinterCulling(KeyValuePair<int,DPerson> entry)
+    {
+        if (isDeadOfWinter)
+        {
+            entry.Value.Dies();
+            people.Remove(entry.Key);
+        }
+    }
+    #endregion
+
+    public void UpdateCity()
+    {
+        UpdateCityFood();
+        UpdateCityHealth();
+    }
+
+    public void UpdateCityFood()
+    {
+        DResource resource = GetResource(Constants.FOOD_RESOURCE_NAME);
+        int consumeAmount = (int)(foodConsumption * DSeasons.modFoodConsumption[(int)season]);
+        if (resource.Amount >= foodConsumption)
+            ConsumeResource(resource, foodConsumption);
+        else
+        {
+            ConsumeResource(resource);
+            NotEnoughFood(foodConsumption - resource.Amount);
+        }
+    }
+
+    public void NotEnoughFood(int deficit)
+    {
+        health *= notEnoughFoodHealthDecay;
+    }
+
+    public void UpdateCityHealth()
+    {
+
+    }
+    #endregion
+
+    #region Basic Manipulation
+    public void AddBuilding(DBuilding dBuilding)
+    {
+        if (buildings.ContainsKey(dBuilding.ID))
+        {
+            throw new BuildingAlreadyAddedException(string.Format("City '{0}' already has building '{1}'", name, dBuilding.Name));
+        }
+        else
+        {
+            buildings.Add(dBuilding.ID, dBuilding);
+        }
     }
 
     public void AddPerson(DPerson dPerson)
@@ -138,13 +277,19 @@ public class DCity : TurnUpdatable
 
     public void AddResource(DResource resource)
     {
+        //int amount = (int)(resource.Amount * SeasonResourceMod(resource));
+        AddResource(resource, 0);
+    }
+
+    public void AddResource(DResource resource, int amount)
+    {
         if (resources.ContainsKey(resource.ID))
         {
-            resources[resource.ID].Amount += resource.Amount;
+            resources[resource.ID].Amount += (int)(amount * SeasonResourceProduceMod(resource));
         }
         else
         {
-            resources.Add(resource.ID, DResource.Create(resource, resource.Amount));
+            resources.Add(resource.ID, DResource.Create(resource, amount));
         }
 
         if (resource.Name.Equals("Shelter"))
@@ -153,11 +298,19 @@ public class DCity : TurnUpdatable
             fuelResource = resources[resource.ID];
     }
 
-    public void ConsumeResource(DResource resource)
+    // todo - as resources are defined with constant names, include if checks here
+    public float SeasonResourceProduceMod(DResource resource)
     {
-        if (resources.ContainsKey(resource.ID) && resources[resource.ID].Amount >= resource.Amount)
+        if (resource.Name == Constants.FOOD_RESOURCE_NAME)
+            return DSeasons.modFoodProduction[(int)season];
+        return 1f;
+    }
+
+    public void ConsumeResource(DResource resource, int amount)
+    {
+        if (resources.ContainsKey(resource.ID) && resources[resource.ID].Amount >= amount)
         {
-            resources[resource.ID].Amount -= resource.Amount;
+           resources[resource.ID].Amount -= (int)(amount * SeasonResourceConsumedMod(resource));
         }
         else
         {
@@ -165,6 +318,18 @@ public class DCity : TurnUpdatable
         }
     }
 
+    // todo - as resources are defined with constant names, include if checks here
+    public float SeasonResourceConsumedMod(DResource resource)
+    {
+        if (resource.Name == Constants.FOOD_RESOURCE_NAME)
+            return DSeasons.modFoodProduction[(int)season];
+        return 1f;
+    }
+
+    public void ConsumeResource(DResource resource)
+    {
+        ConsumeResource(resource, resource.Amount);
+    }
 
 	public float CalculateExploration()
 	{
@@ -200,6 +365,9 @@ public class DCity : TurnUpdatable
         }
 
     }
+#endregion
+
+    #region Map of Canada
     // map of canada methods
     // public Vector2 MapLocation
     // {
@@ -227,6 +395,7 @@ public class DCity : TurnUpdatable
     {
         return linkedCityKeys.Contains(cityKey);
     }
+#endregion
 
     public void Explore(float exploreAmount)
     {
@@ -257,6 +426,12 @@ public class DCity : TurnUpdatable
     public Dictionary<int, DBuilding> Buildings
     {
         get { return buildings; }
+    }
+
+    public float Health
+    {
+        get { return health; }
+        set { health = value; }
     }
 
     public Dictionary<int, DResource> Resources
@@ -295,7 +470,31 @@ public class DCity : TurnUpdatable
     {
         get { return cityController; }
     }
+    
+    public DSeasons._season Season
+    {
+        get { return season; }
+        set { season = value; }
+    }
 
+    public DateTime[] SeasonStartDates
+    {
+        get { return seasonStartDates; }
+        set { seasonStartDates = value; }
+    }
+
+    public DateTime[] DeadOfWinterDates
+    {
+        get { return deadOfWinterStartEnd; }
+        set { deadOfWinterStartEnd = value; }
+    }
+
+    public bool IsDeadOfWinter
+    {
+        get { return isDeadOfWinter; }
+        set { isDeadOfWinter = value; }
+    }
+    
     public int ShelterTier
     {
         get { return shelterTier; }
@@ -326,11 +525,6 @@ public class DCity : TurnUpdatable
     {
         int cap = 4 < fuelResource.Amount ? 4 : fuelResource.Amount;
         fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion - 1, 0, cap);
-    }
-
-    public DSeasons._season CurrentSeason
-    {
-        get { return season; }
     }
 
     #endregion

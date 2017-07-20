@@ -96,6 +96,9 @@ public class BuildingTests
         var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
 
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
 
         city.TurnUpdate(1);
@@ -114,6 +117,9 @@ public class BuildingTests
         var task = Mock.CleanTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
 

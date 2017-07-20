@@ -43,6 +43,11 @@ public class DPerson : TurnUpdatable
     }
     #endregion
 
+    public void Dies()
+    {
+        Object.Destroy(meepleController.gameObject);
+    }
+
     #region Task Management
 
     public void SetTask(DTask dTask)

@@ -7,9 +7,11 @@ public class SeasonsTests
 {
     private DateTime currentDate = new DateTime(2017, 1, 1);
     private DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
+    private DateTime[] defaultDeadOfWinterDates = { new DateTime(2017, 1, 7), new DateTime(2017, 1, 21) };
     private DateTime[] lateWinterSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 1, 5) };
     private DateTime[] zeroYearSeasonStartDates = { new DateTime(1000, 4, 1), new DateTime(1000, 6, 1), new DateTime(1000, 8, 1), new DateTime(1000, 12, 1) };
     private DateTime[] zeroYearLateWinterSeasonStartDates = { new DateTime(1000, 4, 1), new DateTime(1000, 6, 1), new DateTime(1000, 8, 1), new DateTime(1000, 1, 5) };
+
 
     [TearDown]
     public void TearDown()
@@ -157,8 +159,10 @@ public class SeasonsTests
         DateTime[] startDates = zeroYearSeasonStartDates;
         DSeasons._season season = DSeasons._season.NUMELEMENTS;
         DateTime date = new DateTime(currentDate.Year, startDates[1].Month, startDates[1].AddDays(1).Day);
+        DateTime[] deadOfWinter = new DateTime[2];
+        Array.Copy(defaultDeadOfWinterDates, deadOfWinter, defaultDeadOfWinterDates.Length);
 
-        startDates = DSeasons.InitialSeasonSetup(startDates, date, ref season);
+        startDates = DSeasons.InitialSeasonSetup(startDates, date, ref season, ref deadOfWinter);
 
         Assert.That(season, Is.EqualTo(DSeasons._season.SUMMER));
     }
@@ -170,13 +174,15 @@ public class SeasonsTests
         Array.Copy(zeroYearSeasonStartDates, startDates, zeroYearSeasonStartDates.Length);
         DSeasons._season season = DSeasons._season.NUMELEMENTS;
         DateTime date = new DateTime(currentDate.Year, startDates[1].Month, startDates[1].AddDays(1).Day);
+        DateTime[] deadOfWinter = new DateTime[2];
+        Array.Copy(defaultDeadOfWinterDates, deadOfWinter, defaultDeadOfWinterDates.Length);
 
         DateTime[] compareDates = new DateTime[zeroYearSeasonStartDates.Length];
         Array.Copy(zeroYearSeasonStartDates, startDates, zeroYearSeasonStartDates.Length);
         for(int i=0; i<compareDates.Length; i++)
             compareDates[i] = new DateTime(currentDate.Year, zeroYearSeasonStartDates[i].Month, zeroYearSeasonStartDates[i].Day);
 
-        startDates = DSeasons.InitialSeasonSetup(startDates, date, ref season);
+        startDates = DSeasons.InitialSeasonSetup(startDates, date, ref season, ref deadOfWinter);
 
         Assert.IsTrue(startDates[0] == compareDates[0].AddYears(1));
         Assert.IsTrue(startDates[1] == compareDates[1].AddYears(1));
@@ -190,8 +196,10 @@ public class SeasonsTests
         DateTime[] startDates = zeroYearLateWinterSeasonStartDates;
         DSeasons._season season = DSeasons._season.NUMELEMENTS;
         DateTime date = new DateTime(currentDate.Year, startDates[1].Month, startDates[1].AddDays(1).Day);
+        DateTime[] deadOfWinter = new DateTime[2];
+        Array.Copy(defaultDeadOfWinterDates, deadOfWinter, defaultDeadOfWinterDates.Length);
 
-        startDates = DSeasons.InitialSeasonSetup(startDates, date, ref season);
+        startDates = DSeasons.InitialSeasonSetup(startDates, date, ref season, ref deadOfWinter);
 
         Assert.That(season, Is.EqualTo(DSeasons._season.SUMMER));
     }
@@ -203,13 +211,15 @@ public class SeasonsTests
         Array.Copy(zeroYearLateWinterSeasonStartDates, startDates, zeroYearLateWinterSeasonStartDates.Length);
         DSeasons._season season = DSeasons._season.NUMELEMENTS;
         DateTime date = new DateTime(currentDate.Year, startDates[1].Month, startDates[1].AddDays(1).Day);
+        DateTime[] deadOfWinter = new DateTime[2];
+        Array.Copy(defaultDeadOfWinterDates, deadOfWinter, defaultDeadOfWinterDates.Length);
 
         DateTime[] compareDates = new DateTime[zeroYearLateWinterSeasonStartDates.Length];
         Array.Copy(zeroYearLateWinterSeasonStartDates, compareDates, zeroYearLateWinterSeasonStartDates.Length);
         for (int i = 0; i < compareDates.Length; i++)
             compareDates[i] = new DateTime(currentDate.Year, zeroYearLateWinterSeasonStartDates[i].Month, zeroYearLateWinterSeasonStartDates[i].Day);
 
-        startDates = DSeasons.InitialSeasonSetup(startDates, date, ref season);
+        startDates = DSeasons.InitialSeasonSetup(startDates, date, ref season, ref deadOfWinter);
 
         Assert.IsTrue(startDates[0] == compareDates[0].AddYears(1));
         Assert.IsTrue(startDates[1] == compareDates[1].AddYears(1));
