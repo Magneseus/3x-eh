@@ -63,6 +63,7 @@ public class DCity : TurnUpdatable
         deadOfWinterStartEnd = deadWinterDates;
         seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season, ref deadOfWinterStartEnd);
     }
+    #endregion
 
     private void InitialLinkedCities(List<string> linkedCityKeys)
     {
@@ -77,18 +78,6 @@ public class DCity : TurnUpdatable
         deadOfWinterStartEnd = deadWinterDates;
         if (currentDate < deadOfWinterStartEnd[1] && currentDate >= deadOfWinterStartEnd[0])
             isDeadOfWinter = true;
-            
-        if (buildings.ContainsKey(dBuilding.ID))
-        {
-            throw new BuildingAlreadyAddedException(string.Format("City '{0}' already has building '{1}'", name, dBuilding.Name));
-        }
-        else
-        {
-            buildings.Add(dBuilding.ID, dBuilding);
-
-            if (dBuilding.Name == "Town Hall")
-                townHall = dBuilding;
-        }
     }
 
     #region Update Calls
@@ -263,6 +252,9 @@ public class DCity : TurnUpdatable
         else
         {
             buildings.Add(dBuilding.ID, dBuilding);
+
+            if (dBuilding.Name == "Town Hall")
+                townHall = dBuilding;
         }
     }
 

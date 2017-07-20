@@ -134,11 +134,11 @@ public class DPerson : TurnUpdatable
     {
         get
         {   
-            if(city.CurrentSeason == DSeasons._season.WINTER)
+            if(city.Season == DSeasons._season.WINTER)
             {
                 return Constants.MERSON_INFECTION_MIN;
             }
-            else if(city.CurrentSeason == DSeasons._season.SUMMER)
+            else if(city.Season == DSeasons._season.SUMMER)
             {
                 return infectionLevel;
             }
