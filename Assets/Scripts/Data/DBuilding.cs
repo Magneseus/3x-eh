@@ -54,6 +54,38 @@ public class DBuilding : TurnUpdatable {
         CalculateDamages();        
     }
 
+    public void SpringEffects()
+    {
+
+    }
+
+    public void SummerEffects()
+    {
+        FungusGrows();
+    }
+
+    public void FallEffects()
+    {
+
+    }
+
+    public void WinterEffects()
+    {
+        StructureDeteriorates();
+    }
+
+    public void StructureDeteriorates()
+    {
+        foreach (var entry in tasks)
+            entry.Value.StructureDeteriorates();
+    }
+
+    public void FungusGrows()
+    {
+        foreach (var entry in tasks)
+            entry.Value.FungusGrows();
+    }
+
     private void CalculateDamages()
     {
         int numberOfTasks = 0;
@@ -166,6 +198,11 @@ public class DBuilding : TurnUpdatable {
         }
     }
 
+    public float SeasonalInfectionMod()
+    {
+        return DSeasons.modBuildingInfection[(int)city.Season];
+    }
+
     public float LevelAssessed
     {
         get { return percentAssessed; }
@@ -183,7 +220,7 @@ public class DBuilding : TurnUpdatable {
 
     public float LevelInfected
     {
-        get { return percentInfected; }
+        get { return Mathf.Clamp(percentInfected * SeasonalInfectionMod(), 0f, 1f); }
     }   
 
     public bool Damaged

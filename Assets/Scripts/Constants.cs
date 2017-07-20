@@ -16,6 +16,10 @@ public static class Constants {
 
     public static string CITY_JSON_PATH = @"Assets/Resources/Data";
 
+    #region Names
+    public static string FOOD_RESOURCE_NAME = "Food";
+#endregion
+
     #region Task Constants
     public static float TEMP_REPAIR_AMOUNT = 0.2f;
 

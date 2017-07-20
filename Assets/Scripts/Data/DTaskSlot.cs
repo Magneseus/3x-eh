@@ -32,6 +32,16 @@ public class DTaskSlot : TurnUpdatable
         }
     }
 
+    public void StructureDeteriorates()
+    {
+        structuralDamage = Mathf.Clamp(structuralDamage * DSeasons.changeStructureDamageSlots[(int)DSeasons._season.WINTER], 0f, 1f);
+    }
+
+    public void FungusGrows()
+    {
+        fungalDamage = Mathf.Clamp(fungalDamage * DSeasons.changeFungusSlots[(int)DSeasons._season.WINTER], 0f, 1f);
+    }
+
     #region Person Management
 
     public void AddPerson(DPerson dPerson)
@@ -64,12 +74,12 @@ public class DTaskSlot : TurnUpdatable
     {
         if (Infected)
         {
-            fungalDamage -= amount;
+            fungalDamage -= amount * DSeasons.modRepairFungusSpeed[(int)FetchSeason()];
             fungalDamage = Mathf.Clamp(fungalDamage, Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
         }
         else if (Damaged)
         {
-            structuralDamage -= amount;
+            structuralDamage -= amount * DSeasons.modRepairStructureSpeed[(int)FetchSeason()]; ;
             structuralDamage = Mathf.Clamp(structuralDamage, Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG);
         }
     }
@@ -80,6 +90,11 @@ public class DTaskSlot : TurnUpdatable
             return true;
 
         return false;
+    }
+
+    private DSeasons._season FetchSeason()
+    {
+        return task.Building.City.Season;
     }
 
     #region Accessors

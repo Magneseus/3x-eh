@@ -61,6 +61,18 @@ public class DTask : TurnUpdatable
         }
     }
 
+    public void StructureDeteriorates()
+    {
+        foreach (var entry in slotList)
+            entry.StructureDeteriorates();
+    }
+
+    public void FungusGrows()
+    {
+        foreach (var entry in slotList)
+            entry.FungusGrows();
+    }
+
     #region Person Management
 
     public void AddPerson(DPerson dPerson)

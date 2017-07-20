@@ -20,10 +20,15 @@ public class DPerson : TurnUpdatable
 
         city.AddPerson(this);
     }
-       
+
     public void TurnUpdate(int numDaysPassed)
     {
 
+    }
+
+    public void Dies()
+    {
+        Object.Destroy(meepleController.gameObject);
     }
 
     #region Task Management

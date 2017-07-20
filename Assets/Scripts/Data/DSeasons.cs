@@ -7,7 +7,21 @@ using UnityEngine;
 [Serializable]
 public static class DSeasons
 {
-    public enum _season { SPRING, SUMMER, FALL, WINTER, NUMELEMENTS};
+    public enum _season { SPRING, SUMMER, FALL, WINTER, NUMELEMENTS };
+    private static int[,] defaultStartDates = { { 2017, 4, 1 },
+                                                { 2017, 6, 1 },
+                                                { 2017, 9, 1 },
+                                                { 2017, 12, 1 }};
+    private static int[,] defaultDeadOfWinterDates = { { 2017, 1, 7 },
+                                                { 2017, 1, 21 } };
+
+    public static float[] modFoodConsumption = {1f, 1f, 1f, 1.5f };
+    public static float[] modFoodProduction = {1f, 1f, 1f, 0.4f };
+    public static float[] modRepairStructureSpeed = { 1f, 1f, 1f, 0.5f };
+    public static float[] modRepairFungusSpeed = { 1f, 0.5f, 1f, 2f };
+    public static float[] changeFungusSlots = { 1f, 1.25f, 1f, 0.8f };
+    public static float[] changeStructureDamageSlots = { 1f, 1f, 1f, 1.25f };
+    public static float[] modBuildingInfection = { 1f, 1.5f, 1f, 0.5f };
 
     public static _season NextSeason(_season currentSeason)
     {
@@ -46,13 +60,22 @@ public static class DSeasons
         return currentDate > seasonDates[(int)NextSeason(currentSeason)];
     }
 
-    public static DateTime[] InitialSeasonSetup(DateTime[] seasonDates, DateTime currentDate, ref _season season)
+    public static DateTime[] InitialSeasonSetup(DateTime[] seasonDates, DateTime currentDate, ref _season season, ref DateTime[] deadWinterDates)
     {
         DateTime[] seasonStartDates = InitialCurrentYearSeasonDates(seasonDates, currentDate);
         bool lateWinter = seasonDates[3] < seasonDates[0];
         season = InitialSeasonForCheck(lateWinter);
         seasonStartDates = InitialCalendarAdjust(currentDate, lateWinter, seasonStartDates, ref season);
+        deadWinterDates = InitialDeadOfWinterDates(deadWinterDates, currentDate);
         return seasonStartDates;
+    }
+
+    public static DateTime[] InitialDeadOfWinterDates(DateTime[] deadWinterDates, DateTime currentDate)
+    {
+        for (int i = 0; i < deadWinterDates.Length; i++)
+            if (currentDate > deadWinterDates[i])
+                deadWinterDates[i].AddYears(1);
+        return deadWinterDates;
     }
 
     public static DateTime[] InitialCurrentYearSeasonDates(DateTime[] seasonDates, DateTime currentDate)
@@ -85,6 +108,24 @@ public static class DSeasons
                 results[element] = results[element].AddYears(1);
             }
         }
+        return results;
+    }
+
+    public static DateTime[] DefaultStartDates()
+    {
+
+        DateTime[] results = {new DateTime(defaultStartDates[0,0], defaultStartDates[0,1], defaultStartDates[0,2]),
+            new DateTime(defaultStartDates[1,0], defaultStartDates[1,1], defaultStartDates[1,2]),
+            new DateTime(defaultStartDates[2,0], defaultStartDates[2,1], defaultStartDates[2,2]),
+            new DateTime(defaultStartDates[3,0], defaultStartDates[3,1], defaultStartDates[3,2])};
+        return results;
+    }
+
+    public static DateTime[] DefaultDeadOfWinterDates()
+    {
+
+        DateTime[] results = {new DateTime(defaultDeadOfWinterDates[0,0], defaultDeadOfWinterDates[0,1], defaultDeadOfWinterDates[0,2]),
+            new DateTime(defaultDeadOfWinterDates[1,0], defaultDeadOfWinterDates[1,1], defaultDeadOfWinterDates[1,2]) };
         return results;
     }
 }
