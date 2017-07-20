@@ -22,6 +22,7 @@ public static class DSeasons
     public static float[] changeFungusSlots = { 1f, 1.25f, 1f, 0.8f };
     public static float[] changeStructureDamageSlots = { 1f, 1f, 1f, 1.25f };
     public static float[] modBuildingInfection = { 1f, 1.5f, 1f, 0.5f };
+    public static float reduceHealthExploringWinter = -0.1f;
 
     public static _season NextSeason(_season currentSeason)
     {

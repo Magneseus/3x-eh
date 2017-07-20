@@ -129,16 +129,28 @@ public class DCity : TurnUpdatable
 
     private void UpdatePeople(int numDaysPassed)
     {
+        int exploringInWinter = 0;
         foreach (var entry in people)
         {
             entry.Value.TurnUpdate(numDaysPassed);
+            UpdatePeopleWinter(entry, ref exploringInWinter);
+        }
+        if (exploringInWinter > 1)
+            health = Mathf.Clamp(health - DSeasons.reduceHealthExploringWinter, 0f, 1f);
+    }
+
+    private void UpdatePeopleWinter(KeyValuePair<int, DPerson> entry, ref int exploringInWinter)
+    {
+        if (entry.Value.Task.GetType() == typeof(DTask_Explore) && season == DSeasons._season.WINTER)
+        {
+            exploringInWinter++;
             DeadOfWinterCulling(entry);
         }
     }
 
     public void DeadOfWinterCulling(KeyValuePair<int,DPerson> entry)
     {
-        if (isDeadOfWinter && entry.Value.Task.GetType() == typeof(DTask_Explore))
+        if (isDeadOfWinter)
         {
             entry.Value.Dies();
             people.Remove(entry.Key);
