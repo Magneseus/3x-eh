@@ -21,7 +21,7 @@ public class CityController : MonoBehaviour {
     {
       GetComponent<SpriteRenderer>().sprite =
       Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + cityName);
-        dCity = new DCity(cityName, this);
+        dCity = new DCity(cityName, this, dGame.DefaultSeasonStartDates, dGame.CurrentDate);
         dGame.Cities.Add(cityName, dCity);
     }
 }

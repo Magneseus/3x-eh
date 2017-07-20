@@ -49,27 +49,27 @@ public class DPerson : TurnUpdatable
     public void SetTask(DTask dTask)
     {
         if (taskSlot != null && Task != dTask)
-            RemoveTask();
+
+				RemoveTask();
 
         dTask.AddPerson(this);
     }
 
     public void SetTaskSlot(DTaskSlot dTaskSlot)
     {
-        if (taskSlot != null)
-            RemoveTask();
-
-        dTaskSlot.AddPerson(this);
+		if(taskSlot != null)
+			Task.RemovePerson(this);
+		if(dTaskSlot.Task==city.townHall.getIdleTask())
+			((DTask_Idle)dTaskSlot.Task).AddPerson(this, dTaskSlot);
+        else if (dTaskSlot.Task.Name.Equals("Explore"))
+            ((DTask_Explore)dTaskSlot.Task).AddPerson(this, dTaskSlot);
+        else
+        	dTaskSlot.AddPerson(this);
     }
 
     public void __TaskSlot(DTaskSlot dtaskSlot)
     {
         taskSlot = dtaskSlot;
-
-        if (taskSlot == null)
-        {
-            MoveToTownHall();
-        }
     }
 
     public void RemoveTask()
@@ -78,8 +78,6 @@ public class DPerson : TurnUpdatable
         {
             taskSlot.RemovePerson();
             taskSlot = null;
-
-            MoveToTownHall();
         }
         else
         {
@@ -87,12 +85,18 @@ public class DPerson : TurnUpdatable
         }
     }
 
-    public void MoveToTownHall()
+
+	public void MoveToTownHall()
     {
-        //TODO: When the empty building is made / townhall, move to that instead of global parent
-        meepleController.transform.parent = null;
-        meepleController.gameObject.SetActive(true);
+        // Move to town hall in data
+		if(Task !=null)
+        	RemoveTask();
+        city.townHall.getIdleTask().AddPerson(this);
+
+        meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
+
+
 
     #endregion
 
@@ -124,7 +128,21 @@ public class DPerson : TurnUpdatable
 
     public int Infection
     {
-        get { return infectionLevel; }
+        get
+        {   
+            if(city.CurrentSeason == DSeasons._season.WINTER)
+            {
+                return Constants.MERSON_INFECTION_MIN;
+            }
+            else if(city.CurrentSeason == DSeasons._season.SUMMER)
+            {
+                return infectionLevel;
+            }
+            else
+            {
+                return Mathf.Min(infectionLevel, Constants.MERSON_INFECTION_MIN + Constants.MERSON_SPRING_FALL_INFECTION_MODIFIER);
+            }
+        }
         set { infectionLevel = Mathf.Clamp(value, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX); }
     }
 

@@ -26,7 +26,7 @@ public class PersonInfectionTests
     [Test]
     public void IncreaseInfection()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
         var person = new DPerson(city, Mock.Component<MeepleController>())
         {
             Infection = Constants.MERSON_INFECTION_MIN
@@ -40,7 +40,7 @@ public class PersonInfectionTests
     [Test]
     public void DecreaseInfection()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
         var person = new DPerson(city, Mock.Component<MeepleController>())
         {
             Infection = Constants.MERSON_INFECTION_MAX
@@ -53,7 +53,7 @@ public class PersonInfectionTests
     [Test]
     public void InfectionMaximum()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
         var person = new DPerson(city, Mock.Component<MeepleController>())
         {
             Infection = Constants.MERSON_INFECTION_MAX
@@ -66,7 +66,7 @@ public class PersonInfectionTests
     [Test]
     public void InfectedMinimum()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
         var person = new DPerson(city, Mock.Component<MeepleController>())
         {
             Infection = Constants.MERSON_INFECTION_MIN
@@ -80,7 +80,7 @@ public class PersonInfectionTests
     public void LevelOneReducesTaskOutput()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
@@ -103,7 +103,7 @@ public class PersonInfectionTests
     public void LevelOneReduceTaskFungalRepair()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = new DTask(building, resource);        
 
@@ -129,7 +129,7 @@ public class PersonInfectionTests
     public void LevelOneReduceTaskStructureRepair()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = new DTask(building, resource);        
 
@@ -156,7 +156,7 @@ public class PersonInfectionTests
     public void LevelOneReduceTaskAssess()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = new DTask_Assess(building);
 
@@ -175,5 +175,30 @@ public class PersonInfectionTests
         task.TurnUpdate(1);
 
         Assert.That(building.LevelAssessed, Is.EqualTo(Constants.DEFAULT_ASSESS_AMOUNT * Constants.MERSON_INFECTION_TASK_MODIFIER));        
+    }
+    public void TreatTaskRandomlyReducesInfectionOfAPerson()
+    {
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = new DTask(building, null, 1, "Treat People",0.0f);
+
+        var person = new DPerson(city, Mock.Component<MeepleController>())
+        {
+            Infection = Constants.MERSON_INFECTION_MIN + 1
+        };
+
+
+        building.Assess(1.0f);
+        task.ForceClean();
+        task.ForceFixed();
+        task.AddPerson(person);
+        Assert.That(person.Task, Is.EqualTo(task));
+        Assert.That(task.ContainsPerson(person), Is.True);
+        Assert.That(person.Infection, Is.EqualTo(1));
+
+        task.TurnUpdate(1);
+
+        Assert.That(person.Infection, Is.EqualTo(0));
+
     }
 }

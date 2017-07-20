@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,9 @@ public static class Constants {
     public static string MEEPLE_PREFAB_PATH = @"Prefabs/MeepleController";
 
     public static string CITY_JSON_PATH = @"Assets/Resources/Data";
+
+    public static DateTime[] DEFAULT_SEASON_DATES = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
+    public static DateTime DEFAULT_DATE = new DateTime(2077, 7, 7);
 
     #region Task Constants
     public static float TEMP_REPAIR_AMOUNT = 0.2f;
@@ -34,6 +38,7 @@ public static class Constants {
     public static int MERSON_INFECTION_MIN = 0;
     public static int MERSON_INFECTION_MAX = 2;
     public static float MERSON_INFECTION_PROBABILITY = 0.05f;
+    public static int MERSON_SPRING_FALL_INFECTION_MODIFIER = 1;
     public static float MERSON_INFECTION_TASK_MODIFIER = 0.5f;
     #endregion
 }
