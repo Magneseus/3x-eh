@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Assets.Editor.UnitTests;
 using System;
 
+// Disabling "Assigned to but not used" warnings
+#pragma warning disable 0219
+
 public class CityTests
 {
     private string CITY_NAME = "Test City";
@@ -401,6 +404,8 @@ public class CityTests
         city.ConsumeResource(city.GetResource(Constants.FOOD_RESOURCE_NAME), baseConsume);
         int expected = numFood - (int)(baseConsume * city.SeasonResourceConsumedMod(city.GetResource(Constants.FOOD_RESOURCE_NAME)));
         Assert.That(city.GetResource(Constants.FOOD_RESOURCE_NAME).Amount, Is.EqualTo(expected));
-    }
+    } 
     #endregion
 }
+
+#pragma warning restore 0219

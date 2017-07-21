@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using Assets.Editor.UnitTests;
 using System;
 
+// Disabling "Assigned to but not used" warnings
+#pragma warning disable 0219
+
 public class BuildingTests
 {
     private static string CITY_NAME = "Test City";
@@ -160,3 +163,5 @@ public class BuildingTests
     }
     #endregion
 }
+
+#pragma warning restore 0219

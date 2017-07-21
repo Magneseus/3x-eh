@@ -4,6 +4,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
 
+// Disabling "Assigned to but not used" warnings
+#pragma warning disable 0219
+
 public class PersonInfectionTests
 {
     private static string CITY_NAME = "Test City";
@@ -202,3 +205,5 @@ public class PersonInfectionTests
 
     }
 }
+
+#pragma warning restore 0219

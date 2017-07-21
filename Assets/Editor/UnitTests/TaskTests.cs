@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using Assets.Editor.UnitTests;
 using System;
 
+// Disabling "Assigned to but not used" warnings
+#pragma warning disable 0219
+
 public class TaskTests
 {
     private string CITY_NAME = "Test City";
@@ -77,7 +80,7 @@ public class TaskTests
         var resource = DResource.Create("Test Resource", 1);
 
         var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
-	    	var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
+	    var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
@@ -255,3 +258,5 @@ public class TaskTests
         Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MIN_FUNGAL_DMG));
     }
 }
+
+#pragma warning restore 0219
