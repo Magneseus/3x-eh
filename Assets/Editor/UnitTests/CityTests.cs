@@ -262,7 +262,7 @@ public class CityTests
     [Test]
     public void FoodPassivelyConsumed()
     {
-        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var numberOfDaysPassed = 7;
 
         // temp - creating default food resource needed for city.turnupdate to work
@@ -284,7 +284,7 @@ public class CityTests
     [Test]
     public void FoodDeficitLowersHealth()
     {
-        var city = new DCity(CITY_NAME, new CityController(), defaultSeasonStartDates, DateTime.Now);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var numberOfDaysPassed = 7;
 
         // temp - creating default food resource needed for city.turnupdate to work
