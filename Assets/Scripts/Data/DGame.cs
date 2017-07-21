@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 public class DGame
 {
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
-    private DateTime currentDate = new DateTime(2017,1,1);
+    private DateTime currentDate = new DateTime(2017,4,1);
     private DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
     public DCity currentCity = null;
