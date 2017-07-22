@@ -21,8 +21,8 @@ public class SettingManager : MonoBehaviour {
         mainPane.SetActive(false);
         settingPane.SetActive(false);
         confirmPane.SetActive(false);
-        loadingImage.color = Color.clear;
-        loadingImage.enabled = false;
+//        loadingImage.color = Color.clear;
+  //      loadingImage.enabled = false;
 	}
 	
 	// Update is called once per frame
