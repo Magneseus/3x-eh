@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: d1abb8bfc16fa4406aa93aaf0f9bbf37
+timeCreated: 1500749024
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Amethyst
+  fontNames:
+  - Amethyst
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

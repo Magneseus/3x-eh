@@ -66,7 +66,7 @@ public class SettingManager : MonoBehaviour {
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(true, 1f);
+//        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(true, 1f);
         yield return new WaitForSeconds(10f);
         SceneManager.LoadScene("MainMenuSystem");
     }

@@ -90,12 +90,12 @@ public class TimeManager : MonoBehaviour {
         increment = 1;
     }
 
-    public void IncrementResources()
+    /*public void IncrementResources()
     {
         for(int i = 0; i < resourcesManager.GetComponent<ResourceManager>().res.Length; i++)
             resourcesManager.GetComponent<ResourceManager>().res[i] += (TaskSlotDetector.resIncrement[i]*increment);
         Debug.Log("res1 "+resourcesManager.GetComponent<ResourceManager>().res[0]+": incres "+ TaskSlotDetector.resIncrement[0] * increment);
-    }
+    }*/
 
     public void SetIncrement(int increment)
     {
