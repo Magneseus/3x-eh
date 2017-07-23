@@ -16,9 +16,11 @@ public class DGame
     private int durationOfTurn = 7;
     private int currentTurnNumber = 0;
 
-    public DGame()
+    private GameController gameController;
+
+    public DGame(GameController gameController)
     {
-        
+        this.gameController = gameController;
     }
 
     // Sets the specified city to be the current "active" city
@@ -34,9 +36,17 @@ public class DGame
         }
     }
 
+    // Called when the current city is completed
+    public void CompletedCurrentCity()
+    {
+        CollapseCity(currentCity);
+
+
+    }
+
     //TODO: this function and associated class
     // Collapses the city into a set of passive bonuses for future cities
-    public void CollapseCity(string cityName)
+    public void CollapseCity(DCity city)
     {
 
     }
