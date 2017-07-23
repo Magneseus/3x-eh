@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     public GameObject CityViewUIPrefab;
 
     private GameObject countryView;
+    private CountryMap countryMap;
     private GameObject cityView;
 
     // Initialization
@@ -22,7 +23,7 @@ public class GameController : MonoBehaviour
 
         // Start off at the country view
         countryView = Instantiate(CountryViewUIPrefab, UICanvas.transform);
-        CountryMap countryMap = countryView.GetComponent<CountryMap>();
+        countryMap = countryView.GetComponent<CountryMap>();
 
         // Get all cities
         foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
@@ -69,9 +70,12 @@ public class GameController : MonoBehaviour
         {
             Destroy(cityView);
 
+            // Destroy game objects
             var children = new List<GameObject>();
             foreach (Transform child in transform) children.Add(child.gameObject);
             children.ForEach(child => Destroy(child));
+
+            countryMap.SetCityEnabled(dGame.currentCity.Name, false);
         }
 
         countryView.SetActive(true);

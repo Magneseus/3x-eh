@@ -70,4 +70,38 @@ public class CountryMap : MonoBehaviour
         }
         return connectedCityNodes;
     }
+
+    public void EnableAllNodes()
+    {
+        foreach (var node in cityNodes)
+        {
+            node.Enabled = true;
+        }
+    }
+
+    public void DisableAllNodes()
+    {
+        foreach (var node in cityNodes)
+        {
+            node.Enabled = false;
+        }
+    }
+
+    public void SetCityEnabled(string cityName, bool isEnabled)
+    {
+        foreach (var node in cityNodes)
+        {
+            if (node.CityName.Equals(cityName))
+                node.Enabled = isEnabled;
+        }
+    }
+
+    public void SetCitiesEnabled(List<string> cityNames, bool isEnabled)
+    {
+        foreach (var node in cityNodes)
+        {
+            if (cityNames.Contains(node.CityName))
+                node.Enabled = isEnabled;
+        }
+    }
 }
