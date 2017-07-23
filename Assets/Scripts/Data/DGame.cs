@@ -11,8 +11,10 @@ public class DGame
     private DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
     public DCity currentCity = null;
-    int durationOfTurn = 7;
-    int currentTurnNumber = 0;
+
+    private int durationOfCity;
+    private int durationOfTurn = 7;
+    private int currentTurnNumber = 0;
 
     public DGame()
     {
@@ -63,6 +65,8 @@ public class DGame
         cities[city2Key].linkToCity(city1Key);
     }
 
+    #region Properties
+
     public Dictionary<string, DCity> Cities
     {
         get { return cities; }
@@ -77,7 +81,7 @@ public class DGame
     public int TurnDuration
     {
         get { return durationOfTurn; }
-        set { durationOfTurn = value; }
+        //set { durationOfTurn = value; }
     }
     public string currentDateString
     {
@@ -95,6 +99,13 @@ public class DGame
     {
         get { return defaultSeasonStartDates; }
     }
+
+    public int CityDuration
+    {
+        get { return durationOfCity; }
+    }
+
+    #endregion
 }
 
 #region Exceptions
