@@ -3,11 +3,13 @@ using NSubstitute;
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
+using System;
 
 public class GameManagerTests
 {
     private string CITY_NAME = "Test City";
     private string LINKED_CITY_NAME = "Linked City";
+    DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
     [TearDown]
     public void TearDown()
@@ -49,7 +51,7 @@ public class GameManagerTests
     public void AddCityTest()
     {
         var game = new DGame();
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         
         Assert.That(game.Cities.Count, Is.EqualTo(0));
 
@@ -61,8 +63,8 @@ public class GameManagerTests
     public void LinkCities()
     {
         var game = new DGame();
-        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>());
-        DCity linkedCity = new DCity(LINKED_CITY_NAME, Mock.Component<CityController>());
+        DCity city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        DCity linkedCity = new DCity(LINKED_CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
 
         game.AddCity(city);
         game.AddCity(linkedCity);

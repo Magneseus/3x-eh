@@ -3,14 +3,20 @@ using NSubstitute;
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
+using System;
+
+// Disabling "Assigned to but not used" warnings
+#pragma warning disable 0219
 
 public class BuildingTests
 {
     private static string CITY_NAME = "Test City";
+	private static string TOWN_HALL = "Town Hall";
     private static string BUILDING_NAME = "Test Building";
     private static string RESOURCE_NAME = "Test Resource";
     private static int RESOURCE_START_AMOUNT = 3;
-    
+    DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
+
     [TearDown]
     public void TearDown()
     {
@@ -26,11 +32,17 @@ public class BuildingTests
     [Test]
     public void InitializesDefaultValues()
     {
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+				var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
 
+				Assert.That(townHall.City.Name, Is.EqualTo(city.Name));
+				Assert.That(townHall.Tasks.Count, Is.EqualTo(3));
+				Assert.That(townHall.Name, Is.EqualTo(TOWN_HALL));
+
         Assert.That(building.City.Name, Is.EqualTo(city.Name));
-        Assert.That(building.Tasks.Count, Is.EqualTo(0));
+        Assert.That(building.Tasks.Count, Is.EqualTo(1));
         Assert.That(building.Name, Is.EqualTo(BUILDING_NAME));
     }
 
@@ -38,7 +50,7 @@ public class BuildingTests
     public void NameOverride()
     {
         var newName = "Test123";
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>())
         {
            Name = newName
@@ -52,14 +64,14 @@ public class BuildingTests
     public void AddTask()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
 
-        Assert.That(building.Tasks.Count, Is.EqualTo(0));
+        Assert.That(building.Tasks.Count, Is.EqualTo(1));
 
         var task = new DTask(building, resource);
 
-        Assert.That(building.Tasks.Count, Is.EqualTo(1));
+        Assert.That(building.Tasks.Count, Is.EqualTo(2));
         Assert.That(building.Tasks[task.ID].Output, Is.EqualTo(resource));
     }
 
@@ -67,7 +79,7 @@ public class BuildingTests
     public void AddTaskTwice()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
@@ -81,11 +93,14 @@ public class BuildingTests
     public void PassesTaskOutputToCity()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = Mock.CleanTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
 
@@ -98,11 +113,16 @@ public class BuildingTests
     public void DisablingTasks()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+		var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
         var task = Mock.CleanTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
         person.SetTask(task);
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
 
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(0));
 
@@ -143,3 +163,5 @@ public class BuildingTests
     }
     #endregion
 }
+
+#pragma warning restore 0219

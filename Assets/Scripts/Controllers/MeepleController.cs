@@ -23,7 +23,7 @@ public class MeepleController : MonoBehaviour {
         boxCollider = GetComponent<Collider2D>();
         parentTray = null;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
@@ -31,7 +31,14 @@ public class MeepleController : MonoBehaviour {
 
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
-        dPerson= new DPerson(dGame.Cities[cityName], this);
+        dPerson = new DPerson(dGame.Cities[cityName], this);
+	   // dPerson.MoveToTownHall();
+
+    }
+
+    public void ResetLocalPosition()
+    {
+        this.transform.localPosition = new Vector3(0, 0, -3);
     }
 
     #region MouseOver Functions
@@ -80,12 +87,14 @@ public class MeepleController : MonoBehaviour {
     public void OnMouseUp()
     {
         TaskTraySingle oldParentTray = parentTray;
-
+        // DBuilding oldBuilding =
+        // (this.dPerson.Building == null) ?
+        // oldBuilding = null : oldBuilding = this.dPerson.Building;
         if (collisions.Count == 0)
         {
             // Reset position
             this.transform.parent = returnParent;
-            this.transform.localPosition = new Vector3(0, 0, -3);
+			dPerson.MoveToTownHall();
         }
         else
         {
@@ -102,13 +111,27 @@ public class MeepleController : MonoBehaviour {
                 }
             }
 
-            // Set the new parent transform
-            this.transform.parent = closestTray.transform;
-            this.transform.localPosition = new Vector3(0, 0, -3);
-            this.parentTray = closestTray;
+            // If the closest tray is full, reset
+            if (closestTray.taskSlot.Person != null && closestTray.taskSlot.Enabled)
+            {
+                // Reset position
+                this.transform.parent = returnParent;
+                this.transform.localPosition = new Vector3(0, 0, -3);
+            }
+            else
+            {
+                // Set the new task
+                dPerson.SetTaskSlot(closestTray.taskSlot);
 
-            // Set the new task
-            dPerson.SetTask(closestTray.taskController.dTask);
+                // Set the new parent transform
+                this.transform.parent = closestTray.transform;
+                this.transform.localPosition = new Vector3(0, 0, -3);
+                this.parentTray = closestTray;
+                this.dPerson.Building = closestTray.taskController.buildingController.dBuilding;
+                this.dPerson.Building.CalculateDamages();
+                // oldBuilding.CalculateDamages();
+
+            }
         }
 
 
@@ -117,6 +140,15 @@ public class MeepleController : MonoBehaviour {
 
         if (oldParentTray != null)
             oldParentTray.taskController.DecreaseMouseOverCount();
+    }
+    public void SetParentTrayAndTransfrom (TaskTraySingle parentTray)
+    {
+        this.parentTray = parentTray;
+
+        if (parentTray != null)
+            transform.parent = parentTray.transform;
+
+        ResetLocalPosition();
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

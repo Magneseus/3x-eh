@@ -2,10 +2,16 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
+using System;
+
+// Disabling "Assigned to but not used" warnings
+#pragma warning disable 0219
 
 public class TaskTests
 {
     private string CITY_NAME = "Test City";
+	  private string TOWN_HALL = "Town Hall";
+    DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
     [TearDown]
     public void TearDown()
@@ -23,16 +29,15 @@ public class TaskTests
     public void InitializesDefaultValues()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource, 3, "test name");
+        var task = new DTask(building, resource, 3, "test name", 0.0f);
 
         Assert.That(task.Name, Is.EqualTo("test name"));
         Assert.That(task.Output, Is.EqualTo(resource));
         Assert.That(task.Building, Is.EqualTo(building));
         Assert.That(task.Enabled, Is.True);
-
-        Assert.That(task.ListOfPeople, Is.Not.Null);
+        
         Assert.That(task.MaxPeople, Is.EqualTo(3));
 
         Assert.That(task.LevelDamaged, Is.Not.Null);
@@ -49,7 +54,9 @@ public class TaskTests
     public void TaskAddAndRemovePerson()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+
+	    	var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+		    var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
 
@@ -57,20 +64,23 @@ public class TaskTests
 
         Assert.That(person.Task, Is.Null);
 
+		    Assert.That (townHall.Tasks.Count, Is.EqualTo (3));
+
         task.AddPerson(person);
         Assert.That(person.Task, Is.EqualTo(task));
-        Assert.That(task.ListOfPeople.Contains(person), Is.True);
+        Assert.That(task.ContainsPerson(person), Is.True);
 
         task.RemovePerson(person);
-        Assert.That(person.Task, Is.Null);
-        Assert.That(task.ListOfPeople.Contains(person), Is.False);
+		    Assert.That(task.ContainsPerson(person), Is.False);
     }
 
     [Test]
     public void TaskVerifyPersonNotFoundException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+	    var townHall = new DBuilding(city, TOWN_HALL, Mock.Component<BuildingController>());
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
@@ -94,7 +104,7 @@ public class TaskTests
     public void TaskVerifyPersonAlreadyAddedException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
         var task = new DTask(building, resource);
         var person = new DPerson(city, Mock.Component<MeepleController>());
@@ -111,9 +121,9 @@ public class TaskTests
     public void TaskVerifyTaskFullException()
     {
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource, 1, "temp");
+        var task = new DTask(building, resource, 1, "temp", 0.0f);
         var person = new DPerson(city, Mock.Component<MeepleController>());
         var person2 = new DPerson(city, Mock.Component<MeepleController>());
 
@@ -131,13 +141,17 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource);
+        var task = new DTask(building, resource, 1, "test", 0.0f);
+        var taskSlot = task.GetTaskSlot(0);
 
-        task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
-        task.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
-        task.Repair(amount);
+        
+        taskSlot.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
+        taskSlot.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
+        taskSlot.Repair(amount);
+        amount = Mathf.Clamp(amount * DSeasons.modRepairStructureSpeed[(int)city.Season], Constants.TASK_MIN_STRUCTURAL_DMG, Constants.TASK_MAX_STRUCTURAL_DMG);
+
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_STRUCTURAL_DMG - amount));
     }
 
@@ -147,12 +161,14 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource);
+        var task = new DTask(building, resource, 1, "test", 0.0f);
+        var taskSlot = task.GetTaskSlot(0);
 
-        task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
-        task.Repair(amount);
+        taskSlot.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
+        taskSlot.Repair(amount);
+        amount = Mathf.Clamp(amount * DSeasons.modRepairFungusSpeed[(int)city.Season], Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
         Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MAX_FUNGAL_DMG - amount));
     }
 
@@ -162,14 +178,16 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG / 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource);
+        var task = new DTask(building, resource, 1, "test", 0.0f);
+        var taskSlot = task.GetTaskSlot(0);
 
-        task.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
-        task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
+        taskSlot.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
+        taskSlot.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
 
-        task.Repair(amount);
+        taskSlot.Repair(amount);
+        amount = Mathf.Clamp(amount * DSeasons.modRepairFungusSpeed[(int)city.Season], Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
 
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_STRUCTURAL_DMG));
         Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MAX_FUNGAL_DMG - amount));
@@ -182,13 +200,14 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG * -2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource);
+        var task = new DTask(building, resource, 1, "test", 0.0f);
+        var taskSlot = task.GetTaskSlot(0);
 
-        task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
-        task.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG / 2;
-        task.Repair(amount);
+        taskSlot.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
+        taskSlot.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG / 2;
+        taskSlot.Repair(amount);
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MAX_STRUCTURAL_DMG));
     }
     [Test]
@@ -197,13 +216,14 @@ public class TaskTests
         var amount = Constants.TASK_MAX_STRUCTURAL_DMG * 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource);
+        var task = new DTask(building, resource, 1, "test", 0.0f);
+        var taskSlot = task.GetTaskSlot(0);
 
-        task.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
-        task.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
-        task.Repair(amount);
+        taskSlot.LevelInfected = Constants.TASK_MIN_FUNGAL_DMG;
+        taskSlot.LevelDamaged = Constants.TASK_MAX_STRUCTURAL_DMG;
+        taskSlot.Repair(amount);
         Assert.That(task.LevelDamaged, Is.EqualTo(Constants.TASK_MIN_STRUCTURAL_DMG));
     }
 
@@ -213,12 +233,13 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG * -2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource);
+        var task = new DTask(building, resource, 1, "test", 0.0f);
+        var taskSlot = task.GetTaskSlot(0);
 
-        task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG / 2;
-        task.Repair(amount);
+        taskSlot.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG / 2;
+        taskSlot.Repair(amount);
         Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MAX_FUNGAL_DMG));
     }
     [Test]
@@ -227,12 +248,15 @@ public class TaskTests
         var amount = Constants.TASK_MAX_FUNGAL_DMG * 2;
 
         var resource = DResource.Create("Test Resource", 1);
-        var city = new DCity(CITY_NAME, Mock.Component<CityController>());
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
         var building = new DBuilding(city, "Test Building", Mock.Component<BuildingController>());
-        var task = new DTask(building, resource);
+        var task = new DTask(building, resource, 1, "test", 0.0f);
+        var taskSlot = task.GetTaskSlot(0);
 
-        task.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
-        task.Repair(amount);
+        taskSlot.LevelInfected = Constants.TASK_MAX_FUNGAL_DMG;
+        taskSlot.Repair(amount);
         Assert.That(task.LevelInfected, Is.EqualTo(Constants.TASK_MIN_FUNGAL_DMG));
     }
 }
+
+#pragma warning restore 0219

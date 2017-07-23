@@ -20,12 +20,17 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
         }
 
         SetTaskControllerVisibility(false);
+        
     }
 
 	// Update is called once per frame
 	void Update () {
+        if ((dBuilding.Status == DBuilding.DBuildingStatus.UNDISCOVERED))
+            gameObject.SetActive(false);
+        else
+            gameObject.SetActive(true);
 
-	}
+    }
 
     #region MouseOver Functions
 
@@ -51,8 +56,7 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
             Vector3 textPos =  this.transform.position;
             textPos.x += 0.5f;
             transform.Find("BuildingInfo").transform.position = textPos;
-            string status = "Discovered";
-            transform.Find("BuildingInfo").GetComponent<TextMesh>().text = string.Format("Status: {0}\nDamaged: {1}\nInfected: {2}", status, dBuilding.LevelDamaged , dBuilding.LevelInfected);
+            transform.Find("BuildingInfo").GetComponent<TextMesh>().text = string.Format("Status: {0}\nAssessed: {1}\nDamaged: {2}\nInfected: {3}", dBuilding.StatusAsString, dBuilding.LevelAssessed, dBuilding.LevelDamaged , dBuilding.LevelInfected);
 
             SetTaskControllerVisibility(true);
         }
@@ -86,13 +90,17 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
     #endregion
 
     #region TaskController Functions
+
     public void SetTaskControllerVisibility(bool visibility)
     {
         taskControllerVisible = visibility;
+        ReorganizeTaskControllers();
 
         foreach (TaskController tc in taskControllers)
         {
-            tc.gameObject.SetActive(visibility);
+            if (visibility)
+                tc.UpdateSprite();
+            tc.gameObject.SetActive(visibility && tc.dTask.Enabled && tc.dTask.CalculateAssessmentLevels() > 0);
         }
     }
 
@@ -104,22 +112,43 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
         }
 
         // Add to the list
-        taskControllers.Add(taskController);
+        if (!taskControllers.Contains(taskController))
+            taskControllers.Add(taskController);
 
-        // Shift it down slightly
-        Vector3 taskControllerPos = taskController.transform.position;
-        taskControllerPos.y -= TaskTraySingle.WIDTH_CONST * taskControllers.Count;
-        taskController.transform.position = taskControllerPos;
-
-        // Set it to the current activity
-        taskController.enabled = taskControllerVisible;
+        ReorganizeTaskControllers();
     }
 
     public void RemoveTaskController(TaskController taskController)
     {
-        //TODO: Reorganize existing task controllers (shouldn't ever be used though...)
         taskControllers.Remove(taskController);
+        ReorganizeTaskControllers();
     }
+
+    public void ReorganizeTaskControllers()
+    {
+        int index = 0;
+        foreach (TaskController tc in taskControllers)
+        {
+            if (tc.dTask.Enabled && tc.dTask.CalculateAssessmentLevels() > 0)
+            {
+                // Shift it down slightly
+                Vector3 taskControllerPos = tc.transform.parent.position;
+                taskControllerPos.y -= TaskTraySingle.WIDTH_CONST * (index + 1);
+                tc.transform.position = taskControllerPos;
+
+                // Set it to the current activity
+                tc.gameObject.SetActive(taskControllerVisible);
+
+                // Increment counter
+                index++;
+            }
+            else
+            {
+                tc.gameObject.SetActive(false);
+            }
+        }
+    }
+
     #endregion
 
     internal void ConnectToDataEngine(DGame dGame, string cityName, string buildingName)

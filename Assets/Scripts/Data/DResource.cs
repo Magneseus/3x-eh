@@ -27,7 +27,7 @@ public class DResource : TurnUpdatable
 
     public static DResource Create(string name)
     {
-        return Create(name, 0);
+        return Create(name, Constants.DEFAULT_RESOURCE_VALUE);
     }
 
     public static DResource Create(DResource resource)

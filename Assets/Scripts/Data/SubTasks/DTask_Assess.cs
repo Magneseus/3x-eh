@@ -6,32 +6,32 @@ using UnityEngine;
 
 public class DTask_Assess : DTask
 {
-    public const float DEFAULT_ASSESS_AMOUNT = 0.1f;
     private float assessAmount;
 
-    public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName)
-    {}
+    public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName, 0.0f)
+    {
+        this.assessAmount = assessAmount;
 
-    public DTask_Assess(DBuilding dBuilding) : this(dBuilding, DEFAULT_ASSESS_AMOUNT, 4, "default_assess_task")
+        ForceClean();
+        ForceFixed();
+    }
+
+    public DTask_Assess(DBuilding dBuilding) : this(dBuilding, Constants.DEFAULT_ASSESS_AMOUNT, 4, "Assess")
     {}
 
     public override void TurnUpdate(int numDaysPassed)
     {
-        // NOT IMPLEMENTED YET
-        //if (listOfPeople.Count > 0)
-        //{
+        foreach (DTaskSlot taskSlot in slotList)
+        {
+            taskSlot.TurnUpdate(numDaysPassed);
 
-
-        //    TODO: Make this into a exponential scale or something
-        //    for (int i = 0; i < listOfPeople.Count; ++i)
-        //        building.Assess(0.1f);
-        //}
-
-        //Check if we've fully assessed the building, and if so disable task
-        //if (building.Assessed)
-        //{
-        //    DisableTask();
-        //}
+            // TODO: Make this into a exponential scale or something
+            if (taskSlot.IsFunctioning())
+            {
+                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;                                
+                building.Assess(assessAmount * Constants.MERSON_INFECTION_TASK_MODIFIER);
+            }
+        }
     }
 
     #region Accessors

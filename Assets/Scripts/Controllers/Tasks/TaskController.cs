@@ -25,7 +25,12 @@ public class TaskController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        taskText.text = dTask.Name;
 
+        if (dTask == dTask.Building.getIdleTask()||dTask.Name.Equals("Explore")) {
+			Resize();
+		}
+		
 	}
 
     #region MouseOver Functions
@@ -79,8 +84,6 @@ public class TaskController : MonoBehaviour {
                     ((float)(0) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) *
                     TaskTraySingle.WIDTH_CONST;
 
-            taskText.text = dTask.Name;
-
             Vector3 newTaskTextPos = this.transform.position;
             newTaskTextPos.x += xOffset;
             newTaskTextPos.x -= taskText.characterSize * taskText.fontSize / 8.0f;
@@ -95,18 +98,98 @@ public class TaskController : MonoBehaviour {
                     ((float)(i) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) * 
                     TaskTraySingle.WIDTH_CONST;
 
-                GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);
-
+                GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);                
                 Vector3 currentPosition = go.transform.position;
                 currentPosition.x += xOffset;
                 go.transform.position = currentPosition;
 
-                // Set the parent TaskController
+                // Set the parent TaskController & task slot
                 go.GetComponent<TaskTraySingle>().taskController = this;
+                go.GetComponent<TaskTraySingle>().taskSlot = dTask.GetTaskSlot(i);
+				dTask.GetTaskSlot(i).TaskTraySlot = go.GetComponent<TaskTraySingle>();
+                go.GetComponent<TaskTraySingle>().UpdateSprite();
 
                 listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
             }
         }
+    }
+	private void Resize()
+	{
+		if(listOfTraySingles.Count < dTask.MaxPeople)
+			AddSlot();
+
+		if(listOfTraySingles.Count > dTask.MaxPeople)
+			RemoveSlot();
+	}
+	private void AddSlot()
+	{ 
+		
+			// Find where in the tray we will position each single
+			float xOffset = 
+			((float)(listOfTraySingles.Count+1) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) * 
+				TaskTraySingle.WIDTH_CONST;
+
+			GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);  
+			Vector3 currentPosition = go.transform.position;
+			currentPosition.x += xOffset;
+			go.transform.position = currentPosition;
+
+			// Set the parent TaskController & task slot
+			go.GetComponent<TaskTraySingle>().taskController = this;
+			go.GetComponent<TaskTraySingle>().taskSlot = dTask.GetTaskSlot(listOfTraySingles.Count);
+			dTask.GetTaskSlot(listOfTraySingles.Count).TaskTraySlot = go.GetComponent<TaskTraySingle>();
+			go.GetComponent<TaskTraySingle>().UpdateSprite();
+
+			listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
+		//OrganizeSlot();
+
+	}
+	private void RemoveSlot()
+	{
+		GameObject slot = listOfTraySingles[listOfTraySingles.Count - 1].gameObject;
+		listOfTraySingles.RemoveAt(listOfTraySingles.Count-1);
+		Destroy(slot);
+
+		//OrganizeSlot();
+	}
+	private void OrganizeSlot()
+	{
+		float xOffset =
+			((float)(0) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) *
+			TaskTraySingle.WIDTH_CONST;
+
+
+		Vector3 newTaskTextPos = this.transform.position;
+		newTaskTextPos.x += xOffset;
+		newTaskTextPos.x -= taskText.characterSize * taskText.fontSize / 8.0f;
+
+		taskText.transform.position = newTaskTextPos;
+
+		// Generate the new trays
+		for (int i = 0; i < listOfTraySingles.Count; i++)
+		{
+			// Find where in the tray we will position each single
+			xOffset = 
+				((float)(i) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) * 
+				TaskTraySingle.WIDTH_CONST;
+
+			GameObject go = listOfTraySingles[i].gameObject;             
+			Vector3 currentPosition = transform.position;
+			currentPosition.x += xOffset;
+			go.transform.position = currentPosition;
+
+			// Set the parent TaskController & task slot
+
+		}
+
+	}
+
+    internal void UpdateSprite()
+    {
+        foreach(var entry in listOfTraySingles)
+        {
+            entry.UpdateSprite();
+        }       
     }
 
     internal void ConnectToDataEngine(DTask dTask)
