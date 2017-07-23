@@ -71,7 +71,7 @@ public class GameController : MonoBehaviour
     public CityController CreateCity(string prefabPath, string json)
     {
         var cityJson = JSON.Parse(json);
-        CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH);
+        CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH, this.transform);
         cityController.ConnectToDataEngine(dGame, cityJson["name"]);
 
         // Load in all the possible locations for buildings
@@ -148,7 +148,7 @@ public class GameController : MonoBehaviour
 
     public BuildingController CreateBuilding(string cityName, string buildingName, Vector3 position)
     {
-        BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH);
+        BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH, this.transform);
         buildingController.ConnectToDataEngine(dGame, cityName, buildingName);
 
         buildingController.transform.position = position;
@@ -165,7 +165,7 @@ public class GameController : MonoBehaviour
     // TODO: Spawn in "empty building"
     public MeepleController CreateMeeple(string cityName)
     {
-        MeepleController meepleController = InstantiatePrefab<MeepleController>(Constants.MEEPLE_PREFAB_PATH);
+        MeepleController meepleController = InstantiatePrefab<MeepleController>(Constants.MEEPLE_PREFAB_PATH, this.transform);
         meepleController.ConnectToDataEngine(dGame, cityName);
 
         return meepleController;
