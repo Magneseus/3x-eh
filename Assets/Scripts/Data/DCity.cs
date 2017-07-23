@@ -281,8 +281,8 @@ public class DCity : TurnUpdatable
 
     public void AddResource(DResource resource)
     {
-        //int amount = (int)(resource.Amount * SeasonResourceMod(resource));
-        AddResource(resource, 0);
+        int amount = (int)(resource.Amount * SeasonResourceProduceMod(resource));
+        AddResource(resource, amount);
     }
 
     public void AddResource(DResource resource, int amount)
