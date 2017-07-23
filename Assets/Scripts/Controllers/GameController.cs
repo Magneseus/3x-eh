@@ -75,7 +75,22 @@ public class GameController : MonoBehaviour
             foreach (Transform child in transform) children.Add(child.gameObject);
             children.ForEach(child => Destroy(child));
 
-            countryMap.SetCityEnabled(dGame.currentCity.Name, false);
+            // Disable all cities
+            countryMap.DisableAllNodes();
+
+            // Enable cities connected to completed city
+            List<string> linkedCities = new List<string>();
+            foreach (var cityName in dGame.currentCity.LinkedCityKeys)
+            {
+                // If we haven't previously completed this city
+                if (!dGame.Cities.ContainsKey(cityName))
+                    linkedCities.Add(cityName);
+            }
+
+            countryMap.SetCitiesEnabled(linkedCities, true);
+
+            // Reset the turn counter
+            dGame.TurnNumber = 0;
         }
 
         countryView.SetActive(true);

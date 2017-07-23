@@ -42,6 +42,8 @@ public class DGame
         CollapseCity(currentCity);
 
         gameController.ReturnToMap(true);
+
+        currentCity = null;
     }
 
     //TODO: this function and associated class
