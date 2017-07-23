@@ -134,22 +134,13 @@ public class DPerson : TurnUpdatable
 
     public int Infection
     {
-        get
-        {   
-            if(city.Season == DSeasons._season.WINTER)
-            {
-                return Constants.MERSON_INFECTION_MIN;
-            }
-            else if(city.Season == DSeasons._season.SUMMER)
-            {
-                return infectionLevel;
-            }
-            else
-            {
-                return Mathf.Min(infectionLevel, Constants.MERSON_INFECTION_MIN + Constants.MERSON_SPRING_FALL_INFECTION_MODIFIER);
-            }
-        }
+        get { return Mathf.Min(infectionLevel, Constants.MERSON_SEASON_INFECTION_MAX[(int)city.Season]); }
         set { infectionLevel = Mathf.Clamp(value, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX); }
+    }
+
+    public int InfectionActual
+    {
+        get { return infectionLevel; }
     }
 
     public bool IsDead
