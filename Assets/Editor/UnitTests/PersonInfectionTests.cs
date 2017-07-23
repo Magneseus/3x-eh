@@ -57,6 +57,7 @@ public class PersonInfectionTests
     public void InfectionMaximum()
     {
         var city = new DCity(CITY_NAME, Mock.Component<CityController>(), Constants.DEFAULT_SEASON_DATES, Constants.DEFAULT_DATE);
+        city.Season = DSeasons._season.SUMMER;
         var person = new DPerson(city, Mock.Component<MeepleController>())
         {
             Infection = Constants.MERSON_INFECTION_MAX
