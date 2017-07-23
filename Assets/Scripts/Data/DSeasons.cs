@@ -72,9 +72,9 @@ public static class DSeasons
             if (currentDate > deadOfWinter[1])
             {
                 deadOfWinter[1].AddYears(1);
-                return true;
+                return false;
             }
-            return false;
+            return true;
     }
 
     public static DateTime SetNextSeasonDate(DateTime currentStartDate)
