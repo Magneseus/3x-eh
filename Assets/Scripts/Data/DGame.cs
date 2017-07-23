@@ -12,7 +12,7 @@ public class DGame
 
     public DCity currentCity = null;
 
-    private int durationOfCity;
+    private int turnDurationOfCity = 10;
     private int durationOfTurn = 7;
     private int currentTurnNumber = 0;
 
@@ -41,7 +41,7 @@ public class DGame
     {
         CollapseCity(currentCity);
 
-
+        gameController.ReturnToMap(true);
     }
 
     //TODO: this function and associated class
@@ -56,11 +56,17 @@ public class DGame
     {
         currentDate = currentDate.AddDays(durationOfTurn);
         currentTurnNumber += 1;
-
-        foreach (var kvp in cities)
+        
+        if (currentCity != null)
         {
-            kvp.Value.TurnUpdate(durationOfTurn);
-            kvp.Value.UpdateSeason(currentDate);
+            currentCity.TurnUpdate(durationOfTurn);
+            currentCity.UpdateSeason(currentDate);
+        }
+
+        // If we've finished the current city
+        if (currentTurnNumber >= turnDurationOfCity)
+        {
+            CompletedCurrentCity();
         }
     }
 
@@ -112,7 +118,7 @@ public class DGame
 
     public int CityDuration
     {
-        get { return durationOfCity; }
+        get { return turnDurationOfCity; }
     }
 
     #endregion
