@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using SimpleJSON;
 
 [Serializable]
-public class DGame
+public class DGame : JSONParsable<DGame>
 {
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     private DateTime currentDate = new DateTime(2017,4,1);
@@ -124,6 +125,18 @@ public class DGame
     }
 
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = new JSONObject();
+
+        return returnNode;
+    }
+
+    public DGame LoadFromJSON(JSONNode jsonNode)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 #region Exceptions

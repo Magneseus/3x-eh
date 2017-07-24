@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using SimpleJSON;
 using UnityEngine;
 
 [Serializable]
-public class DCity : TurnUpdatable
+public class DCity : TurnUpdatable, JSONParsable<DCity>
 {
     private CityController cityController;
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
@@ -532,6 +533,16 @@ public class DCity : TurnUpdatable
     }
 
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        throw new NotImplementedException();
+    }
+
+    public DCity LoadFromJSON(JSONNode jsonNode)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 #region Exceptions

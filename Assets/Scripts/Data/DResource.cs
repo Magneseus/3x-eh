@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
 
-public class DResource : TurnUpdatable
+public class DResource : TurnUpdatable, JSONParsable<DResource>
 {
     private static int resourceIDCounter = 0;
     private static Dictionary<string, int> resourceNameToIDMap = new Dictionary<string, int>();
@@ -75,6 +76,8 @@ public class DResource : TurnUpdatable
 
     }
 
+    #region Properties
+
     public int ID
     {
         get { return resourceID; }
@@ -89,6 +92,18 @@ public class DResource : TurnUpdatable
     {
         get { return resourceAmount; }
         set { resourceAmount = Math.Max(0, value); }
+    }
+
+    #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        throw new NotImplementedException();
+    }
+
+    public DResource LoadFromJSON(JSONNode jsonNode)
+    {
+        throw new NotImplementedException();
     }
 }
 

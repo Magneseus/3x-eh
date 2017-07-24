@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using SimpleJSON;
 using UnityEngine;
 
-public class DBuilding : TurnUpdatable {
+public class DBuilding : TurnUpdatable, JSONParsable<DBuilding> {
 
     public enum DBuildingStatus
     {
@@ -285,6 +286,16 @@ public class DBuilding : TurnUpdatable {
         get { return percentInfected != 1.0f; }
     }
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        throw new NotImplementedException();
+    }
+
+    public DBuilding LoadFromJSON(JSONNode jsonNode)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 #region Exceptions

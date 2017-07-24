@@ -1,7 +1,9 @@
 ﻿using System.Runtime.Serialization;
 using UnityEngine;
+using SimpleJSON;
 
-public class DTaskSlot : TurnUpdatable
+
+public class DTaskSlot : TurnUpdatable, JSONParsable<DTaskSlot>
 {
     private DTask task;
     private DPerson person;
@@ -157,6 +159,18 @@ public class DTaskSlot : TurnUpdatable
 	}
 
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = new JSONObject();
+
+        return returnNode;
+    }
+
+    public DTaskSlot LoadFromJSON(JSONNode jsonNode)
+    {
+        throw new System.NotImplementedException();
+    }
 }
 
 #region Exceptions

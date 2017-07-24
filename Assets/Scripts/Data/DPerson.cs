@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
 // using System;
-public class DPerson : TurnUpdatable
+
+public class DPerson : TurnUpdatable, JSONParsable<DPerson>
 {
     private static int NEXT_ID = 0;
     private MeepleController meepleController;
@@ -102,6 +104,8 @@ public class DPerson : TurnUpdatable
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
 
+    
+
 
 
     #endregion
@@ -149,4 +153,14 @@ public class DPerson : TurnUpdatable
     }
 
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public DPerson LoadFromJSON(JSONNode jsonNode)
+    {
+        throw new System.NotImplementedException();
+    }
 }

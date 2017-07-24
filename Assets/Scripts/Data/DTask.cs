@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using SimpleJSON;
 using UnityEngine;
 
-public class DTask : TurnUpdatable
+public class DTask : TurnUpdatable, JSONParsable<DTask>
 {
 
     private static int NEXT_ID = 0;
@@ -219,6 +220,16 @@ public class DTask : TurnUpdatable
             int index = Random.Range(0, building.City.People.Count - 1);
             building.City.People[index].DecreaseInfection();
         }
+    }
+
+    public JSONNode SaveToJSON()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public DTask LoadFromJSON(JSONNode jsonNode)
+    {
+        throw new System.NotImplementedException();
     }
 
     #region Properties
