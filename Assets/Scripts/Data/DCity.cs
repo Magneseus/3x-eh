@@ -284,6 +284,11 @@ public class DCity : TurnUpdatable
     {
         int amount = (int)(resource.Amount * SeasonResourceProduceMod(resource));
         AddResource(resource, amount);
+
+        if (resource.Name.Equals("Shelter"))
+            shelterResource = resources[resource.ID];
+        else if (resource.Name.Equals("Fuel"))
+            fuelResource = resources[resource.ID];
     }
 
     public void AddResource(DResource resource, int amount)
