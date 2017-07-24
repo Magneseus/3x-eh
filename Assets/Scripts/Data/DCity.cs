@@ -256,6 +256,7 @@ public class DCity : TurnUpdatable
     #endregion
 
     #region Basic Manipulation
+
     public void AddBuilding(DBuilding dBuilding)
     {
         if (buildings.ContainsKey(dBuilding.ID))
@@ -378,12 +379,7 @@ public class DCity : TurnUpdatable
 #endregion
 
     #region Map of Canada
-    // map of canada methods
-    // public Vector2 MapLocation
-    // {
-    //     get{ return mapLocation;}
-    //     set{  mapLocation = value;}
-    // }
+
     public void setEdges(List<string> s)
     {
       linkedCityKeys = s;
@@ -405,7 +401,8 @@ public class DCity : TurnUpdatable
     {
         return linkedCityKeys.Contains(cityKey);
     }
-#endregion
+
+    #endregion
 
     public void Explore(float exploreAmount)
     {
@@ -541,12 +538,110 @@ public class DCity : TurnUpdatable
 
     public JSONNode SaveToJSON()
     {
-        throw new NotImplementedException();
+        JSONNode returnNode = new JSONObject();
+
+        // Save general info about city
+        returnNode.Add("name", new JSONString(name));
+        returnNode.Add("age", new JSONNumber(age));
+        returnNode.Add("explorationLevel", new JSONNumber(explorationLevel));
+
+        // Save resource info
+        returnNode.Add("shelterTier", new JSONNumber(shelterTier));
+        returnNode.Add("fuelToShelterConversion", new JSONNumber(fuelToShelterConversion));
+        
+        // Save health and food stuff
+        returnNode.Add("health", new JSONNumber(health));
+        returnNode.Add("foodConsumption", new JSONNumber(foodConsumption));
+        returnNode.Add("notEnoughFoodHealthDecay", new JSONNumber(notEnoughFoodHealthDecay));
+
+        // Save season
+        returnNode.Add("season", new JSONNumber((int)season));
+        returnNode.Add("isDeadOfWinter", new JSONBool(isDeadOfWinter));
+
+        #region Lists of Stuff
+
+        // Save buildings
+        JSONArray buildingList = new JSONArray();
+        foreach (var building in buildings)
+        {
+            buildingList.Add(building.Key.ToString(), building.Value.SaveToJSON());
+        }
+        returnNode.Add("buildings", buildingList);
+
+        // Save resources
+        JSONArray resourceList = new JSONArray();
+        foreach (var resource in resources)
+        {
+            resourceList.Add(resource.Key.ToString(), resource.Value.SaveToJSON());
+        }
+        returnNode.Add("resources", resourceList);
+
+        // Save people
+        JSONArray peopleList = new JSONArray();
+        foreach (var person in people)
+        {
+            peopleList.Add(person.Key.ToString(), person.Value.SaveToJSON());
+        }
+        returnNode.Add("people", peopleList);
+
+        // Save linked cities
+        JSONArray linkedCityList = new JSONArray();
+        foreach (var city in linkedCityKeys)
+        {
+            peopleList.Add("name", new JSONString(city));
+        }
+        returnNode.Add("linked_cities", linkedCityList);
+
+        #endregion
+
+        return returnNode;
     }
 
-    public static DCity LoadFromJSON(JSONNode jsonNode)
+    public static DCity LoadFromJSON(JSONNode jsonNode, CityController cityController, DateTime currentDate)
     {
-        throw new NotImplementedException();
+        // Load general info about city
+        string _name = jsonNode["name"];
+        int _age = jsonNode["age"].AsInt;
+        float _explorationLevel = jsonNode["explorationLevel"].AsFloat;
+
+        // Load resource info
+        float _shelterTier = jsonNode["shelterTier"].AsInt;
+        float _fuelToShelterConversion = jsonNode["fuelToShelterConversion"].AsInt;
+
+        // Load health and food stuff
+        float _health = jsonNode["health"].AsFloat;
+        int _foodConsumption = jsonNode["foodConsumption"].AsInt;
+        float _notEnoughFoodHealthDecay = jsonNode["notEnoughFoodHealthDecay"].AsFloat;
+
+        // Load season
+        DSeasons._season _season = (DSeasons._season)(jsonNode["season"].AsInt);
+        bool _isDeadOfWinter = jsonNode["isDeadOfWinter"].AsBool;
+
+        // TODO: Store season start and end dates
+        // Create city object
+        DCity dCity = new DCity(_name, cityController, currentDate);
+
+        #region Lists of Stuff
+
+        // Load buildings
+        foreach (JSONNode building in jsonNode["buildings"].AsArray)
+            dCity.AddBuilding(DBuilding.LoadFromJSON(building));
+
+        // Load resources
+        foreach (JSONNode resource in jsonNode["resources"].AsArray)
+            dCity.AddResource(DResource.LoadFromJSON(resource));
+
+        // Load people
+        foreach (JSONNode person in jsonNode["people"].AsArray)
+            dCity.AddPerson(DPerson.LoadFromJSON(person));
+
+        // Load linked cities
+        foreach (JSONNode linkedCity in jsonNode["linked_cities"].AsArray)
+            dCity.linkToCity(linkedCity["name"]);
+
+        #endregion
+
+        return dCity;
     }
 }
 

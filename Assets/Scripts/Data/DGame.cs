@@ -151,6 +151,14 @@ public class DGame
     {
         DGame dGame = new DGame(gameController);
 
+        // Load the current date
+        string[] mmddyyyy = ((string)(jsonNode["currentDate"])).Split('/');
+        DateTime _currentDate = new DateTime(
+            int.Parse(mmddyyyy[0]),
+            int.Parse(mmddyyyy[1]),
+            int.Parse(mmddyyyy[2]));
+        dGame.currentDate = _currentDate;
+
         // Load the current city
         if (jsonNode["currentCity"].IsNull)
         {
@@ -159,15 +167,11 @@ public class DGame
         else
         {
             // TODO: Add the city controller
-            dGame.currentCity = DCity.LoadFromJSON(jsonNode["currentCity"]);
+            dGame.currentCity = DCity.LoadFromJSON(
+                jsonNode["currentCity"],
+                null,
+                _currentDate);
         }
-
-        // Load the current date
-        string[] mmddyyyy = ((string)(jsonNode["currentDate"])).Split('/');
-        dGame.currentDate = new DateTime(
-            int.Parse(mmddyyyy[0]),
-            int.Parse(mmddyyyy[1]),
-            int.Parse(mmddyyyy[2]));
 
         // Load the turn information
         dGame.turnDurationOfCity = jsonNode["turnDurationOfCity"].AsInt;
