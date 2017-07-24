@@ -12,7 +12,7 @@ public class DGame
 
     public DCity currentCity = null;
 
-    private int turnDurationOfCity = 10;
+    private int turnDurationOfCity = 52;
     private int durationOfTurn = 7;
     private int currentTurnNumber = 0;
 
