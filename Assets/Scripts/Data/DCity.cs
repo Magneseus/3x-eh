@@ -6,7 +6,7 @@ using SimpleJSON;
 using UnityEngine;
 
 [Serializable]
-public class DCity : TurnUpdatable, JSONParsable<DCity>
+public class DCity : TurnUpdatable
 {
     private CityController cityController;
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
@@ -539,7 +539,7 @@ public class DCity : TurnUpdatable, JSONParsable<DCity>
         throw new NotImplementedException();
     }
 
-    public DCity LoadFromJSON(JSONNode jsonNode)
+    public static DCity LoadFromJSON(JSONNode jsonNode)
     {
         throw new NotImplementedException();
     }

@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using SimpleJSON;
 using UnityEngine;
 
-public class DTask : TurnUpdatable, JSONParsable<DTask>
+public class DTask : TurnUpdatable
 {
 
     private static int NEXT_ID = 0;
@@ -227,7 +227,7 @@ public class DTask : TurnUpdatable, JSONParsable<DTask>
         throw new System.NotImplementedException();
     }
 
-    public DTask LoadFromJSON(JSONNode jsonNode)
+    public static DTask LoadFromJSON(JSONNode jsonNode)
     {
         throw new System.NotImplementedException();
     }

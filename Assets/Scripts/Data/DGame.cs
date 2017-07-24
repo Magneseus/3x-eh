@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using SimpleJSON;
 
 [Serializable]
-public class DGame : JSONParsable<DGame>
+public class DGame
 {
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     private DateTime currentDate = new DateTime(2017,4,1);
@@ -133,7 +133,7 @@ public class DGame : JSONParsable<DGame>
         return returnNode;
     }
 
-    public DGame LoadFromJSON(JSONNode jsonNode)
+    public static DGame LoadFromJSON(JSONNode jsonNode)
     {
         throw new NotImplementedException();
     }

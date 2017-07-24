@@ -3,7 +3,7 @@ using UnityEngine;
 using SimpleJSON;
 
 
-public class DTaskSlot : TurnUpdatable, JSONParsable<DTaskSlot>
+public class DTaskSlot : TurnUpdatable
 {
     private DTask task;
     private DPerson person;
@@ -167,7 +167,7 @@ public class DTaskSlot : TurnUpdatable, JSONParsable<DTaskSlot>
         return returnNode;
     }
 
-    public DTaskSlot LoadFromJSON(JSONNode jsonNode)
+    public static DTaskSlot LoadFromJSON(JSONNode jsonNode)
     {
         throw new System.NotImplementedException();
     }

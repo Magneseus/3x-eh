@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 
-public class DResource : TurnUpdatable, JSONParsable<DResource>
+public class DResource : TurnUpdatable
 {
     private static int resourceIDCounter = 0;
     private static Dictionary<string, int> resourceNameToIDMap = new Dictionary<string, int>();
@@ -101,7 +101,7 @@ public class DResource : TurnUpdatable, JSONParsable<DResource>
         throw new NotImplementedException();
     }
 
-    public DResource LoadFromJSON(JSONNode jsonNode)
+    public static DResource LoadFromJSON(JSONNode jsonNode)
     {
         throw new NotImplementedException();
     }

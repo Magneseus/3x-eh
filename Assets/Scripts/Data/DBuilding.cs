@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using SimpleJSON;
 using UnityEngine;
 
-public class DBuilding : TurnUpdatable, JSONParsable<DBuilding> {
+public class DBuilding : TurnUpdatable {
 
     public enum DBuildingStatus
     {
@@ -292,7 +292,7 @@ public class DBuilding : TurnUpdatable, JSONParsable<DBuilding> {
         throw new NotImplementedException();
     }
 
-    public DBuilding LoadFromJSON(JSONNode jsonNode)
+    public static DBuilding LoadFromJSON(JSONNode jsonNode)
     {
         throw new NotImplementedException();
     }
