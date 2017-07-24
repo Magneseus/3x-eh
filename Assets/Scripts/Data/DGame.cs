@@ -130,12 +130,51 @@ public class DGame
     {
         JSONNode returnNode = new JSONObject();
 
+        // Save the current city
+        if (currentCity == null)
+            returnNode.Add("currentCity", new JSONNull());
+        else
+            returnNode.Add("currentCity", currentCity.SaveToJSON());
+
+        // Save the current date
+        returnNode.Add("currentDate", new JSONString(currentDate.ToShortDateString()));
+
+        // Save the turn information
+        returnNode.Add("turnDurationOfCity", new JSONNumber(turnDurationOfCity));
+        returnNode.Add("durationOfTurn", new JSONNumber(durationOfTurn));
+        returnNode.Add("currentTurnNumber", new JSONNumber(currentTurnNumber));
+
         return returnNode;
     }
 
-    public static DGame LoadFromJSON(JSONNode jsonNode)
+    public static DGame LoadFromJSON(JSONNode jsonNode, GameController gameController)
     {
-        throw new NotImplementedException();
+        DGame dGame = new DGame(gameController);
+
+        // Load the current city
+        if (jsonNode["currentCity"].IsNull)
+        {
+            dGame.currentCity = null;
+        }
+        else
+        {
+            // TODO: Add the city controller
+            dGame.currentCity = DCity.LoadFromJSON(jsonNode["currentCity"]);
+        }
+
+        // Load the current date
+        string[] mmddyyyy = ((string)(jsonNode["currentDate"])).Split('/');
+        dGame.currentDate = new DateTime(
+            int.Parse(mmddyyyy[0]),
+            int.Parse(mmddyyyy[1]),
+            int.Parse(mmddyyyy[2]));
+
+        // Load the turn information
+        dGame.turnDurationOfCity = jsonNode["turnDurationOfCity"].AsInt;
+        dGame.durationOfTurn = jsonNode["durationOfTurn"].AsInt;
+        dGame.currentTurnNumber = jsonNode["currentTurnNumber"].AsInt;
+
+        return dGame;
     }
 }
 
