@@ -40,5 +40,6 @@ public static class Constants {
     public static float MERSON_INFECTION_PROBABILITY = 0.05f;
     public static int MERSON_SPRING_FALL_INFECTION_MODIFIER = 1;
     public static float MERSON_INFECTION_TASK_MODIFIER = 0.5f;
+    public static int[] MERSON_SEASON_INFECTION_MAX = { 1, MERSON_INFECTION_MAX, 1, MERSON_INFECTION_MIN };
     #endregion
 }

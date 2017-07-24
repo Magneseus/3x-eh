@@ -136,7 +136,7 @@ public class DCity : TurnUpdatable
         if (!isDeadOfWinter)
             isDeadOfWinter = DSeasons.StartDeadOfWinter(ref deadOfWinterStartEnd, currentDate);
         else
-            isDeadOfWinter = DSeasons.EndDeadOfWinter(ref deadOfWinterStartEnd, currentDate);
+            isDeadOfWinter = !DSeasons.EndDeadOfWinter(ref deadOfWinterStartEnd, currentDate);
     }
 
     #region Update Other Elements
