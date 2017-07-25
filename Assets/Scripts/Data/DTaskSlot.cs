@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using UnityEngine;
 
-public class DTaskSlot : TurnUpdatable
+public class DTaskSlot : ITurnUpdatable
 {
     private DTask task;
     private DPerson person;

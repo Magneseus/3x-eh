@@ -39,7 +39,7 @@ public class DGame
 
     }
 
-
+    bool temp = true;
     public void EndTurnUpdate()
     {
         currentDate = currentDate.AddDays(durationOfTurn);
@@ -49,6 +49,12 @@ public class DGame
         {
             kvp.Value.TurnUpdate(durationOfTurn);
             kvp.Value.UpdateSeason(currentDate);
+
+            if (temp)
+            {
+                temp = false;
+                DEventSystem.AddEvent(new ModifyResourceEvent(kvp.Value, DResource.Create("Food", 50)));
+            }
         }
     }
 

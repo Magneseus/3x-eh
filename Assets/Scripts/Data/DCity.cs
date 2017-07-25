@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using UnityEngine;
 
 [Serializable]
-public class DCity : TurnUpdatable
+public class DCity : ITurnUpdatable
 {
     private CityController cityController;
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();

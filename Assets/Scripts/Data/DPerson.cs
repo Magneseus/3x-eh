@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 // using System;
-public class DPerson : TurnUpdatable
+public class DPerson : ITurnUpdatable
 {
     private static int NEXT_ID = 0;
     private MeepleController meepleController;

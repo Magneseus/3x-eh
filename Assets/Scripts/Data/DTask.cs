@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using UnityEngine;
 
-public class DTask : TurnUpdatable
+public class DTask : ITurnUpdatable
 {
 
     private static int NEXT_ID = 0;
