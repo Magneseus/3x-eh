@@ -289,12 +289,50 @@ public class DBuilding : TurnUpdatable {
 
     public JSONNode SaveToJSON()
     {
-        throw new NotImplementedException();
+        JSONNode returnNode = new JSONObject();
+
+        // Save basic building info
+        returnNode.Add("name", new JSONString(buildingName));
+        returnNode.Add("ID", new JSONNumber(id));
+        returnNode.Add("cityName", new JSONString(city.Name));
+
+        // Save status information
+        returnNode.Add("status", new JSONNumber((int)(status)));
+        returnNode.Add("percentInfected", new JSONNumber(percentInfected));
+        returnNode.Add("percentDamaged", new JSONNumber(percentDamaged));
+        returnNode.Add("percentAssessed", new JSONNumber(percentAssessed));
+
+        // Save tasks
+        JSONArray jsonTaskList = new JSONArray();
+        foreach (var task in tasks)
+        {
+            jsonTaskList.Add(task.Value.SaveToJSON());
+        }
+        returnNode.Add("tasks", jsonTaskList);
+
+        return returnNode;
     }
 
-    public static DBuilding LoadFromJSON(JSONNode jsonNode)
+    public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city, BuildingController buildingController)
     {
-        throw new NotImplementedException();
+        DBuilding dBuilding = new DBuilding(city, jsonNode["name"], buildingController);
+
+        // Load basic info
+        dBuilding.id = jsonNode["ID"].AsInt;
+
+        // Load status info
+        dBuilding.status = (DBuildingStatus)(jsonNode["status"].AsInt);
+        dBuilding.percentInfected = jsonNode["percentInfected"].AsFloat;
+        dBuilding.percentDamaged = jsonNode["percentDamaged"].AsFloat;
+        dBuilding.percentAssessed = jsonNode["percentAssessed"].AsFloat;
+
+        // Load tasks
+        foreach (JSONNode taskNode in jsonNode["tasks"].AsArray)
+        {
+            dBuilding.AddTask(DTask.LoadFromJSON(taskNode));
+        }
+
+        return dBuilding;
     }
 }
 

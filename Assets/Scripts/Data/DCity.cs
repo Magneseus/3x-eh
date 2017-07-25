@@ -625,7 +625,13 @@ public class DCity : TurnUpdatable
 
         // Load buildings
         foreach (JSONNode building in jsonNode["buildings"].AsArray)
-            dCity.AddBuilding(DBuilding.LoadFromJSON(building));
+        {
+            //TODO: Add reference to building controller
+            dCity.AddBuilding(DBuilding.LoadFromJSON(
+                building,
+                dCity,
+                null));
+        }
 
         // Load resources
         foreach (JSONNode resource in jsonNode["resources"].AsArray)
