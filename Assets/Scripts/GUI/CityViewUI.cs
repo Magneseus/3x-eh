@@ -11,6 +11,9 @@ public class CityViewUI : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        // Resize to the Screen
+        ResizeToScreen();
+
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         // Set the end turn button's OnClick
@@ -23,9 +26,17 @@ public class CityViewUI : MonoBehaviour
         }
         endTurnButton.onClick.AddListener(gameController.dGame.EndTurnUpdate);
 	}
+
+    void Awake()
+    {
+        ResizeToScreen();
+    }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	public void ResizeToScreen()
+    {
+        RectTransform rt = GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.sizeDelta = Vector2.zero;
+    }
 }

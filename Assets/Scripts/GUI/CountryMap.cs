@@ -13,7 +13,12 @@ public class CountryMap : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        ResizeToScreen();
+    }
 
+    void Awake()
+    {
+        ResizeToScreen();
     }
 
     // Update is called once per frame
@@ -69,5 +74,13 @@ public class CountryMap : MonoBehaviour
             }
         }
         return connectedCityNodes;
+    }
+
+    public void ResizeToScreen()
+    {
+        RectTransform rt = GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.sizeDelta = Vector2.zero;
     }
 }
