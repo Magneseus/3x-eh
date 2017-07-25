@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class Constants {
+
+    public enum _prosperityMeasures { HEALTH, MORALE, ORDER, EDUCATION, NUMELEMENTS };
+
     public static string OTTAWA_PREFAB_PATH = @"Prefabs/Cities/Ottawa";
     public static string CITY_PREFAB_PATH = @"Prefabs/Cities/City";
     public static string CITY_SPRITE_PATH = @"Sprites/";
