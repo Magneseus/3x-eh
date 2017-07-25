@@ -564,7 +564,7 @@ public class DCity : TurnUpdatable
         JSONArray buildingList = new JSONArray();
         foreach (var building in buildings)
         {
-            buildingList.Add(building.Key.ToString(), building.Value.SaveToJSON());
+            buildingList.Add(building.Value.SaveToJSON());
         }
         returnNode.Add("buildings", buildingList);
 
@@ -572,7 +572,7 @@ public class DCity : TurnUpdatable
         JSONArray resourceList = new JSONArray();
         foreach (var resource in resources)
         {
-            resourceList.Add(resource.Key.ToString(), resource.Value.SaveToJSON());
+            resourceList.Add(resource.Value.SaveToJSON());
         }
         returnNode.Add("resources", resourceList);
 
@@ -580,7 +580,7 @@ public class DCity : TurnUpdatable
         JSONArray peopleList = new JSONArray();
         foreach (var person in people)
         {
-            peopleList.Add(person.Key.ToString(), person.Value.SaveToJSON());
+            peopleList.Add(person.Value.SaveToJSON());
         }
         returnNode.Add("people", peopleList);
 
