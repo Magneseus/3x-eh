@@ -15,7 +15,7 @@ public class DCompressedCity {
     {
         population = baseCity.People.Count;
         percentInfected = baseCity.PercentPopulationInfected();
-        //TODO - percent development of cities based on amount reclaimed
+        development = baseCity.DevelopedValue();
         prosperityMeasures = CalculateProsperityMeasures(baseCity);
         finalResources = baseCity.Resources;
         resourceRates = CalculateResourceRates(baseCity);

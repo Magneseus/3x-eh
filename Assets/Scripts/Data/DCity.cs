@@ -387,18 +387,18 @@ public class DCity : TurnUpdatable
         return result;
     }
 
-    public float PercentCityDeveloped()
+    public float DevelopedValue()
     {
         float explored = CalculateExploration();
-        float assessed = PercentCityAssessed();
+        float assessed = PercentAssessed();
         float repaired = PercentRepaired();
 
-        return explored * Constants.CITY_DEVELOPMENT_PERCENT_FROM_EXPLORE +
-            assessed * Constants.CITY_DEVELOPMENT_PERCENT_FROM_ASSESS +
-            repaired * Constants.CITY_DEVELOPMENT_PERCENT_FROM_REPAIR;
+        return (explored * Constants.CITY_DEVELOPMENT_PERCENT_FROM_EXPLORE) +
+            (assessed * Constants.CITY_DEVELOPMENT_PERCENT_FROM_ASSESS) +
+            (repaired * Constants.CITY_DEVELOPMENT_PERCENT_FROM_REPAIR);
     }
 
-    public float PercentCityAssessed()
+    public float PercentAssessed()
     {
         float result = 0f;
         foreach (KeyValuePair<int, DBuilding> entry in buildings)

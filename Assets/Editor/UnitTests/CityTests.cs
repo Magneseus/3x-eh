@@ -210,7 +210,7 @@ public class CityTests
         building2.LevelAssessed = val2;
 
         float expected = (val1 + val2) / 2f;
-        Assert.That(city.PercentCityAssessed(), Is.EqualTo(expected));
+        Assert.That(city.PercentAssessed(), Is.EqualTo(expected));
     }
 
     [Test]
@@ -232,6 +232,39 @@ public class CityTests
 
         float expected = (damaged1 + damaged2 + infected1 + infected2) / 4f;
         Assert.That(city.PercentRepaired(), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void DevelopedValue()
+    {
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building1 = new DBuilding(city, BUILDING_NAME + 1, Mock.Component<BuildingController>());
+        var building2 = new DBuilding(city, BUILDING_NAME + 2, Mock.Component<BuildingController>());
+        city.Season = DSeasons._season.SPRING;
+
+        float damaged1 = 0.6f;
+        float damaged2 = 0.3f;
+        float infected1 = 0.2f;
+        float infected2 = 0.9f;
+        float assessed1 = 0.5f;
+        float assessed2 = 0f;
+        building1.LevelDamaged = damaged1;
+        building1.LevelInfected = infected1;
+        building1.LevelAssessed = assessed1;
+        building2.LevelDamaged = damaged2;
+        building2.LevelInfected = infected2;
+        building2.LevelAssessed = assessed2;
+
+        building1.Status = DBuilding.DBuildingStatus.DISCOVERED;
+
+        float explored = city.CalculateExploration();
+        float assessed = city.PercentAssessed();
+        float repaired = city.PercentRepaired();
+        float expected = (explored * Constants.CITY_DEVELOPMENT_PERCENT_FROM_EXPLORE) +
+                        (assessed * Constants.CITY_DEVELOPMENT_PERCENT_FROM_ASSESS) +
+                        (repaired * Constants.CITY_DEVELOPMENT_PERCENT_FROM_REPAIR);
+
+        Assert.That(city.DevelopedValue(), Is.EqualTo(expected));
     }
     #endregion
 

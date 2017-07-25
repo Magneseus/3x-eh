@@ -206,6 +206,7 @@ public class DBuilding : TurnUpdatable {
     public DBuildingStatus Status
     {
         get { return status; }
+        set { status = value; }
     }
 
     public string StatusAsString
