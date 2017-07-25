@@ -262,19 +262,19 @@ public class DBuilding : TurnUpdatable {
 
     public float LevelDamaged
     {
-      get {
-            CalculateDamages();
-            return percentDamaged;
-          }
+        get { return percentDamaged; }
+        set { percentDamaged = value; }
     }
 
     public float LevelInfected
     {
-        get
-        {
-          CalculateDamages();
-          return Mathf.Clamp(percentInfected * SeasonalInfectionMod(), 0f, 1f);
-        }
+        get { return Mathf.Clamp01(percentInfected * SeasonalInfectionMod()); }
+        set { percentInfected = value; }
+    }
+
+    public float LevelInfectedRaw
+    {
+        get { return percentInfected; }
     }
 
     public bool Damaged
