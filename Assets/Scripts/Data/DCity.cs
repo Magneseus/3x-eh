@@ -391,7 +391,7 @@ public class DCity : TurnUpdatable
     {
         float explored = CalculateExploration();
         float assessed = PercentCityAssessed();
-        float repaired = 0f;
+        float repaired = PercentCityRepaired();
 
         return explored * Constants.CITY_DEVELOPMENT_PERCENT_FROM_EXPLORE +
             assessed * Constants.CITY_DEVELOPMENT_PERCENT_FROM_ASSESS +
@@ -403,6 +403,15 @@ public class DCity : TurnUpdatable
         float result = 0f;
         foreach (KeyValuePair<int, DBuilding> entry in buildings)
             result += entry.Value.LevelAssessed;
+        result /= buildings.Count;
+        return result;
+    }
+
+    public float PercentCityRepaired()
+    {
+        float result = 0f;
+        foreach (KeyValuePair<int, DBuilding> entry in buildings)
+            result += (entry.Value.LevelDamaged + entry.Value.LevelInfected)/2f;
         result /= buildings.Count;
         return result;
     }
