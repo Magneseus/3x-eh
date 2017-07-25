@@ -58,6 +58,7 @@ public class GameController : MonoBehaviour
 
         // Spawn City UI
         cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
+		cityView.transform.SetParent(UICanvas.transform);
 
         // Disable Country View
         countryView.SetActive(false);
