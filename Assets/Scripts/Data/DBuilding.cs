@@ -252,6 +252,7 @@ public class DBuilding : TurnUpdatable {
     public float LevelAssessed
     {
         get { return percentAssessed; }
+        set { percentAssessed = value; }
     }
 
     public bool Assessed

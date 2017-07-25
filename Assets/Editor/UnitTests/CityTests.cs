@@ -195,6 +195,22 @@ public class CityTests
         city.TurnUpdate(1);
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));
     }
+
+    [Test]
+    public void PercentAssessed()
+    {
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building1 = new DBuilding(city, BUILDING_NAME+1, Mock.Component<BuildingController>());
+        var building2 = new DBuilding(city, BUILDING_NAME+2, Mock.Component<BuildingController>());
+
+        float val1 = 0.5f;
+        float val2 = 0f;
+        building1.LevelAssessed = val1;
+        building2.LevelAssessed = val2;
+
+        float expected = (val1 + val2) / 2f;
+        Assert.That(city.PercentCityAssessed(), Is.EqualTo(expected));
+    }
     #endregion
 
     #region Update Methods

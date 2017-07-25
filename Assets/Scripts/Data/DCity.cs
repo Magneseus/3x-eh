@@ -64,7 +64,6 @@ public class DCity : TurnUpdatable
         deadOfWinterStartEnd = deadWinterDates;
         seasonStartDates = DSeasons.InitialSeasonSetup(seasonDates, currentDate, ref season, ref deadOfWinterStartEnd);
     }
-    #endregion
 
     private void InitialLinkedCities(List<string> linkedCityKeys)
     {
@@ -82,6 +81,7 @@ public class DCity : TurnUpdatable
         else
             isDeadOfWinter = false;
     }
+    #endregion
 
     #region Update Calls
     // TurnUpdate is called once per Turn
