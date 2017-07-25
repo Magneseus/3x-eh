@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class Constants {
 
-    public enum _prosperityMeasures { HEALTH, MORALE, ORDER, EDUCATION, NUMELEMENTS };
+    
 
     public static string OTTAWA_PREFAB_PATH = @"Prefabs/Cities/Ottawa";
     public static string CITY_PREFAB_PATH = @"Prefabs/Cities/City";
@@ -44,5 +44,10 @@ public static class Constants {
     public static int MERSON_SPRING_FALL_INFECTION_MODIFIER = 1;
     public static float MERSON_INFECTION_TASK_MODIFIER = 0.5f;
     public static int[] MERSON_SEASON_INFECTION_MAX = { 1, MERSON_INFECTION_MAX, 1, MERSON_INFECTION_MIN };
+    #endregion
+
+    #region Compressed City
+    public enum _prosperityMeasures { HEALTH, MORALE, ORDER, EDUCATION, NUMELEMENTS };
+    public static int BASE_RESOURCE_VALUE_FOR_RATES = 500;
     #endregion
 }
