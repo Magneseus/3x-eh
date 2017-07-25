@@ -46,8 +46,10 @@ public static class Constants {
     public static int[] MERSON_SEASON_INFECTION_MAX = { 1, MERSON_INFECTION_MAX, 1, MERSON_INFECTION_MIN };
     #endregion
 
-    #region Compressed City
+    #region City and Compressed City
     public enum _prosperityMeasures { HEALTH, MORALE, ORDER, EDUCATION, NUMELEMENTS };
-    public static int BASE_RESOURCE_VALUE_FOR_RATES = 500;
+    public static float CITY_DEVELOPMENT_PERCENT_FROM_EXPLORE = 0.2f;
+    public static float CITY_DEVELOPMENT_PERCENT_FROM_ASSESS = 0.4f;
+    public static float CITY_DEVELOPMENT_PERCENT_FROM_REPAIR = 0.4f;
     #endregion
 }

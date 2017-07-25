@@ -19,6 +19,7 @@ public class DCompressedCity {
         prosperityMeasures = CalculateProsperityMeasures(baseCity);
         finalResources = baseCity.Resources;
         resourceRates = CalculateResourceRates(baseCity);
+        baseCity.Resources = finalResources;    // keep if resource rates change city's resource levels, resets
     }
 
     public float[] CalculateProsperityMeasures(DCity city)
@@ -33,13 +34,11 @@ public class DCompressedCity {
         return results;
     }
 
-
     // TODO - more complex calculation
     public float CalculateHealthProsperity(DCity city)
     {
         return 1f - city.PercentPopulationInfected();
     }
-
 
     // TODO - calculation
     public float CalculateMoraleProsperity(DCity city)
@@ -59,17 +58,10 @@ public class DCompressedCity {
         return 0f;
     }
 
+    // stub for integration with city rate of resource change function(s)
     public Dictionary<int, DResource>[] CalculateResourceRates(DCity city)
     {
         Dictionary<int, DResource>[] results = new Dictionary<int, DResource>[(int)DSeasons._season.NUMELEMENTS];
-
-        //for seasons
-            //set city season
-            // for resources
-                // set city resource to base value
-            //city.turnupdate(1)
-            // for resources
-                // add to dictionary
 
         return results;
     }

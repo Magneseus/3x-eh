@@ -386,6 +386,26 @@ public class DCity : TurnUpdatable
         result /= people.Count;
         return result;
     }
+
+    public float PercentCityDeveloped()
+    {
+        float explored = CalculateExploration();
+        float assessed = PercentCityAssessed();
+        float repaired = 0f;
+
+        return explored * Constants.CITY_DEVELOPMENT_PERCENT_FROM_EXPLORE +
+            assessed * Constants.CITY_DEVELOPMENT_PERCENT_FROM_ASSESS +
+            repaired * Constants.CITY_DEVELOPMENT_PERCENT_FROM_REPAIR;
+    }
+
+    public float PercentCityAssessed()
+    {
+        float result = 0f;
+        foreach (KeyValuePair<int, DBuilding> entry in buildings)
+            result += entry.Value.LevelAssessed;
+        result /= buildings.Count;
+        return result;
+    }
     #endregion
 
     #region Map of Canada
@@ -454,6 +474,7 @@ public class DCity : TurnUpdatable
     public Dictionary<int, DResource> Resources
     {
         get { return resources; }
+        set { resources = value; }
     }
 
     public Dictionary<int, DPerson> People
