@@ -5,11 +5,36 @@ using UnityEngine;
 public class DCompressedCity {
 
     private int population;
+    private float percentInfected;
     private float development;
-    private Constants._prosperityMeasures[] prosperityMeasures = 
-        new Constants._prosperityMeasures[(int)Constants._prosperityMeasures.NUMELEMENTS];
+    private float[] prosperityMeasures = 
+        new float[(int)Constants._prosperityMeasures.NUMELEMENTS];
     private Dictionary<int, DResource> finalResources = new Dictionary<int, DResource>();
     private Dictionary<int, DResource> resourceRates = new Dictionary<int, DResource>();
+
+    public DCompressedCity(DCity baseCity)
+    {
+        population = baseCity.People.Count;
+        percentInfected = baseCity.PercentPopulationInfected();
+        //TODO - percent development of cities based on amount reclaimed
+        prosperityMeasures = CalculateProsperityMeasures(baseCity);
+        finalResources = baseCity.Resources;
+        //TODO - calculate resource rates
+    }
+
+    public float[] CalculateProsperityMeasures(DCity city)
+    {
+        float[] results =
+            new float[(int)Constants._prosperityMeasures.NUMELEMENTS];
+
+        //results[(int)Constants._prosperityMeasures.HEALTH]
+
+        return results;
+    }
+
+
+
+
 
     #region Properties
     public int Population
@@ -18,13 +43,19 @@ public class DCompressedCity {
         set { population = value; }
     }
 
+    public float PercentInfected
+    {
+        get { return percentInfected; }
+        set { percentInfected = value; }
+    }
+
     public float Development
     {
         get { return development; }
         set { development = value; }
     }
 
-    public Constants._prosperityMeasures[] ProsperityMeasures
+    public float[] ProsperityMeasures
     {
         get { return prosperityMeasures; }
         set { prosperityMeasures = value;  }

@@ -255,7 +255,7 @@ public class DCity : TurnUpdatable
     }
     #endregion
 
-    #region Basic Manipulation
+    #region Basics
 
     public void AddBuilding(DBuilding dBuilding)
     {
@@ -376,7 +376,17 @@ public class DCity : TurnUpdatable
         }
 
     }
-#endregion
+
+    public float PercentPopulationInfected()
+    {
+        float result = 0;
+        foreach (KeyValuePair<int, DPerson> entry in people)
+            if (entry.Value.Infection > 0)
+                result++;
+        result /= people.Count;
+        return result;
+    }
+    #endregion
 
     #region Map of Canada
 
