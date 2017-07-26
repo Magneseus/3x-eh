@@ -96,9 +96,36 @@ public class DResource : TurnUpdatable
 
     #endregion
 
+    public static JSONNode SaveResourceIDMapToJSON()
+    {
+        JSONNode returnNode = new JSONArray();
+
+        // Save all the currently created resources (the master list)
+        foreach (var kvp in resourceNameToIDMap)
+        {
+            JSONNode resourceEntry = new JSONObject();
+            resourceEntry.Add("name", new JSONString(kvp.Key));
+            resourceEntry.Add("ID", new JSONNumber(kvp.Value.ToString()));
+        }
+
+        return returnNode;
+    }
+
     public JSONNode SaveToJSON()
     {
         throw new NotImplementedException();
+
+    public static void LoadResourceIDMapFromJSON(JSONNode jsonNode)
+    {
+        Dictionary<string, int> resourceMap = new Dictionary<string, int>();
+
+        // Load all the currently created resources (the master list)
+        foreach (JSONNode resource in jsonNode.AsArray)
+        {
+            resourceMap.Add(resource["name"], resource["ID"]);
+        }
+
+        resourceNameToIDMap = resourceMap;
     }
 
     public static DResource LoadFromJSON(JSONNode jsonNode)

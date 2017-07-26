@@ -130,6 +130,9 @@ public class DGame
     {
         JSONNode returnNode = new JSONObject();
 
+        // Save the static resource dictionary
+        returnNode.Add("resourceNames", DResource.SaveResourceIDMapToJSON());
+
         // Save the current city
         if (currentCity == null)
             returnNode.Add("currentCity", new JSONNull());
@@ -150,6 +153,9 @@ public class DGame
     public static DGame LoadFromJSON(JSONNode jsonNode, GameController gameController)
     {
         DGame dGame = new DGame(gameController);
+
+        // Load the static resource dictionary
+        DResource.LoadResourceIDMapFromJSON(jsonNode["resourceNames"]);
 
         // Load the current date
         string[] mmddyyyy = ((string)(jsonNode["currentDate"])).Split('/');
