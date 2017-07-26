@@ -113,7 +113,14 @@ public class DResource : TurnUpdatable
 
     public JSONNode SaveToJSON()
     {
-        throw new NotImplementedException();
+        JSONNode returnNode = new JSONObject();
+
+        returnNode.Add("name", new JSONString(resourceName));
+        returnNode.Add("ID", new JSONNumber(resourceID));
+        returnNode.Add("amount", new JSONNumber(resourceAmount));
+
+        return returnNode;
+    }
 
     public static void LoadResourceIDMapFromJSON(JSONNode jsonNode)
     {
@@ -130,9 +137,23 @@ public class DResource : TurnUpdatable
 
     public static DResource LoadFromJSON(JSONNode jsonNode)
     {
-        throw new NotImplementedException();
+        DResource loadedResource = Create(jsonNode["name"], jsonNode["amount"].AsInt);
+
+        if (loadedResource.ID != jsonNode["ID"].AsInt)
+        {
+            throw new ResourceDictionaryMismatchException(
+                string.Format("Resource ({1}) has saved ID ({2}), but ID should be ({3}).",
+                    jsonNode["name"],
+                    loadedResource.ID,
+                    jsonNode["ID"])
+                );
+        }
+
+        return loadedResource;
     }
 }
+
+#region Exceptions
 
 /*****************************
  * 
@@ -155,3 +176,22 @@ public class ResourceNameNotFoundException : Exception
     {
     }
 }
+
+public class ResourceDictionaryMismatchException : Exception
+{
+    public ResourceDictionaryMismatchException()
+    {
+    }
+
+    public ResourceDictionaryMismatchException(string message)
+    : base(message)
+    {
+    }
+
+    public ResourceDictionaryMismatchException(string message, Exception inner)
+    : base(message, inner)
+    {
+    }
+}
+
+#endregion
