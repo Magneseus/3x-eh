@@ -36,6 +36,12 @@ public class MeepleController : MonoBehaviour {
 
     }
 
+    public void ConnectToDataEngine(TaskTraySingle taskTray, DPerson person)
+    {
+        parentTray = taskTray;
+        dPerson = person;
+    }
+
     public void ResetLocalPosition()
     {
         this.transform.localPosition = new Vector3(0, 0, -3);

@@ -8,6 +8,9 @@ using UnityEngine;
 [Serializable]
 public class DCity : TurnUpdatable
 {
+    [NonSerialized]
+    private DGame dGame;
+
     private CityController cityController;
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
@@ -574,6 +577,11 @@ public class DCity : TurnUpdatable
         fuelToShelterConversion = Mathf.Clamp(fuelToShelterConversion - 1, 0, cap);
     }
 
+    public DGame Game
+    {
+        get { return dGame; }
+    }
+
     #endregion
 
     public JSONNode SaveToJSON()
@@ -637,7 +645,7 @@ public class DCity : TurnUpdatable
         return returnNode;
     }
 
-    public static DCity LoadFromJSON(JSONNode jsonNode, CityController cityController, DateTime currentDate)
+    public static DCity LoadFromJSON(JSONNode jsonNode, DGame dGame)
     {
         // Load general info about city
         string _name = jsonNode["name"];
@@ -659,23 +667,19 @@ public class DCity : TurnUpdatable
 
         // TODO: Store season start and end dates
         // Create city object
-        DCity dCity = new DCity(_name, cityController, currentDate);
+        DCity dCity = new DCity(_name, null, dGame.CurrentDate);
+        dCity.cityController = dGame.GameController.CreateCityController(dCity);
+        dCity.dGame = dGame;
 
         #region Lists of Stuff
 
         // Load people
         foreach (JSONNode person in jsonNode["people"].AsArray)
-            dCity.AddPerson(DPerson.LoadFromJSON(person, dCity));
+            DPerson.LoadFromJSON(person, dCity);
 
         // Load buildings
         foreach (JSONNode building in jsonNode["buildings"].AsArray)
-        {
-            //TODO: Add reference to building controller
-            dCity.AddBuilding(DBuilding.LoadFromJSON(
-                building,
-                dCity,
-                null));
-        }
+            DBuilding.LoadFromJSON(building, dCity);
 
         // Load resources
         foreach (JSONNode resource in jsonNode["resources"].AsArray)

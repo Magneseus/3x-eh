@@ -24,4 +24,10 @@ public class CityController : MonoBehaviour {
         dCity = new DCity(cityName, this, dGame.DefaultSeasonStartDates, dGame.CurrentDate);
         dGame.Cities.Add(cityName, dCity);
     }
+
+    public void ConnectToDataEngine(DGame dGame, DCity dCity)
+    {
+        this.dCity = dCity;
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + dCity.Name);
+    }
 }

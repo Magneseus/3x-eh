@@ -156,4 +156,10 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
         dBuilding = new DBuilding(dGame.Cities[cityName], buildingName, this);
     }
 
+    public void ConnectToDataEngine(DBuilding dBuilding)
+    {
+        this.dBuilding = dBuilding;
+        dBuilding.SetBuildingController(this);
+    }
+
 }
