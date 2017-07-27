@@ -331,7 +331,7 @@ public class DBuilding : TurnUpdatable {
         // Load tasks
         foreach (JSONNode taskNode in jsonNode["tasks"].AsArray)
         {
-            dBuilding.AddTask(DTask.LoadFromJSON(taskNode));
+            dBuilding.AddTask(DTask.LoadFromJSON(taskNode, dBuilding));
         }
 
         return dBuilding;

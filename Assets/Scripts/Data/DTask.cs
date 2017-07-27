@@ -222,14 +222,103 @@ public class DTask : TurnUpdatable
         }
     }
 
-    public JSONNode SaveToJSON()
+    public virtual JSONNode SaveToJSON()
     {
-        throw new System.NotImplementedException();
+        JSONNode returnNode = new JSONObject();
+
+        // Save Task info
+        returnNode.Add("ID", new JSONNumber(id));
+        returnNode.Add("name", new JSONString(taskName));
+        returnNode.Add("buildingName", new JSONString(building.Name));
+
+        // Save person info
+        returnNode.Add("maxPeople", new JSONNumber(maxPeople));
+        returnNode.Add("numPeople", new JSONNumber(numPeople));
+
+        // Save output info
+        returnNode.Add("fullAssessRequirement", new JSONNumber(numPeople));
+        returnNode.Add("taskEnabled", new JSONBool(taskEnabled));
+
+        // Resource output
+        if (output != null)
+            returnNode.Add("resourceOutput", output.SaveToJSON());
+        else
+            returnNode.Add("resourceOutput", new JSONNull());
+
+        // Save task slot list
+        JSONArray jsonSlotList = new JSONArray();
+        foreach (var taskSlot in slotList)
+        {
+            jsonSlotList.Add(taskSlot.SaveToJSON());
+        }
+        returnNode.Add("taskSlots", jsonSlotList);
+
+        return returnNode;
     }
 
-    public static DTask LoadFromJSON(JSONNode jsonNode)
+    public static DTask LoadFromJSON(JSONNode jsonNode, DBuilding building)
     {
-        throw new System.NotImplementedException();
+        DTask returnTask = null;
+
+        // Check for special task cases
+        if (jsonNode["resourceOutput"].IsNull)
+        {
+            if (jsonNode["specialTask"] == "assess")
+            {
+                returnTask = new DTask_Assess(
+                    building,
+                    jsonNode["assessAmount"].AsFloat,
+                    jsonNode["maxPeople"].AsInt,
+                    jsonNode["name"]);
+            }
+            else if (jsonNode["specialTask"] == "explore")
+            {
+                returnTask = new DTask_Explore(
+                    building,
+                    jsonNode["exploreAmount"].AsFloat,
+                    jsonNode["name"]);
+            }
+            else if (jsonNode["specialTask"] == "idle")
+            {
+                returnTask = new DTask_Idle(building, jsonNode["name"]);
+            }
+        }
+        else
+        {
+            returnTask = new DTask(
+                building,
+                DResource.LoadFromJSON(jsonNode["resourceOutput"]),
+                jsonNode["maxPeople"].AsInt,
+                jsonNode["name"],
+                jsonNode["fullAssessRequirement"].AsFloat);
+        }
+
+        // Set the other vars
+        if (returnTask == null)
+        {
+            throw new NullTaskException("Task failed to load from JSON: " + jsonNode["name"]);
+        }
+        else
+        {
+            // Load task info
+            returnTask.id = jsonNode["ID"];
+
+            // Load person info
+            returnTask.numPeople = jsonNode["numPeople"];
+            returnTask.maxPeople = jsonNode["maxPeople"];
+
+            // Save output info
+            returnTask.fullAssessRequirement = jsonNode["fullAssessRequirement"];
+            returnTask.taskEnabled = jsonNode["taskEnabled"];
+
+            // Load the task slots
+            foreach (JSONNode taskSlotJSON in jsonNode["taskSlots"].AsArray)
+            {
+                returnTask.SlotList.Add(DTaskSlot.LoadFromJSON(taskSlotJSON));
+            }
+        }
+
+        return returnTask;
     }
 
     #region Properties

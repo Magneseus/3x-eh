@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using SimpleJSON;
 
 
 public class DTask_Explore : DTask
@@ -122,5 +123,15 @@ public class DTask_Explore : DTask
         {
             slotList.RemoveAt(slotList.Count - 1);
         }
+    }
+
+    public override JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = base.SaveToJSON();
+
+        returnNode.Add("specialTask", new JSONString("explore"));
+        returnNode.Add("exploreAmount", new JSONNumber(exploreAmount));
+
+        return returnNode;
     }
 }

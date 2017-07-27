@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using SimpleJSON;
 
 public class DTask_Assess : DTask
 {
@@ -32,6 +33,16 @@ public class DTask_Assess : DTask
                 building.Assess(assessAmount * Constants.MERSON_INFECTION_TASK_MODIFIER);
             }
         }
+    }
+
+    public override JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = base.SaveToJSON();
+
+        returnNode.Add("specialTask", new JSONString("assess"));
+        returnNode.Add("assessAmount", new JSONNumber(assessAmount));
+
+        return returnNode;
     }
 
     #region Accessors
