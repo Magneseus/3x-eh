@@ -106,6 +106,8 @@ public class DResource : TurnUpdatable
             JSONNode resourceEntry = new JSONObject();
             resourceEntry.Add("name", new JSONString(kvp.Key));
             resourceEntry.Add("ID", new JSONNumber(kvp.Value.ToString()));
+
+            returnNode.Add(resourceEntry);
         }
 
         return returnNode;

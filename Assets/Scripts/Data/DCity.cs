@@ -628,7 +628,7 @@ public class DCity : TurnUpdatable
         JSONArray linkedCityList = new JSONArray();
         foreach (var city in linkedCityKeys)
         {
-            peopleList.Add("name", new JSONString(city));
+            linkedCityList.Add(new JSONString(city));
         }
         returnNode.Add("linked_cities", linkedCityList);
 
