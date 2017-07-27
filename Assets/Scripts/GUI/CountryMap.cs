@@ -13,12 +13,12 @@ public class CountryMap : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        ResizeToScreen();
+        //ResizeToScreen();
     }
 
     void Awake()
     {
-        ResizeToScreen();
+        //ResizeToScreen();
     }
 
     // Update is called once per frame
