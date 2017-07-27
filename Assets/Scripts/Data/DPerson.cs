@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 
-public class DPerson : TurnUpdatable
+public class DPerson : ITurnUpdatable
 {
     private static int NEXT_ID = 0;
     private MeepleController meepleController;
@@ -102,8 +102,6 @@ public class DPerson : TurnUpdatable
 
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
-
-    
 
 
 

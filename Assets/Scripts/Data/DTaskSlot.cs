@@ -3,7 +3,7 @@ using UnityEngine;
 using SimpleJSON;
 
 
-public class DTaskSlot : TurnUpdatable
+public class DTaskSlot : ITurnUpdatable
 {
     private DTask task;
     private DPerson person;

@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using SimpleJSON;
 using UnityEngine;
 
-public class DBuilding : TurnUpdatable {
+public class DBuilding : ITurnUpdatable {
 
     public enum DBuildingStatus
     {

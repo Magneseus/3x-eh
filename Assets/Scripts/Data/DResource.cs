@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 
-public class DResource : TurnUpdatable
+public class DResource : ITurnUpdatable
 {
     private static int resourceIDCounter = 0;
     private static Dictionary<string, int> resourceNameToIDMap = new Dictionary<string, int>();

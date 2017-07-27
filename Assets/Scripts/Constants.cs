@@ -23,6 +23,12 @@ public static class Constants {
     public static DateTime DEFAULT_DATE = DEFAULT_SEASON_DATES[0].AddDays(1);
     public static int DEFAULT_RESOURCE_VALUE = 0;
 
+    public const int NO_INPUT = 0;
+    public const int EVENT_PRIORITY_DEFAULT = 0;
+    public const int EVENT_PRIORITY_INTERESTING = 1;
+    public const int EVENT_PRIORITY_REQ_RESOURCES = 2;
+    public const int EVENT_PRIORITY_STORY = 3;
+
     #region Task Constants
     public static float TEMP_REPAIR_AMOUNT = 0.2f;
     public static float DEFAULT_ASSESS_AMOUNT = 0.1f;
