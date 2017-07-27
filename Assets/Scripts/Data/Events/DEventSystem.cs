@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class DEventSystem {
 
-    public static List<IEvent> eventPool = new List<IEvent>();
-    public static List<IEvent> eventsToAdd = new List<IEvent>();
-    public static List<IEvent> eventsToRemove = new List<IEvent>();
+    public static List<DEvent> eventPool = new List<DEvent>();
+    public static List<DEvent> eventsToAdd = new List<DEvent>();
+    public static List<DEvent> eventsToRemove = new List<DEvent>();
 
     public static EventController EventController { get; set; }
 
-    public static void AddEvent(IEvent e)
+    public static void AddEvent(DEvent e)
     {
         eventsToAdd.Add(e);
     }
 
-    public static void RemoveEvent(IEvent e)
+    public static void RemoveEvent(DEvent e)
     {
         eventsToRemove.Add(e);
     }

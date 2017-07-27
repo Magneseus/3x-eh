@@ -13,7 +13,7 @@ public class EventController : MonoBehaviour {
 		
 	}
 
-    public void ResolveEvent(IEvent e)
+    public void ResolveEvent(DEvent e)
     {
         e.Resolve();
     }

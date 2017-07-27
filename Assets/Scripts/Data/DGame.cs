@@ -56,6 +56,7 @@ public class DGame
                 DEventSystem.AddEvent(new ModifyResourceEvent(kvp.Value, DResource.Create("Food", 50)));
             }
         }
+        DEventSystem.TurnUpdate();
     }
 
     public void AddCity(DCity dCity)

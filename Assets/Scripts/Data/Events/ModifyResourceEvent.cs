@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ModifyResourceEvent : IEvent {
+public class ModifyResourceEvent : DEvent {
 
     private DCity city;
     private DResource resource;
@@ -14,7 +14,7 @@ public class ModifyResourceEvent : IEvent {
         this.resource = resource;
     }
 
-    public void Resolve()
+    override public void Resolve()
     {
         city.AddResource(resource);
     }    
