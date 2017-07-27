@@ -19,8 +19,6 @@ public class DGame
     private DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
     public DCity currentCity = null;
-    int durationOfTurn = 7;
-    int currentTurnNumber = 0;
 
     private int turnDurationOfCity = 52;
     private int durationOfTurn = 7;
