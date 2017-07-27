@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DCompressedCity : DBuilding {
+public class DCompressedCity : DBuilding, TurnUpdatable {
 
     private int population;
     private float percentInfected;
@@ -26,12 +26,13 @@ public class DCompressedCity : DBuilding {
     public void assignCity(DCity city)
     {
       base.City = city;
-      base.City.CityController.gameController.CreateBuildingController(this, Vector3.zero);
+      base.City.CityController.gameController.CreateBuildingController(this, new Vector3(1,1,0));
 
       // this.City.AddBuilding(this);
     }
-    public void TurnUpdate(int numDaysPassed)
+    public override void TurnUpdate(int numDaysPassed)
     {
+      Debug.Log("Last City stuff is in here.");
       foreach(var entry in  City.Resources)
         foreach (var rate in resourceRates)
         {

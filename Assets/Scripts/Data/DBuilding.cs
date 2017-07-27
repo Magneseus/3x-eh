@@ -78,7 +78,7 @@ public class DBuilding : TurnUpdatable {
     }
 
     // TurnUpdate is called once per Turn
-    public void TurnUpdate(int numDaysPassed)
+    public virtual void TurnUpdate(int numDaysPassed)
     {
         foreach (var entry in tasks)
         {
