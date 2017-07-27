@@ -665,7 +665,7 @@ public class DCity : TurnUpdatable
 
         // Load people
         foreach (JSONNode person in jsonNode["people"].AsArray)
-            dCity.AddPerson(DPerson.LoadFromJSON(person));
+            dCity.AddPerson(DPerson.LoadFromJSON(person, dCity));
 
         // Load buildings
         foreach (JSONNode building in jsonNode["buildings"].AsArray)

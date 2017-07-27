@@ -198,7 +198,7 @@ public class DTaskSlot : TurnUpdatable
             {
                 if (person.Value.ID == jsonNode["personID"])
                 {
-                    returnTaskSlot.person = person.Value;
+                    person.Value.SetTaskSlot(returnTaskSlot);
                     break;
                 }
             }

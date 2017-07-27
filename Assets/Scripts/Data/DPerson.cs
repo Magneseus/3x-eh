@@ -26,7 +26,7 @@ public class DPerson : TurnUpdatable
 
         city.AddPerson(this);
     }
-
+    
     public void TurnUpdate(int numDaysPassed)
     {
       // Random random = new Random();
@@ -155,11 +155,29 @@ public class DPerson : TurnUpdatable
 
     public JSONNode SaveToJSON()
     {
-        throw new System.NotImplementedException();
+        JSONNode returnNode = new JSONObject();
+
+        // Save person info
+        returnNode.Add("ID", new JSONNumber(id));
+        returnNode.Add("infectionLevel", new JSONNumber(infectionLevel));
+        returnNode.Add("isDead", new JSONBool(isDead));
+
+        // Save task info
+        returnNode.Add("taskID", new JSONNumber(taskSlot.Task.ID));
+
+        return returnNode;
     }
 
-    public static DPerson LoadFromJSON(JSONNode jsonNode)
+    public static DPerson LoadFromJSON(JSONNode jsonNode, DCity city)
     {
-        throw new System.NotImplementedException();
+        //TODO: Set meeple controller
+        DPerson returnPerson = new DPerson(city, null);
+
+        // Load person info
+        returnPerson.id = jsonNode["ID"];
+        returnPerson.infectionLevel = jsonNode["infectionLevel"];
+        returnPerson.isDead = jsonNode["isDead"];
+
+        return returnPerson;
     }
 }
