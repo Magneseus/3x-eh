@@ -44,7 +44,10 @@ public class DEventSystem {
         if (eventPool.Count == 0)
             return null;
         DEvent result = eventPool[0];
-        eventPool.RemoveAt(0);
+        foreach (DEvent e in eventPool)
+            if (e.priority > result.priority)
+                result = e;
+        eventPool.Remove(result);
         return result;
     }
 }

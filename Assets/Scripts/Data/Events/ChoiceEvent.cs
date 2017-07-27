@@ -11,13 +11,15 @@ public class ChoiceEvent : DEvent
     public string[] outcomeTexts = new string[2];
 
 
-    public ChoiceEvent(string promptText, DCity city, activationCondition actCondition, outcome[] outcomes, string[] outcomeTexts)
+    public ChoiceEvent(string promptText, DCity city, activationCondition actCondition, outcome[] outcomes, 
+        string[] outcomeTexts, int priority = Constants.EVENT_PRIORITY_DEFAULT)
     {
         this.promptText = promptText;
         this.city = city;
         this.actCondition = actCondition;
         this.outcomes = outcomes;
         this.outcomeTexts = outcomeTexts;
+        this.priority = priority;
     }
 
     public override void Activate()
@@ -27,7 +29,7 @@ public class ChoiceEvent : DEvent
         */
         Debug.Log(promptText);  // for UI - display (call DEvent.PromptText)
         Debug.Log("<player enters input via UI>");   // for UI - from UI call DGame.Instance().ResolveEvent() when player hits button to close
-        int option = 0;
+        int option = 1;
             DGame.Instance().ResolveEvent(option); // for UI - per above, remove this when UI call to ResolveEvent() implemented
         //Resolve(option); // TEMP - only here because DGame currently broken and cannot support singleton
     }

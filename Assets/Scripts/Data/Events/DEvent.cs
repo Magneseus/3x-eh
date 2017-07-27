@@ -4,6 +4,7 @@
     public delegate bool activationCondition(DEvent e);
     public activationCondition actCondition;
     public DCity city;
+    public int priority = Constants.EVENT_PRIORITY_DEFAULT;
 
     public abstract void Activate();
     public abstract void Resolve(int selection = Constants.NO_INPUT);

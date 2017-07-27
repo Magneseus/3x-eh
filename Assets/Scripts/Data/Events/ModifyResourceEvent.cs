@@ -7,12 +7,14 @@ public class ModifyResourceEvent : DEvent {
 
     private DResource resource;
 
-    public ModifyResourceEvent(string promptText, DCity city, DResource resource, activationCondition actCondition)
+    public ModifyResourceEvent(string promptText, DCity city, DResource resource, 
+        activationCondition actCondition, int priority = Constants.EVENT_PRIORITY_DEFAULT)
     {
         this.promptText = promptText;
         this.city = city;
         this.resource = resource;
         this.actCondition = actCondition;
+        this.priority = priority;
     }
 
     public override void Activate()

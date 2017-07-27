@@ -21,6 +21,10 @@ public static class Constants {
     public static int DEFAULT_RESOURCE_VALUE = 0;
 
     public const int NO_INPUT = 0;
+    public const int EVENT_PRIORITY_DEFAULT = 0;
+    public const int EVENT_PRIORITY_INTERESTING = 1;
+    public const int EVENT_PRIORITY_REQ_RESOURCES = 2;
+    public const int EVENT_PRIORITY_STORY = 3;
 
     #region Task Constants
     public static float TEMP_REPAIR_AMOUNT = 0.2f;
