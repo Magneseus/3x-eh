@@ -22,6 +22,10 @@ public class DEventSystem {
 
     public static void TurnUpdate()
     {
+        foreach (var e in eventPool)
+            if (e.TurnsToActivation > 0)
+                e.TurnsToActivation--;
+
         foreach (var e in eventsToAdd)
             eventPool.Add(e);
         eventsToAdd.Clear();
@@ -29,24 +33,17 @@ public class DEventSystem {
         foreach (var e in eventsToRemove)
             eventPool.Remove(e);
         eventsToRemove.Clear();
-
-        /*
-        foreach (var e in eventPool)
-            //EventController.ResolveEvent(e);
-            DGame.Instance().ActivateEvent(e);
-        */
-
-
     }
 
     public static DEvent NextEvent()
     {
+        DEvent result = null;
         if (eventPool.Count == 0)
-            return null;
-        DEvent result = eventPool[0];
+            return result;
         foreach (DEvent e in eventPool)
-            if (e.priority > result.priority)
-                result = e;
+            if(e.TurnsToActivation == 0)
+                if (result == null || e.Priority > result.Priority)
+                    result = e;
         eventPool.Remove(result);
         return result;
     }

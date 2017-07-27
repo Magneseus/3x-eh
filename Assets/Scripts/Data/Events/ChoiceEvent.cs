@@ -12,13 +12,14 @@ public class ChoiceEvent : DEvent
 
 
     public ChoiceEvent(string promptText, DCity city, activationCondition actCondition, outcome[] outcomes, 
-        string[] outcomeTexts, int priority = Constants.EVENT_PRIORITY_DEFAULT)
+        string[] outcomeTexts, int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT)
     {
         this.promptText = promptText;
         this.city = city;
         this.actCondition = actCondition;
         this.outcomes = outcomes;
         this.outcomeTexts = outcomeTexts;
+        this.turnsToActivation = turnsToActivation;
         this.priority = priority;
     }
 

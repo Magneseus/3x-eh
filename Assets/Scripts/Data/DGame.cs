@@ -75,6 +75,7 @@ public class DGame
     public void TEMPtestEvents()
     {
         temp = false;
+        int turnsToActivate = 2;
 
         string prompt2 = "A wolverine is raising her pups in your taco pantry. Do you attempt to remove her?";
         DEvent.activationCondition actCon2 = e => true;
@@ -83,11 +84,11 @@ public class DGame
         ChoiceEvent.outcome outcome1 = e => e.City.Health *= 0.9f;
         ChoiceEvent.outcome[] outcomes = new ChoiceEvent.outcome[] { outcome0, outcome1 };
         string[] outcomeTexts = new string[] { "Her pups will remember the tacos fondly. Your people will not.", "Jared was only slightly maimed removing the wolverine." };
-        DEventSystem.AddEvent(new ChoiceEvent(prompt2, currentCity, actCon2, outcomes, outcomeTexts));
+        DEventSystem.AddEvent(new ChoiceEvent(prompt2, currentCity, actCon2, outcomes, outcomeTexts, turnsToActivate));
 
         string prompt1 = "Oh shit, you found some tacos!\nYou got 50 food.";
         DEvent.activationCondition actCon1 = e => e.City.HasPeopleInTask(typeof(DTask_Explore));
-        DEventSystem.AddEvent(new ModifyResourceEvent(prompt1, currentCity, DResource.Create("Food", 50), actCon1, Constants.EVENT_PRIORITY_INTERESTING));
+        DEventSystem.AddEvent(new ModifyResourceEvent(prompt1, currentCity, DResource.Create("Food", 50), actCon1, turnsToActivate, Constants.EVENT_PRIORITY_INTERESTING));
     }
 
     public void NextEvent()
