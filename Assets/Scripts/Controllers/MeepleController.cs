@@ -39,6 +39,7 @@ public class MeepleController : MonoBehaviour {
     {
         parentTray = taskTray;
         dPerson = person;
+        person.SetMeepleController(this);
     }
 
     public void ResetLocalPosition()

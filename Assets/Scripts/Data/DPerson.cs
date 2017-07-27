@@ -151,6 +151,11 @@ public class DPerson : TurnUpdatable
         get { return isDead; }
     }
 
+    public void SetMeepleController(MeepleController mc)
+    {
+        this.meepleController = mc;
+    }
+
     #endregion
 
     public JSONNode SaveToJSON()

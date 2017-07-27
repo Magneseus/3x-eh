@@ -705,7 +705,12 @@ public class DCity : TurnUpdatable
 
         // Load buildings
         foreach (JSONNode building in jsonNode["buildings"].AsArray)
-            DBuilding.LoadFromJSON(building, dCity);
+        {
+            DBuilding loadedBuilding = DBuilding.LoadFromJSON(building, dCity);
+
+            if (loadedBuilding.Name.Equals("Town Hall"))
+                dCity.townHall = loadedBuilding;
+        }
 
         // Load resources
         foreach (JSONNode resource in jsonNode["resources"].AsArray)
