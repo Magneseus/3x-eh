@@ -19,7 +19,7 @@ public class CityViewUI : MonoBehaviour
         // Set the end turn button's OnClick
         foreach (var button in GetComponentsInChildren<Button>())
         {
-            if (button.name == "EndTurnButton")
+            if (button.name == "NextTurnButton")
             {
                 endTurnButton = button;
             }
