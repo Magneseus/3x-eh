@@ -600,6 +600,14 @@ public class DCity : TurnUpdatable
 
         #region Lists of Stuff
 
+        // Save people
+        JSONArray peopleList = new JSONArray();
+        foreach (var person in people)
+        {
+            peopleList.Add(person.Value.SaveToJSON());
+        }
+        returnNode.Add("people", peopleList);
+
         // Save buildings
         JSONArray buildingList = new JSONArray();
         foreach (var building in buildings)
@@ -615,14 +623,6 @@ public class DCity : TurnUpdatable
             resourceList.Add(resource.Value.SaveToJSON());
         }
         returnNode.Add("resources", resourceList);
-
-        // Save people
-        JSONArray peopleList = new JSONArray();
-        foreach (var person in people)
-        {
-            peopleList.Add(person.Value.SaveToJSON());
-        }
-        returnNode.Add("people", peopleList);
 
         // Save linked cities
         JSONArray linkedCityList = new JSONArray();
@@ -663,6 +663,10 @@ public class DCity : TurnUpdatable
 
         #region Lists of Stuff
 
+        // Load people
+        foreach (JSONNode person in jsonNode["people"].AsArray)
+            dCity.AddPerson(DPerson.LoadFromJSON(person));
+
         // Load buildings
         foreach (JSONNode building in jsonNode["buildings"].AsArray)
         {
@@ -676,10 +680,6 @@ public class DCity : TurnUpdatable
         // Load resources
         foreach (JSONNode resource in jsonNode["resources"].AsArray)
             dCity.AddResource(DResource.LoadFromJSON(resource));
-
-        // Load people
-        foreach (JSONNode person in jsonNode["people"].AsArray)
-            dCity.AddPerson(DPerson.LoadFromJSON(person));
 
         // Load linked cities
         foreach (JSONNode linkedCity in jsonNode["linked_cities"].AsArray)
