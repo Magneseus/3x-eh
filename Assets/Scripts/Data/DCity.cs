@@ -16,7 +16,7 @@ public class DCity : TurnUpdatable
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
     private Dictionary<int, DResource> prevResources = new Dictionary<int, DResource>();
 
-    private Dictionary<string, int> resourceRates = new Dictionary<string, int>();
+    private Dictionary<DResource, int> resourceRates = new Dictionary<DResource, int>();
 
     private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
     private List<string> linkedCityKeys = new List<string>();
@@ -379,7 +379,7 @@ public class DCity : TurnUpdatable
       {
         if (entry.Key == entry0.Key)
         {
-          resourceRates[entry.Value.Name] = entry0.Value.Amount - entry.Value.Amount;
+          resourceRates[entry.Value]= entry0.Value.Amount - entry.Value.Amount;
           break;
         }
       }
@@ -504,7 +504,7 @@ public class DCity : TurnUpdatable
         get { return health; }
         set { health = value; }
     }
-    public Dictionary<string, int> ResourceRates
+    public Dictionary<DResource, int> ResourceRates
     {
       get { return resourceRates; }
       set { resourceRates = value; }

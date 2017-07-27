@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DCompressedCity {
+public class DCompressedCity : DBuilding {
 
     private int population;
     private float percentInfected;
     private float development;
     private float[] prosperityMeasures = new float[(int)Constants._prosperityMeasures.NUMELEMENTS];
     private Dictionary<int, DResource> finalResources = new Dictionary<int, DResource>();
-    private Dictionary<string,int> resourceRates = new Dictionary<string, int>();
+    private Dictionary<DResource, int> resourceRates = new Dictionary<DResource, int>();
 
-    public DCompressedCity(DCity baseCity)
+    public DCompressedCity(DCity baseCity): base ( baseCity.Name)
+
     {
         population = baseCity.People.Count;
         percentInfected = baseCity.PercentPopulationInfected();
@@ -20,8 +21,21 @@ public class DCompressedCity {
         finalResources = baseCity.Resources;
         resourceRates = baseCity.ResourceRates;
         baseCity.Resources = finalResources;    // keep if resource rates change city's resource levels, resets
-    }
 
+    }
+    public void assignCity(DCity city)
+    {
+      this.City = city;
+      this.City.AddBuilding(this);
+    }
+    public void TurnUpdate(int numDaysPassed)
+    {
+      foreach(var entry in  City.Resources)
+        foreach (var rate in resourceRates)
+        {
+          if(entry.Value == rate.Key) City.AddResource(rate.Key, rate.Value);
+        }
+    }
     public float[] CalculateProsperityMeasures(DCity city)
     {
         float[] results = new float[(int)Constants._prosperityMeasures.NUMELEMENTS];
@@ -97,7 +111,7 @@ public class DCompressedCity {
         set { finalResources = value; }
     }
 
-    public Dictionary<string, int> ResourceRates
+    public Dictionary<DResource, int> ResourceRates
     {
         get { return resourceRates; }
         set { resourceRates = value; }

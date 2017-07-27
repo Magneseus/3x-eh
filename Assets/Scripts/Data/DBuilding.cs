@@ -31,6 +31,24 @@ public class DBuilding : TurnUpdatable {
     private float percentDamaged;
     private float percentAssessed;
 
+    public DBuilding(string buildingName)
+    {
+        this.id = NEXT_ID++;
+        // this.city = city;
+        this.buildingName = buildingName;
+        // this.buildingController = buildingController;
+
+        this.status = DBuildingStatus.ASSESSED;
+        this.percentAssessed = 1.0f;
+
+
+
+        // percentDamaged = 0.0f;
+        // percentInfected = 0.0f;
+
+        // city.AddBuilding(this);
+    }
+
     public DBuilding(DCity city, string buildingName, BuildingController buildingController, bool autoSpawnTasks=true)
     {
         this.id = NEXT_ID++;
@@ -76,7 +94,7 @@ public class DBuilding : TurnUpdatable {
 
     }
 
-  
+
     public void SpringEffects()
     {
 
@@ -108,7 +126,7 @@ public class DBuilding : TurnUpdatable {
         foreach (var entry in tasks)
             entry.Value.FungusGrows();
     }
-  
+
     public void CalculateDamages()
     {
         int numberOfTasks = 0;
@@ -154,7 +172,7 @@ public class DBuilding : TurnUpdatable {
 
 	public DTask_Idle getIdleTask()
 	{
-        return idleTask;	
+        return idleTask;
 	}
     public DTask_Explore getExploreTask()
     {
@@ -182,6 +200,7 @@ public class DBuilding : TurnUpdatable {
     public DCity City
     {
         get { return city; }
+        set { city = value; }
     }
 
     public Dictionary<int, DTask> Tasks
