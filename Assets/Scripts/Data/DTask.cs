@@ -236,7 +236,7 @@ public class DTask : TurnUpdatable
         returnNode.Add("numPeople", new JSONNumber(numPeople));
 
         // Save output info
-        returnNode.Add("fullAssessRequirement", new JSONNumber(numPeople));
+        returnNode.Add("fullAssessRequirement", new JSONNumber(fullAssessRequirement));
         returnNode.Add("taskEnabled", new JSONBool(taskEnabled));
 
         // Resource output
@@ -312,6 +312,7 @@ public class DTask : TurnUpdatable
             returnTask.taskEnabled = jsonNode["taskEnabled"];
 
             // Load the task slots
+            returnTask.slotList = new List<DTaskSlot>();
             foreach (JSONNode taskSlotJSON in jsonNode["taskSlots"].AsArray)
             {
                 returnTask.SlotList.Add(DTaskSlot.LoadFromJSON(taskSlotJSON, returnTask));

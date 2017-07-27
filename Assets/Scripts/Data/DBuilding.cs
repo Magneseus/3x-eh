@@ -31,7 +31,7 @@ public class DBuilding : TurnUpdatable {
     private float percentDamaged;
     private float percentAssessed;
 
-    public DBuilding(DCity city, string buildingName, BuildingController buildingController)
+    public DBuilding(DCity city, string buildingName, BuildingController buildingController, bool autoSpawnTasks=true)
     {
         this.id = NEXT_ID++;
         this.city = city;
@@ -40,14 +40,18 @@ public class DBuilding : TurnUpdatable {
 
         this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
-        // Add an assess task by default
 
-		if(buildingName.Equals("Town Hall")) {
-			this.idleTask = new DTask_Idle(this, "Idle Merson");
-            this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
-        } 
-		
-		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
+        if (autoSpawnTasks)
+        {
+            // Add an assess task by default
+            if (buildingName.Equals("Town Hall"))
+            {
+                this.idleTask = new DTask_Idle(this, "Idle");
+                this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
+            }
+
+            this.assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
+        }
 
         percentDamaged = 0.0f;
         percentInfected = 0.0f;
@@ -201,6 +205,11 @@ public class DBuilding : TurnUpdatable {
 		get { return buildingController; }
 	}
 
+    public void SetBuildingController(BuildingController bc)
+    {
+        buildingController = bc;
+    }
+
     #region Assessment Components
 
     public DBuildingStatus Status
@@ -312,12 +321,19 @@ public class DBuilding : TurnUpdatable {
         }
         returnNode.Add("tasks", jsonTaskList);
 
+        // Save building position
+        JSONNode position = new JSONObject();
+        position.Add("x", new JSONNumber(buildingController.transform.position.x));
+        position.Add("y", new JSONNumber(buildingController.transform.position.y));
+
+        returnNode.Add("position", position);
+
         return returnNode;
     }
 
-    public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city, BuildingController buildingController)
+    public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city)
     {
-        DBuilding dBuilding = new DBuilding(city, jsonNode["name"], buildingController);
+        DBuilding dBuilding = new DBuilding(city, jsonNode["name"], null, false);
 
         // Load basic info
         dBuilding.id = jsonNode["ID"].AsInt;
@@ -331,8 +347,24 @@ public class DBuilding : TurnUpdatable {
         // Load tasks
         foreach (JSONNode taskNode in jsonNode["tasks"].AsArray)
         {
-            dBuilding.AddTask(DTask.LoadFromJSON(taskNode, dBuilding));
+            DTask task = DTask.LoadFromJSON(taskNode, dBuilding);
+
+            if (task.Name == "Idle")
+                dBuilding.idleTask = (DTask_Idle)(task);
+            else if (task.Name.Contains("Assess"))
+                dBuilding.assessTask = (DTask_Assess)(task);
+            else if (task.Name == "Explore")
+                dBuilding.exploreTask = (DTask_Explore)(task);
         }
+
+        // Load building position
+        Vector3 position = new Vector3(
+            jsonNode["position"]["x"],
+            jsonNode["position"]["y"],
+            1);
+
+        // Spawn building controller
+        city.Game.GameController.CreateBuildingController(dBuilding, position);
 
         return dBuilding;
     }

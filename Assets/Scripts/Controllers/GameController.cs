@@ -49,7 +49,29 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyUp("s"))
+        {
+            File.WriteAllText(@"Assets/Resources/testLoad.json", dGame.SaveToJSON().ToString());
+        }
+        else if (Input.GetKeyUp("l"))
+        {
+            LoadGame();
+        }
+    }
 
+    public void LoadGame()
+    {
+        var json = File.ReadAllText(@"Assets/Resources/testLoad.json");
+        dGame = DGame.LoadFromJSON(JSON.Parse(json), this);
+
+        if (dGame.currentCity != null)
+        {
+            // Spawn City UI
+            cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
+
+            // Disable Country View
+            countryView.SetActive(false);
+        }
     }
 
     public void SelectCity(string cityName)
@@ -100,6 +122,43 @@ public class GameController : MonoBehaviour
     {
         dGame.EndTurnUpdate();
     }
+
+    #region Controller Spawners
+
+    public CityController CreateCityController(DCity city)
+    {
+        CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH, this.transform);
+        cityController.ConnectToDataEngine(dGame, city);
+
+        return cityController;
+    }
+
+    public BuildingController CreateBuildingController(DBuilding building, Vector3 position)
+    {
+        BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH, this.transform);
+        buildingController.ConnectToDataEngine(building);
+
+        // Set position
+        buildingController.transform.position = position;
+
+        // Generate all predefined tasks
+        foreach (var kvp in buildingController.dBuilding.Tasks)
+        {
+            TaskController newTaskController = AttachTaskController(kvp.Value, buildingController);
+        }
+
+        return buildingController;
+    }
+
+    public MeepleController CreateMeepleController(TaskTraySingle taskTray, DPerson person)
+    {
+        MeepleController meepleController = InstantiatePrefab<MeepleController>(Constants.MEEPLE_PREFAB_PATH, taskTray.transform);
+        meepleController.ConnectToDataEngine(taskTray, person);
+
+        return meepleController;
+    }
+
+    #endregion
 
     public CityController CreateCity(string prefabPath, string json)
     {

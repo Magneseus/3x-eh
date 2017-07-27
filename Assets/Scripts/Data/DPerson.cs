@@ -170,7 +170,6 @@ public class DPerson : TurnUpdatable
 
     public static DPerson LoadFromJSON(JSONNode jsonNode, DCity city)
     {
-        //TODO: Set meeple controller
         DPerson returnPerson = new DPerson(city, null);
 
         // Load person info

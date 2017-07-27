@@ -13,6 +13,7 @@ public class TaskController : MonoBehaviour {
 
     private int MouseOverCount = 0;
     private List<TaskTraySingle> listOfTraySingles;
+    private GameController gameController;
     
 	// Use this for initialization
 	void Start ()
@@ -21,7 +22,9 @@ public class TaskController : MonoBehaviour {
         {
             listOfTraySingles = new List<TaskTraySingle>();
         }
-	}
+
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -103,16 +106,26 @@ public class TaskController : MonoBehaviour {
                 currentPosition.x += xOffset;
                 go.transform.position = currentPosition;
 
-                // Set the parent TaskController & task slot
-                go.GetComponent<TaskTraySingle>().taskController = this;
-                go.GetComponent<TaskTraySingle>().taskSlot = dTask.GetTaskSlot(i);
-				dTask.GetTaskSlot(i).TaskTraySlot = go.GetComponent<TaskTraySingle>();
-                go.GetComponent<TaskTraySingle>().UpdateSprite();
+                TaskTraySingle tts = go.GetComponent<TaskTraySingle>();
 
-                listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
+                // Set the parent TaskController & task slot
+                tts.taskController = this;
+                tts.taskSlot = dTask.GetTaskSlot(i);
+				dTask.GetTaskSlot(i).TaskTraySlot = tts;
+                tts.UpdateSprite();
+
+                listOfTraySingles.Add(tts);
+
+                // If a person is present, spawn their meeple
+                if (tts.taskSlot.Person != null)
+                {
+                    MeepleController meeple = gameController.CreateMeepleController(tts, tts.taskSlot.Person);
+                    meeple.SetParentTrayAndTransfrom(tts);
+                }
             }
         }
     }
+
 	private void Resize()
 	{
 		if(listOfTraySingles.Count < dTask.MaxPeople)
@@ -194,6 +207,9 @@ public class TaskController : MonoBehaviour {
 
     internal void ConnectToDataEngine(DTask dTask)
     {
+        if (gameController == null)
+            gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+
         this.dTask = dTask;
         GenerateTaskTrays();
     }

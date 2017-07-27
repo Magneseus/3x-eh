@@ -124,6 +124,11 @@ public class DGame
         get { return turnDurationOfCity; }
     }
 
+    public GameController GameController
+    {
+        get { return gameController; }
+    }
+
     #endregion
 
     public JSONNode SaveToJSON()
@@ -140,7 +145,11 @@ public class DGame
             returnNode.Add("currentCity", currentCity.SaveToJSON());
 
         // Save the current date
-        returnNode.Add("currentDate", new JSONString(currentDate.ToShortDateString()));
+        JSONNode dateJSON = new JSONObject();
+        dateJSON.Add("day", new JSONNumber(currentDate.Day));
+        dateJSON.Add("month", new JSONNumber(currentDate.Month));
+        dateJSON.Add("year", new JSONNumber(currentDate.Year));
+        returnNode.Add("currentDate", dateJSON);
 
         // Save the turn information
         returnNode.Add("turnDurationOfCity", new JSONNumber(turnDurationOfCity));
@@ -158,12 +167,10 @@ public class DGame
         DResource.LoadResourceIDMapFromJSON(jsonNode["resourceNames"]);
 
         // Load the current date
-        string[] mmddyyyy = ((string)(jsonNode["currentDate"])).Split('/');
-        DateTime _currentDate = new DateTime(
-            int.Parse(mmddyyyy[0]),
-            int.Parse(mmddyyyy[1]),
-            int.Parse(mmddyyyy[2]));
-        dGame.currentDate = _currentDate;
+        dGame.currentDate = new DateTime(
+            jsonNode["currentDate"]["year"].AsInt,
+            jsonNode["currentDate"]["month"].AsInt,
+            jsonNode["currentDate"]["day"].AsInt);
 
         // Load the current city
         if (jsonNode["currentCity"].IsNull)
@@ -172,11 +179,7 @@ public class DGame
         }
         else
         {
-            // TODO: Add the city controller
-            dGame.currentCity = DCity.LoadFromJSON(
-                jsonNode["currentCity"],
-                null,
-                _currentDate);
+            dGame.currentCity = DCity.LoadFromJSON(jsonNode["currentCity"], dGame);
         }
 
         // Load the turn information
