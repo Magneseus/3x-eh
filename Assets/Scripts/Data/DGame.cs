@@ -11,7 +11,6 @@ public class DGame
     public enum _gameState { PLAY, EVENT, MENU, NUMELEMENTS};
     public _gameState gameState = _gameState.PLAY;
     public DEvent currentEvent = null;
-    public static int counter = 0;
 
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     private DateTime currentDate = new DateTime(2017,4,1);
@@ -23,18 +22,14 @@ public class DGame
 
     public static DGame Instance()
     {
-        /*
-        Debug.Log("test");
         if (singleton == null)
             singleton = new DGame();
-            */
+
         return singleton;
     }
 
     public DGame()
     {
-        counter++;
-        Debug.Log("new game number " + counter);
         if (singleton == null)
             singleton = this;
     }
@@ -121,8 +116,6 @@ public class DGame
         {
             currentEvent = e;
             currentEvent.Activate();
-            if (currentEvent == null)
-                Debug.Log("activate null");
         }
         else
             NextEvent();
@@ -130,8 +123,6 @@ public class DGame
 
     public void ResolveEvent(int selection = Constants.NO_INPUT)
     {
-        if (currentEvent == null)
-            Debug.Log("resolve null");
         currentEvent.Resolve(selection);
         NextEvent();
     }
