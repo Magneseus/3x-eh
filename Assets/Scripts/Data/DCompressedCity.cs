@@ -9,7 +9,7 @@ public class DCompressedCity {
     private float development;
     private float[] prosperityMeasures = new float[(int)Constants._prosperityMeasures.NUMELEMENTS];
     private Dictionary<int, DResource> finalResources = new Dictionary<int, DResource>();
-    private Dictionary<int, DResource>[] resourceRates = new Dictionary<int, DResource>[(int)DSeasons._season.NUMELEMENTS];
+    private Dictionary<string,int> resourceRates = new Dictionary<string, int>();
 
     public DCompressedCity(DCity baseCity)
     {
@@ -18,7 +18,7 @@ public class DCompressedCity {
         development = baseCity.DevelopedValue();
         prosperityMeasures = CalculateProsperityMeasures(baseCity);
         finalResources = baseCity.Resources;
-        resourceRates = CalculateResourceRates(baseCity);
+        resourceRates = baseCity.ResourceRates;
         baseCity.Resources = finalResources;    // keep if resource rates change city's resource levels, resets
     }
 
@@ -59,12 +59,12 @@ public class DCompressedCity {
     }
 
     // stub for integration with city rate of resource change function(s)
-    public Dictionary<int, DResource>[] CalculateResourceRates(DCity city)
-    {
-        Dictionary<int, DResource>[] results = new Dictionary<int, DResource>[(int)DSeasons._season.NUMELEMENTS];
-
-        return results;
-    }
+    // public Dictionary<int, DResource>[] CalculateResourceRates(DCity city)
+    // {
+    //     Dictionary<int, DResource>[] results = new Dictionary<int, DResource>[(int)DSeasons._season.NUMELEMENTS];
+    //
+    //     return results;
+    // }
 
     #region Properties
     public int Population
@@ -97,7 +97,7 @@ public class DCompressedCity {
         set { finalResources = value; }
     }
 
-    public Dictionary<int, DResource>[] ResourceRates
+    public Dictionary<string, int> ResourceRates
     {
         get { return resourceRates; }
         set { resourceRates = value; }

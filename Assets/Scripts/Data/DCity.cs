@@ -11,6 +11,10 @@ public class DCity : TurnUpdatable
     private CityController cityController;
     private Dictionary<int, DBuilding> buildings = new Dictionary<int, DBuilding>();
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
+    private Dictionary<int, DResource> prevResources = new Dictionary<int, DResource>();
+
+    private Dictionary<string, int> resourceRates = new Dictionary<string, int>();
+
     private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
     private List<string> linkedCityKeys = new List<string>();
 
@@ -21,7 +25,7 @@ public class DCity : TurnUpdatable
     private DResource shelterResource;
     private DResource fuelResource;
 
-	private float explorationLevel;
+    private float explorationLevel;
     public DBuilding townHall;
 
     private DSeasons._season season;
@@ -49,7 +53,7 @@ public class DCity : TurnUpdatable
         Init(cityName, cityController, seasonDates, currentDate, DSeasons.DefaultDeadOfWinterDates(), linkedCityKeys);
     }
 
-    private void Init(string cityName, CityController cityController, DateTime[] seasonDates, DateTime currentDate, 
+    private void Init(string cityName, CityController cityController, DateTime[] seasonDates, DateTime currentDate,
          DateTime[] deadWinterDates, List<string> linkedCityKeys)
     {
         name = cityName;
@@ -88,14 +92,15 @@ public class DCity : TurnUpdatable
     public void TurnUpdate(int numDaysPassed)
     {
         // Set shelter resource to zero, cannot accumulate shelter
+        prevResources = resources; // does this copy or just ref??
         if (shelterResource != null)
             shelterResource.Amount = 0;
-        
+
         UpdateBuildings(numDaysPassed);
         UpdateResources(numDaysPassed);
         UpdatePeople(numDaysPassed);
         UpdateCity();
-        
+
         if (shelterResource != null)
         {
             // Shelter calculations
@@ -111,8 +116,9 @@ public class DCity : TurnUpdatable
         }
 
         age += numDaysPassed;
+        CalculateResourceRates();
     }
-    
+
     // TODO: Account for infection in people
     public int ShelterConsumedPerTurn()
     {
@@ -149,7 +155,7 @@ public class DCity : TurnUpdatable
             BuildingSeasonalEffects(entry.Value, numDaysPassed);
         }
     }
-    
+
     private void BuildingSeasonalEffects(DBuilding building, int numDaysPassed)
     {
         switch (season)
@@ -174,7 +180,7 @@ public class DCity : TurnUpdatable
         foreach (var entry in resources)
         {
             entry.Value.TurnUpdate(numDaysPassed);
-            
+
             // Remove fuel due to shelter conversion
             if (entry.Value.Name.Equals("Fuel"))
             {
@@ -182,7 +188,7 @@ public class DCity : TurnUpdatable
             }
         }
     }
-    
+
     private void UpdatePeople(int numDaysPassed)
     {
         int exploringInWinter = 0;
@@ -254,6 +260,7 @@ public class DCity : TurnUpdatable
 
     }
     #endregion
+
 
     #region Basics
 
@@ -345,7 +352,7 @@ public class DCity : TurnUpdatable
 	public float CalculateExploration()
 	{
 		float countDiscovered = 0.0f;
-		foreach(DBuilding dBuilding in buildings.Values) 
+		foreach(DBuilding dBuilding in buildings.Values)
 		{
             if (dBuilding != townHall)
             {
@@ -361,7 +368,22 @@ public class DCity : TurnUpdatable
 		else
 			return countDiscovered;
 	}
+  public void CalculateResourceRates()
+  {
+    foreach (var entry in resources)
+    {
+      foreach (var entry0 in prevResources)
+      {
+        if (entry.Key == entry0.Key)
+        {
+          resourceRates[entry.Value.Name] = entry0.Value.Amount - entry.Value.Amount;
+          break;
+        }
+      }
 
+    }
+    Debug.Log(resourceRates);
+  }
     public DResource GetResource(string name)
     {
         int resourceID = DResource.NameToID(name);
@@ -446,10 +468,10 @@ public class DCity : TurnUpdatable
     public void Explore(float exploreAmount)
     {
         explorationLevel = Mathf.Clamp01(explorationLevel + exploreAmount);
-        
+
         float explorableBuildings = buildings.Count - 1.0f;
         float offsetPercentage = 1.0f / explorableBuildings;
-        
+
         List<DBuilding> UnExploredBuildings = new List<DBuilding>();
         foreach(DBuilding dBuilding in buildings.Values)
         {
@@ -464,7 +486,7 @@ public class DCity : TurnUpdatable
             int index = UnityEngine.Random.Range(0, UnExploredBuildings.Count - 1);
             UnExploredBuildings[index].Discover();
         }
-        
+
     }
 
     #region Properties
@@ -479,7 +501,11 @@ public class DCity : TurnUpdatable
         get { return health; }
         set { health = value; }
     }
-
+    public Dictionary<string, int> ResourceRates
+    {
+      get { return resourceRates; }
+      set { resourceRates = value; }
+    }
     public Dictionary<int, DResource> Resources
     {
         get { return resources; }
@@ -517,7 +543,7 @@ public class DCity : TurnUpdatable
     {
         get { return cityController; }
     }
-    
+
     public DSeasons._season Season
     {
         get { return season; }
@@ -541,7 +567,7 @@ public class DCity : TurnUpdatable
         get { return isDeadOfWinter; }
         set { isDeadOfWinter = value; }
     }
-    
+
     public int ShelterTier
     {
         get { return shelterTier; }
@@ -588,7 +614,7 @@ public class DCity : TurnUpdatable
         // Save resource info
         returnNode.Add("shelterTier", new JSONNumber(shelterTier));
         returnNode.Add("fuelToShelterConversion", new JSONNumber(fuelToShelterConversion));
-        
+
         // Save health and food stuff
         returnNode.Add("health", new JSONNumber(health));
         returnNode.Add("foodConsumption", new JSONNumber(foodConsumption));
