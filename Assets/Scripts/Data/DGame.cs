@@ -2,10 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using UnityEngine;
 
 [Serializable]
 public class DGame
 {
+    private static DGame singleton = null;
+    public enum _gameState { PLAY, EVENT, MENU, NUMELEMENTS};
+    public _gameState gameState = _gameState.PLAY;
+    public DEvent currentEvent = null;
+
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     private DateTime currentDate = new DateTime(2017,4,1);
     private DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
@@ -14,9 +20,17 @@ public class DGame
     int durationOfTurn = 7;
     int currentTurnNumber = 0;
 
+    public static DGame Instance()
+    {
+        if (singleton == null)
+            singleton = new DGame();
+        return singleton;
+    }
+
     public DGame()
     {
-        
+        if (singleton == null)
+            singleton = this;
     }
 
     // Sets the specified city to be the current "active" city
@@ -53,7 +67,8 @@ public class DGame
             if (temp)
             {
                 temp = false;
-                DEventSystem.AddEvent(new ModifyResourceEvent(kvp.Value, DResource.Create("Food", 50)));
+                string tempPrompt = "Oh shit, you found some tacos!\nYou got 50 food.";
+                DEventSystem.AddEvent(new ModifyResourceEvent(tempPrompt, kvp.Value, DResource.Create("Food", 50)));
             }
         }
         DEventSystem.TurnUpdate();
@@ -68,6 +83,20 @@ public class DGame
     {
         cities[city1Key].linkToCity(city2Key);
         cities[city2Key].linkToCity(city1Key);
+    }
+
+    public void ActivateEvent(DEvent e)
+    {
+        gameState = _gameState.EVENT;
+        currentEvent = e;
+        e.Activate();
+    }
+
+    public void ResolveEvent(string selection = Constants.NO_INPUT)
+    {
+        currentEvent.Resolve(selection);
+        gameState = _gameState.PLAY;
+        currentEvent = null;
     }
 
     public Dictionary<string, DCity> Cities
@@ -101,6 +130,18 @@ public class DGame
     public DateTime[] DefaultSeasonStartDates
     {
         get { return defaultSeasonStartDates; }
+    }
+
+    public _gameState GameState
+    {
+        get { return gameState; }
+        set { gameState = value; }
+    }
+
+    public DEvent CurrentEvent
+    {
+        get { return currentEvent; }
+        set { currentEvent = value; }
     }
 }
 

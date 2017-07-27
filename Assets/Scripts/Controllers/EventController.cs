@@ -3,15 +3,18 @@ using UnityEngine;
 
 public class EventController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private static EventController singleton = null;
+
+    public static EventController Instance()
+    {
+        if(singleton == null)
+        {
+            singleton = GameObject.FindObjectOfType<EventController>();
+            if (singleton == null)
+                singleton = new EventController();
+        }
+        return singleton;
+    }
 
     public void ResolveEvent(DEvent e)
     {

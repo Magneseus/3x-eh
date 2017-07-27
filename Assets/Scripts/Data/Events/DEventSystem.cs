@@ -8,7 +8,7 @@ public class DEventSystem {
     public static List<DEvent> eventsToAdd = new List<DEvent>();
     public static List<DEvent> eventsToRemove = new List<DEvent>();
 
-    public static EventController EventController { get; set; }
+    public static EventController EventController { get { return EventController.Instance(); } }
 
     public static void AddEvent(DEvent e)
     {
@@ -31,7 +31,8 @@ public class DEventSystem {
         eventsToRemove.Clear();
 
         foreach (var e in eventPool)
-            EventController.ResolveEvent(e);
+            //EventController.ResolveEvent(e);
+            DGame.Instance().ActivateEvent(e);
 
 
     }
