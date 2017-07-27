@@ -103,8 +103,6 @@ public class DPerson : TurnUpdatable
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
 
-    
-
 
 
     #endregion

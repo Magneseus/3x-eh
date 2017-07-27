@@ -6,7 +6,7 @@ using SimpleJSON;
 using UnityEngine;
 
 [Serializable]
-public class DCity : TurnUpdatable
+public class DCity : ITurnUpdatable
 {
     [NonSerialized]
     private DGame dGame;
@@ -490,6 +490,29 @@ public class DCity : TurnUpdatable
             UnExploredBuildings[index].Discover();
         }
 
+    }
+
+    public bool HasPeopleInTask(Type taskType)
+    {
+        if (taskType != typeof(DTask) && !taskType.IsSubclassOf(typeof(DTask)))
+            return false;
+
+        foreach (var entry in people)
+            if (entry.Value.Task != null && entry.Value.Task.GetType() == typeof(DTask_Explore))
+                return true;
+        return false;
+    }
+
+    public int PeopleInTask(Type taskType)
+    {
+        if (taskType != typeof(DTask) && taskType.IsSubclassOf(typeof(DTask)))
+            return 0;
+
+        int result = 0;
+        foreach (var entry in people)
+            if (entry.Value.Task != null && entry.Value.Task.GetType() == typeof(DTask_Explore))
+                result ++;
+        return result;
     }
 
     #region Properties

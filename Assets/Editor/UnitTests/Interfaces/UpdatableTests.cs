@@ -26,7 +26,7 @@ public class UpdatableTests {
         Assert.AreEqual(numDaysPassed, myStub._number);
     }
 
-    class StubUpdatable : TurnUpdatable
+    class StubUpdatable : ITurnUpdatable
     {
         public int _number;
 
