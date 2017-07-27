@@ -8,6 +8,8 @@ using SimpleJSON;
 public class DGame
 {
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
+    Dictionary<string, DCompressedCity> completedCities = new Dictionary<string, DCompressedCity>();
+
     private DateTime currentDate = new DateTime(2017,4,1);
     private DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
 
@@ -34,6 +36,15 @@ public class DGame
         else
         {
             currentCity = cities[cityName];
+            // Adds completed cities to the selected city
+            foreach (string linkedCity in currentCity.LinkedCityKeys)
+            {
+              foreach( var completed in completedCities)
+              {
+                if( linkedCity == completed.Key)
+                  currentCity.AddBuilding(completed.Value);
+              }
+            }
         }
     }
 
@@ -51,7 +62,7 @@ public class DGame
     // Collapses the city into a set of passive bonuses for future cities
     public void CollapseCity(DCity city)
     {
-
+      completedCities.Add(city.Name, new DCompressedCity(city));
     }
 
 
@@ -59,7 +70,7 @@ public class DGame
     {
         currentDate = currentDate.AddDays(durationOfTurn);
         currentTurnNumber += 1;
-        
+
         if (currentCity != null)
         {
             currentCity.TurnUpdate(durationOfTurn);
