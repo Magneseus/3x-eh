@@ -25,8 +25,10 @@ public class DCompressedCity : DBuilding {
     }
     public void assignCity(DCity city)
     {
-      this.City = city;
-      this.City.AddBuilding(this);
+      base.City = city;
+      base.City.CityController.gameController.CreateBuildingController(this, Vector3.zero);
+
+      // this.City.AddBuilding(this);
     }
     public void TurnUpdate(int numDaysPassed)
     {

@@ -7,6 +7,7 @@ public class CityController : MonoBehaviour {
 
     public DCity dCity;
     public Sprite sprite;
+    public GameController gameController;
 	// Use this for initialization
 	void Start () {
 
@@ -16,7 +17,10 @@ public class CityController : MonoBehaviour {
 	void Update () {
 
 	}
-
+public void assignGameController(GameController game)
+{
+  this.gameController = game;
+}
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
       GetComponent<SpriteRenderer>().sprite =

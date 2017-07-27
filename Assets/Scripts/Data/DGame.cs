@@ -36,13 +36,19 @@ public class DGame
         else
         {
             currentCity = cities[cityName];
+            currentCity.CityController.assignGameController(gameController);
             // Adds completed cities to the selected city
             foreach (string linkedCity in currentCity.LinkedCityKeys)
             {
               foreach( var completed in completedCities)
               {
                 if( linkedCity == completed.Key)
-                  currentCity.AddBuilding(completed.Value);
+                  {
+                    currentCity.AddBuilding(completed.Value);
+                    completed.Value.assignCity(currentCity);
+                    
+
+                  }
               }
             }
         }

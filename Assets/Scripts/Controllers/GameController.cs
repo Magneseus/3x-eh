@@ -77,7 +77,9 @@ public class GameController : MonoBehaviour
     public void SelectCity(string cityName)
     {
         CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
+
         dGame.SelectCity(cityName);
+        // dGame.currentCity.CityController.assignGameController(this);
 
         // Spawn City UI
         cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
@@ -199,7 +201,7 @@ public class GameController : MonoBehaviour
             // Load in all the tasks for this building
             foreach (JSONNode task in building["tasks"].AsArray)
             {
-				
+
                 // TODO: Check for "special" tasks, like assess/explore/etc.
                 string taskName = task["name"];
                 int maxPeople = task["maxPeople"];
