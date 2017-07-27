@@ -11,6 +11,7 @@ public class DGame
     public enum _gameState { PLAY, EVENT, MENU, NUMELEMENTS};
     public _gameState gameState = _gameState.PLAY;
     public DEvent currentEvent = null;
+    public static int counter = 0;
 
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     private DateTime currentDate = new DateTime(2017,4,1);
@@ -22,13 +23,18 @@ public class DGame
 
     public static DGame Instance()
     {
+        /*
+        Debug.Log("test");
         if (singleton == null)
             singleton = new DGame();
+            */
         return singleton;
     }
 
     public DGame()
     {
+        counter++;
+        Debug.Log("new game number " + counter);
         if (singleton == null)
             singleton = this;
     }
@@ -64,16 +70,28 @@ public class DGame
             kvp.Value.TurnUpdate(durationOfTurn);
             kvp.Value.UpdateSeason(currentDate);
 
-            if (temp)
-            {
-                temp = false;
-                string tempPrompt = "Oh shit, you found some tacos!\nYou got 50 food.";
-                DEvent.activationCondition actCon = e => e.City.HasPeopleInTask(typeof(DTask_Explore));
-                DEventSystem.AddEvent(new ModifyResourceEvent(tempPrompt, kvp.Value, DResource.Create("Food", 50), actCon));
-            }
+            if(temp)
+                TEMPtestEvents();
         }
         DEventSystem.TurnUpdate();
         NextEvent();
+    }
+
+    public void TEMPtestEvents()
+    {
+        temp = false;
+        string prompt1 = "Oh shit, you found some tacos!\nYou got 50 food.";
+        DEvent.activationCondition actCon1 = e => e.City.HasPeopleInTask(typeof(DTask_Explore));
+        DEventSystem.AddEvent(new ModifyResourceEvent(prompt1, currentCity, DResource.Create("Food", 50), actCon1));
+
+        string prompt2 = "A wolverine is raising her pups in your taco pantry. Do you attempt to remove her?";
+        DEvent.activationCondition actCon2 = e => true;
+        DResource resource0 = DResource.Create("Food", -25);
+        ChoiceEvent.outcome outcome0 = e => e.City.AddResource(resource0);
+        ChoiceEvent.outcome outcome1 = e => e.City.Health *= 0.9f;
+        ChoiceEvent.outcome[] outcomes = new ChoiceEvent.outcome[] { outcome0, outcome1 };
+        string[] outcomeTexts = new string[] { "Her pups will remember the tacos fondly. Your people will not.", "Jared was only slightly maimed removing the wolverine." };
+        DEventSystem.AddEvent(new ChoiceEvent(prompt2, currentCity, actCon2, outcomes, outcomeTexts));
     }
 
     public void NextEvent()
@@ -102,14 +120,18 @@ public class DGame
         if (e.ActivationCondition())
         {
             currentEvent = e;
-            e.Activate();
+            currentEvent.Activate();
+            if (currentEvent == null)
+                Debug.Log("activate null");
         }
         else
             NextEvent();
     }
 
-    public void ResolveEvent(string selection = Constants.NO_INPUT)
+    public void ResolveEvent(int selection = Constants.NO_INPUT)
     {
+        if (currentEvent == null)
+            Debug.Log("resolve null");
         currentEvent.Resolve(selection);
         NextEvent();
     }

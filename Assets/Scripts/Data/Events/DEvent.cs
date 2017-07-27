@@ -6,7 +6,7 @@
     public DCity city;
 
     public abstract void Activate();
-    public abstract void Resolve(string selection = Constants.NO_INPUT);
+    public abstract void Resolve(int selection = Constants.NO_INPUT);
     public bool ActivationCondition()
     {
         return actCondition(this);

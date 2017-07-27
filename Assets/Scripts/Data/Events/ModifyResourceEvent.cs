@@ -22,10 +22,11 @@ public class ModifyResourceEvent : DEvent {
         */
         Debug.Log(promptText);  // for UI - display (call DEvent.PromptText)
         Debug.Log("<player enters confirmation via UI>");   // for UI - from UI call DGame.Instance().ResolveEvent() when player hits button to close
-        Resolve(); // for UI - per above, remove this when UI call to ResolveEvent() implemented
+                                                            //DGame.Instance().ResolveEvent(); // for UI - per above, remove this when UI call to ResolveEvent() implemented
+        Resolve();  // TEMP - only here because DGame currently broken and cannot support singleton
     }
 
-    override public void Resolve(string selection = Constants.NO_INPUT)
+    override public void Resolve(int selection = Constants.NO_INPUT)
     {
         city.AddResource(resource);
     }
