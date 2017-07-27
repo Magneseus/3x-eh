@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     // Initialization
     void Start()
     {
-        dGame = DGame.Instance();
+        dGame = new DGame();
 
         // Start off at the country view
         countryView = Instantiate(CountryViewUIPrefab, UICanvas.transform);

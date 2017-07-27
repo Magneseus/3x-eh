@@ -31,7 +31,7 @@ public class ChoiceEvent : DEvent
         Debug.Log(promptText);  // for UI - display (call DEvent.PromptText)
         Debug.Log("<player enters input via UI>");   // for UI - from UI call DGame.Instance().ResolveEvent() when player hits button to close
         int option = 1;
-            DGame.Instance().ResolveEvent(option); // for UI - per above, remove this when UI call to ResolveEvent() implemented
+            dGame.ResolveEvent(option); // for UI - per above, remove this when UI call to ResolveEvent() implemented
         //Resolve(option); // TEMP - only here because DGame currently broken and cannot support singleton
     }
 

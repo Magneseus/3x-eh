@@ -1,5 +1,7 @@
 ﻿public abstract class DEvent {
 
+    public static DGame dGame { get; set; }
+
     public string promptText;
     public delegate bool activationCondition(DEvent e);
     public activationCondition actCondition;

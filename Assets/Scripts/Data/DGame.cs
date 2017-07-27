@@ -7,7 +7,6 @@ using UnityEngine;
 [Serializable]
 public class DGame
 {
-    private static DGame singleton = null;
     public enum _gameState { PLAY, EVENT, MENU, NUMELEMENTS};
     public _gameState gameState = _gameState.PLAY;
     public DEvent currentEvent = null;
@@ -20,18 +19,10 @@ public class DGame
     int durationOfTurn = 7;
     int currentTurnNumber = 0;
 
-    public static DGame Instance()
-    {
-        if (singleton == null)
-            singleton = new DGame();
-
-        return singleton;
-    }
 
     public DGame()
     {
-        if (singleton == null)
-            singleton = this;
+        DEvent.dGame = this;
     }
 
     // Sets the specified city to be the current "active" city

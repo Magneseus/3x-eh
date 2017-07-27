@@ -8,7 +8,7 @@ public class DEventSystem {
     public static List<DEvent> eventsToAdd = new List<DEvent>();
     public static List<DEvent> eventsToRemove = new List<DEvent>();
 
-    public static EventController EventController { get { return EventController.Instance(); } }
+    public static EventController EventController { get; set; }
 
     public static void AddEvent(DEvent e)
     {
