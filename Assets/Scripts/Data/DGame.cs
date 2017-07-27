@@ -72,6 +72,17 @@ public class DGame
             }
         }
         DEventSystem.TurnUpdate();
+        NextEvent();
+    }
+
+    public void NextEvent()
+    {
+        gameState = _gameState.EVENT;
+        DEvent nextEvent = DEventSystem.NextEvent();
+        if (nextEvent != null)
+            ActivateEvent(nextEvent);
+        else
+            gameState = _gameState.PLAY;
     }
 
     public void AddCity(DCity dCity)
@@ -87,7 +98,6 @@ public class DGame
 
     public void ActivateEvent(DEvent e)
     {
-        gameState = _gameState.EVENT;
         currentEvent = e;
         e.Activate();
     }
@@ -95,8 +105,7 @@ public class DGame
     public void ResolveEvent(string selection = Constants.NO_INPUT)
     {
         currentEvent.Resolve(selection);
-        gameState = _gameState.PLAY;
-        currentEvent = null;
+        NextEvent();
     }
 
     public Dictionary<string, DCity> Cities

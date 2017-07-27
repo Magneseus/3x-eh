@@ -30,10 +30,21 @@ public class DEventSystem {
             eventPool.Remove(e);
         eventsToRemove.Clear();
 
+        /*
         foreach (var e in eventPool)
             //EventController.ResolveEvent(e);
             DGame.Instance().ActivateEvent(e);
+        */
 
 
+    }
+
+    public static DEvent NextEvent()
+    {
+        if (eventPool.Count == 0)
+            return null;
+        DEvent result = eventPool[0];
+        eventPool.RemoveAt(0);
+        return result;
     }
 }
