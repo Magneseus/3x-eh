@@ -351,7 +351,7 @@ public class DBuilding : TurnUpdatable {
 
             if (task.Name == "Idle")
                 dBuilding.idleTask = (DTask_Idle)(task);
-            else if (task.Name == "Assess Building")
+            else if (task.Name.Contains("Assess"))
                 dBuilding.assessTask = (DTask_Assess)(task);
             else if (task.Name == "Explore")
                 dBuilding.exploreTask = (DTask_Explore)(task);
