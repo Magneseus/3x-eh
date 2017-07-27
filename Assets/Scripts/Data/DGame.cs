@@ -68,7 +68,8 @@ public class DGame
             {
                 temp = false;
                 string tempPrompt = "Oh shit, you found some tacos!\nYou got 50 food.";
-                DEventSystem.AddEvent(new ModifyResourceEvent(tempPrompt, kvp.Value, DResource.Create("Food", 50)));
+                DEvent.activationCondition actCon = e => e.City.HasPeopleInTask(typeof(DTask_Explore));
+                DEventSystem.AddEvent(new ModifyResourceEvent(tempPrompt, kvp.Value, DResource.Create("Food", 50), actCon));
             }
         }
         DEventSystem.TurnUpdate();
@@ -98,8 +99,13 @@ public class DGame
 
     public void ActivateEvent(DEvent e)
     {
-        currentEvent = e;
-        e.Activate();
+        if (e.ActivationCondition())
+        {
+            currentEvent = e;
+            e.Activate();
+        }
+        else
+            NextEvent();
     }
 
     public void ResolveEvent(string selection = Constants.NO_INPUT)
