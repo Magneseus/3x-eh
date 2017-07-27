@@ -1,5 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using UnityEngine;
+using SimpleJSON;
+
 
 public class DTaskSlot : TurnUpdatable
 {
@@ -157,6 +159,52 @@ public class DTaskSlot : TurnUpdatable
 	}
 
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = new JSONObject();
+
+        // Save task info
+        returnNode.Add("taskName", new JSONString(task.Name));
+        returnNode.Add("taskSlotEnabled", new JSONBool(taskSlotEnabled));
+
+        // Save damage
+        returnNode.Add("structuralDamage", new JSONNumber(structuralDamage));
+        returnNode.Add("fungalDamage", new JSONNumber(fungalDamage));
+
+        // Save person id
+        if (person != null)
+            returnNode.Add("personID", new JSONNumber(person.ID));
+        else
+            returnNode.Add("personID", new JSONNull());
+
+        return returnNode;
+    }
+
+    public static DTaskSlot LoadFromJSON(JSONNode jsonNode, DTask task)
+    {
+        DTaskSlot returnTaskSlot = new DTaskSlot(task);
+
+        // Load damage and enabled bool
+        returnTaskSlot.taskSlotEnabled = jsonNode["taskSlotEnabled"];
+        returnTaskSlot.structuralDamage = jsonNode["structuralDamage"];
+        returnTaskSlot.fungalDamage = jsonNode["fungalDamage"];
+
+        // Find and add person
+        if (!jsonNode["personID"].IsNull)
+        {
+            DCity city = task.Building.City;
+            foreach (var person in city.People)
+            {
+                if (person.Value.ID == jsonNode["personID"])
+                {
+                    person.Value.SetTaskSlot(returnTaskSlot);
+                }
+            }
+        }
+
+        return returnTaskSlot;
+    }
 }
 
 #region Exceptions

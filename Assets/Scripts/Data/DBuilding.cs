@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using SimpleJSON;
 using UnityEngine;
 
 public class DBuilding : TurnUpdatable {
@@ -30,7 +31,25 @@ public class DBuilding : TurnUpdatable {
     private float percentDamaged;
     private float percentAssessed;
 
-    public DBuilding(DCity city, string buildingName, BuildingController buildingController)
+    public DBuilding(string buildingName)
+    {
+        this.id = NEXT_ID++;
+        // this.city = city;
+        this.buildingName = buildingName;
+        // this.buildingController = buildingController;
+
+        this.status = DBuildingStatus.ASSESSED;
+        this.percentAssessed = 1.0f;
+
+
+
+        // percentDamaged = 0.0f;
+        // percentInfected = 0.0f;
+
+        // city.AddBuilding(this);
+    }
+
+    public DBuilding(DCity city, string buildingName, BuildingController buildingController, bool autoSpawnTasks=true)
     {
         this.id = NEXT_ID++;
         this.city = city;
@@ -39,14 +58,18 @@ public class DBuilding : TurnUpdatable {
 
         this.status = DBuildingStatus.UNDISCOVERED;
         this.percentAssessed = 0.0f;
-        // Add an assess task by default
 
-		if(buildingName.Equals("Town Hall")) {
-			this.idleTask = new DTask_Idle(this, "Idle Merson");
-            this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
-        } 
-		
-		this.assessTask = new DTask_Assess (this, 0.2f, 1, "Assess Building");
+        if (autoSpawnTasks)
+        {
+            // Add an assess task by default
+            if (buildingName.Equals("Town Hall"))
+            {
+                this.idleTask = new DTask_Idle(this, "Idle");
+                this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
+            }
+
+            this.assessTask = new DTask_Assess(this, 0.2f, 1, "Assess Building");
+        }
 
         percentDamaged = 0.0f;
         percentInfected = 0.0f;
@@ -55,7 +78,7 @@ public class DBuilding : TurnUpdatable {
     }
 
     // TurnUpdate is called once per Turn
-    public void TurnUpdate(int numDaysPassed)
+    public virtual void TurnUpdate(int numDaysPassed)
     {
         foreach (var entry in tasks)
         {
@@ -71,7 +94,7 @@ public class DBuilding : TurnUpdatable {
 
     }
 
-  
+
     public void SpringEffects()
     {
 
@@ -103,7 +126,7 @@ public class DBuilding : TurnUpdatable {
         foreach (var entry in tasks)
             entry.Value.FungusGrows();
     }
-  
+
     public void CalculateDamages()
     {
         int numberOfTasks = 0;
@@ -149,7 +172,7 @@ public class DBuilding : TurnUpdatable {
 
 	public DTask_Idle getIdleTask()
 	{
-        return idleTask;	
+        return idleTask;
 	}
     public DTask_Explore getExploreTask()
     {
@@ -177,6 +200,7 @@ public class DBuilding : TurnUpdatable {
     public DCity City
     {
         get { return city; }
+        set { city = value; }
     }
 
     public Dictionary<int, DTask> Tasks
@@ -200,11 +224,17 @@ public class DBuilding : TurnUpdatable {
 		get { return buildingController; }
 	}
 
+    public void SetBuildingController(BuildingController bc)
+    {
+        buildingController = bc;
+    }
+
     #region Assessment Components
 
     public DBuildingStatus Status
     {
         get { return status; }
+        set { status = value; }
     }
 
     public string StatusAsString
@@ -251,6 +281,7 @@ public class DBuilding : TurnUpdatable {
     public float LevelAssessed
     {
         get { return percentAssessed; }
+        set { percentAssessed = value; }
     }
 
     public bool Assessed
@@ -260,19 +291,19 @@ public class DBuilding : TurnUpdatable {
 
     public float LevelDamaged
     {
-      get {
-            CalculateDamages();
-            return percentDamaged;
-          }
+        get { return percentDamaged; }
+        set { percentDamaged = value; }
     }
 
     public float LevelInfected
     {
-        get
-        {
-          CalculateDamages();
-          return Mathf.Clamp(percentInfected * SeasonalInfectionMod(), 0f, 1f);
-        }
+        get { return Mathf.Clamp01(percentInfected * SeasonalInfectionMod()); }
+        set { percentInfected = value; }
+    }
+
+    public float LevelInfectedRaw
+    {
+        get { return percentInfected; }
     }
 
     public bool Damaged
@@ -285,6 +316,77 @@ public class DBuilding : TurnUpdatable {
         get { return percentInfected != 1.0f; }
     }
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = new JSONObject();
+
+        // Save basic building info
+        returnNode.Add("name", new JSONString(buildingName));
+        returnNode.Add("ID", new JSONNumber(id));
+        returnNode.Add("cityName", new JSONString(city.Name));
+
+        // Save status information
+        returnNode.Add("status", new JSONNumber((int)(status)));
+        returnNode.Add("percentInfected", new JSONNumber(percentInfected));
+        returnNode.Add("percentDamaged", new JSONNumber(percentDamaged));
+        returnNode.Add("percentAssessed", new JSONNumber(percentAssessed));
+
+        // Save tasks
+        JSONArray jsonTaskList = new JSONArray();
+        foreach (var task in tasks)
+        {
+            jsonTaskList.Add(task.Value.SaveToJSON());
+        }
+        returnNode.Add("tasks", jsonTaskList);
+
+        // Save building position
+        JSONNode position = new JSONObject();
+        position.Add("x", new JSONNumber(buildingController.transform.position.x));
+        position.Add("y", new JSONNumber(buildingController.transform.position.y));
+
+        returnNode.Add("position", position);
+
+        return returnNode;
+    }
+
+    public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city)
+    {
+        DBuilding dBuilding = new DBuilding(city, jsonNode["name"], null, false);
+
+        // Load basic info
+        dBuilding.id = jsonNode["ID"].AsInt;
+
+        // Load status info
+        dBuilding.status = (DBuildingStatus)(jsonNode["status"].AsInt);
+        dBuilding.percentInfected = jsonNode["percentInfected"].AsFloat;
+        dBuilding.percentDamaged = jsonNode["percentDamaged"].AsFloat;
+        dBuilding.percentAssessed = jsonNode["percentAssessed"].AsFloat;
+
+        // Load tasks
+        foreach (JSONNode taskNode in jsonNode["tasks"].AsArray)
+        {
+            DTask task = DTask.LoadFromJSON(taskNode, dBuilding);
+
+            if (task.Name == "Idle")
+                dBuilding.idleTask = (DTask_Idle)(task);
+            else if (task.Name.Contains("Assess"))
+                dBuilding.assessTask = (DTask_Assess)(task);
+            else if (task.Name == "Explore")
+                dBuilding.exploreTask = (DTask_Explore)(task);
+        }
+
+        // Load building position
+        Vector3 position = new Vector3(
+            jsonNode["position"]["x"],
+            jsonNode["position"]["y"],
+            1);
+
+        // Spawn building controller
+        city.Game.GameController.CreateBuildingController(dBuilding, position);
+
+        return dBuilding;
+    }
 }
 
 #region Exceptions

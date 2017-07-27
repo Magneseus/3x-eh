@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Editor.UnitTests;
 using System;
+using UnityEngine;
 
 // Disabling "Assigned to but not used" warnings
 #pragma warning disable 0219
@@ -194,6 +195,76 @@ public class CityTests
         person.SetTask(task_B);
         city.TurnUpdate(1);
         Assert.That(city.GetResource(RESOURCE_NAME).Amount, Is.EqualTo(RESOURCE_A_AMOUNT + RESOURCE_B_AMOUNT));
+    }
+
+    [Test]
+    public void PercentAssessed()
+    {
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building1 = new DBuilding(city, BUILDING_NAME+1, Mock.Component<BuildingController>());
+        var building2 = new DBuilding(city, BUILDING_NAME+2, Mock.Component<BuildingController>());
+
+        float val1 = 0.5f;
+        float val2 = 0f;
+        building1.LevelAssessed = val1;
+        building2.LevelAssessed = val2;
+
+        float expected = (val1 + val2) / 2f;
+        Assert.That(city.PercentAssessed(), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void PercentRepaired()
+    {
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building1 = new DBuilding(city, BUILDING_NAME + 1, Mock.Component<BuildingController>());
+        var building2 = new DBuilding(city, BUILDING_NAME + 2, Mock.Component<BuildingController>());
+        city.Season = DSeasons._season.SPRING;
+
+        float damaged1 = 0.6f;
+        float damaged2 = 0.3f;
+        float infected1 = 0.2f;
+        float infected2 = 0.9f;
+        building1.LevelDamaged = damaged1;
+        building1.LevelInfected = infected1;
+        building2.LevelDamaged = damaged2;
+        building2.LevelInfected = infected2;
+
+        float expected = (damaged1 + damaged2 + infected1 + infected2) / 4f;
+        Assert.That(city.PercentRepaired(), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void DevelopedValue()
+    {
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building1 = new DBuilding(city, BUILDING_NAME + 1, Mock.Component<BuildingController>());
+        var building2 = new DBuilding(city, BUILDING_NAME + 2, Mock.Component<BuildingController>());
+        city.Season = DSeasons._season.SPRING;
+
+        float damaged1 = 0.6f;
+        float damaged2 = 0.3f;
+        float infected1 = 0.2f;
+        float infected2 = 0.9f;
+        float assessed1 = 0.5f;
+        float assessed2 = 0f;
+        building1.LevelDamaged = damaged1;
+        building1.LevelInfected = infected1;
+        building1.LevelAssessed = assessed1;
+        building2.LevelDamaged = damaged2;
+        building2.LevelInfected = infected2;
+        building2.LevelAssessed = assessed2;
+
+        building1.Status = DBuilding.DBuildingStatus.DISCOVERED;
+
+        float explored = city.CalculateExploration();
+        float assessed = city.PercentAssessed();
+        float repaired = city.PercentRepaired();
+        float expected = (explored * Constants.CITY_DEVELOPMENT_PERCENT_FROM_EXPLORE) +
+                        (assessed * Constants.CITY_DEVELOPMENT_PERCENT_FROM_ASSESS) +
+                        (repaired * Constants.CITY_DEVELOPMENT_PERCENT_FROM_REPAIR);
+
+        Assert.That(city.DevelopedValue(), Is.EqualTo(expected));
     }
     #endregion
 

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class Constants {
+
+    
+
     public static string OTTAWA_PREFAB_PATH = @"Prefabs/Cities/Ottawa";
     public static string CITY_PREFAB_PATH = @"Prefabs/Cities/City";
     public static string CITY_SPRITE_PATH = @"Sprites/";
@@ -41,5 +44,12 @@ public static class Constants {
     public static int MERSON_SPRING_FALL_INFECTION_MODIFIER = 1;
     public static float MERSON_INFECTION_TASK_MODIFIER = 0.5f;
     public static int[] MERSON_SEASON_INFECTION_MAX = { 1, MERSON_INFECTION_MAX, 1, MERSON_INFECTION_MIN };
+    #endregion
+
+    #region City and Compressed City
+    public enum _prosperityMeasures { HEALTH, MORALE, ORDER, EDUCATION, NUMELEMENTS };
+    public static float CITY_DEVELOPMENT_PERCENT_FROM_EXPLORE = 0.2f;
+    public static float CITY_DEVELOPMENT_PERCENT_FROM_ASSESS = 0.4f;
+    public static float CITY_DEVELOPMENT_PERCENT_FROM_REPAIR = 0.4f;
     #endregion
 }

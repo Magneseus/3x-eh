@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 public class DTask_Idle : DTask {
 
@@ -84,4 +85,13 @@ public class DTask_Idle : DTask {
 			slotList.RemoveAt(slotList.Count - 1);
 		}
 	}
+
+    public override JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = base.SaveToJSON();
+
+        returnNode.Add("specialTask", new JSONString("idle"));
+
+        return returnNode;
+    }
 }
