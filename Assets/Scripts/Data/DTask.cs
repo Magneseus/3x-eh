@@ -314,7 +314,7 @@ public class DTask : TurnUpdatable
             // Load the task slots
             foreach (JSONNode taskSlotJSON in jsonNode["taskSlots"].AsArray)
             {
-                returnTask.SlotList.Add(DTaskSlot.LoadFromJSON(taskSlotJSON));
+                returnTask.SlotList.Add(DTaskSlot.LoadFromJSON(taskSlotJSON, returnTask));
             }
         }
 
