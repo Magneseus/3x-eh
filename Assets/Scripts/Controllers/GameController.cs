@@ -21,6 +21,10 @@ public class GameController : MonoBehaviour
     {
         dGame = new DGame(this);
 
+        // Re-enable the cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         // Start off at the country view
         countryView = Instantiate(CountryViewUIPrefab, UICanvas.transform);
         countryMap = countryView.GetComponent<CountryMap>();
