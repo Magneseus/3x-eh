@@ -177,7 +177,7 @@ public class DPerson : ITurnUpdatable
 
         // Load person info
         returnPerson.id = jsonNode["ID"];
-        returnPerson.infectionLevel = jsonNode["infectionLevel"];
+        returnPerson.infectionLevel = RandJSON.JSONInt(jsonNode["infectionLevel"]);
         returnPerson.isDead = jsonNode["isDead"];
 
         return returnPerson;
