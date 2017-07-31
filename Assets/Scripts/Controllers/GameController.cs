@@ -37,9 +37,9 @@ public class GameController : MonoBehaviour
                 var cityJSON = JSON.Parse(File.ReadAllText(file));
 
                 List<string> edges = new List<string>();
-                for(int i=0; i< cityJSON["edges"].AsArray.Count; i++)
+                for(int i=0; i< cityJSON["linked_cities"].AsArray.Count; i++)
                 {
-                   edges.Add((cityJSON["edges"].AsArray[i]));
+                   edges.Add((cityJSON["linked_cities"].AsArray[i]));
                 }
                 countryMap.SpawnCityNode(
                     cityJSON["name"],
@@ -55,17 +55,17 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKeyUp("s"))
         {
-            File.WriteAllText(@"Assets/Resources/testLoad.json", dGame.SaveToJSON().ToString());
+            //File.WriteAllText(@"Assets/Resources/testLoad.json", dGame.SaveToJSON().ToString());
         }
         else if (Input.GetKeyUp("l"))
         {
-            LoadGame();
+            //LoadGame();
         }
     }
 
-    public void LoadGame()
+    public void LoadGame(string savedGameFile, string pathToSavedGames=Constants.SAVE_JSON_PATH)
     {
-        var json = File.ReadAllText(@"Assets/Resources/testLoad.json");
+        var json = File.ReadAllText(pathToSavedGames + @"/" + savedGameFile);
         dGame = DGame.LoadFromJSON(JSON.Parse(json), this);
 
         if (dGame.currentCity != null)
@@ -76,6 +76,12 @@ public class GameController : MonoBehaviour
             // Disable Country View
             countryView.SetActive(false);
         }
+    }
+
+    public void SaveGame(string savedGameFile, string pathToSavedGames = Constants.SAVE_JSON_PATH)
+    {
+        var json = dGame.SaveToJSON();
+        File.WriteAllText(pathToSavedGames + @"/" + savedGameFile, json.ToString());
     }
 
     public void SelectCity(string cityName)
