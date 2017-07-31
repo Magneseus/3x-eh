@@ -186,9 +186,9 @@ public class DTaskSlot : ITurnUpdatable
         DTaskSlot returnTaskSlot = new DTaskSlot(task);
 
         // Load damage and enabled bool
-        returnTaskSlot.taskSlotEnabled = jsonNode["taskSlotEnabled"];
-        returnTaskSlot.structuralDamage = jsonNode["structuralDamage"];
-        returnTaskSlot.fungalDamage = jsonNode["fungalDamage"];
+        returnTaskSlot.taskSlotEnabled = jsonNode["taskSlotEnabled"].AsBool;
+        returnTaskSlot.structuralDamage = RandJSON.JSONFloat(jsonNode["structuralDamage"]);
+        returnTaskSlot.fungalDamage = RandJSON.JSONFloat(jsonNode["fungalDamage"]);
 
         // Find and add person
         if (!jsonNode["personID"].IsNull)
@@ -196,7 +196,7 @@ public class DTaskSlot : ITurnUpdatable
             DCity city = task.Building.City;
             foreach (var person in city.People)
             {
-                if (person.Value.ID == jsonNode["personID"])
+                if (person.Value.ID == jsonNode["personID"].AsInt)
                 {
                     person.Value.SetTaskSlot(returnTaskSlot);
                 }
