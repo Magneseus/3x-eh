@@ -267,15 +267,15 @@ public class DTask : ITurnUpdatable
             {
                 returnTask = new DTask_Assess(
                     building,
-                    jsonNode["assessAmount"].AsFloat,
-                    jsonNode["maxPeople"].AsInt,
+                    RandJSON.JSONFloat(jsonNode["assessAmount"]),
+                    RandJSON.JSONInt(jsonNode["maxPeople"]),
                     jsonNode["name"]);
             }
             else if (jsonNode["specialTask"] == "explore")
             {
                 returnTask = new DTask_Explore(
                     building,
-                    jsonNode["exploreAmount"].AsFloat,
+                    RandJSON.JSONFloat(jsonNode["exploreAmount"]),
                     jsonNode["name"]);
             }
             else if (jsonNode["specialTask"] == "idle")
@@ -288,9 +288,9 @@ public class DTask : ITurnUpdatable
             returnTask = new DTask(
                 building,
                 DResource.LoadFromJSON(jsonNode["resourceOutput"]),
-                jsonNode["maxPeople"].AsInt,
+                RandJSON.JSONInt(jsonNode["maxPeople"]),
                 jsonNode["name"],
-                jsonNode["fullAssessRequirement"].AsFloat);
+                RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]));
         }
 
         // Set the other vars
@@ -301,15 +301,15 @@ public class DTask : ITurnUpdatable
         else
         {
             // Load task info
-            returnTask.id = jsonNode["ID"];
+            returnTask.id = jsonNode["ID"].AsInt;
 
             // Load person info
-            returnTask.numPeople = jsonNode["numPeople"];
-            returnTask.maxPeople = jsonNode["maxPeople"];
+            returnTask.numPeople = RandJSON.JSONInt(jsonNode["numPeople"]);
+            returnTask.maxPeople = RandJSON.JSONInt(jsonNode["maxPeople"]);
 
             // Save output info
-            returnTask.fullAssessRequirement = jsonNode["fullAssessRequirement"];
-            returnTask.taskEnabled = jsonNode["taskEnabled"];
+            returnTask.fullAssessRequirement = RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]);
+            returnTask.taskEnabled = jsonNode["taskEnabled"].AsBool;
 
             // Load the task slots
             returnTask.slotList = new List<DTaskSlot>();
