@@ -64,13 +64,30 @@ public class DTask : ITurnUpdatable
 
             if (taskSlot.IsFunctioning())
             {
-                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
-                building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier))); 
-                if(taskName.Equals("Treat People"))
-                {
-                    RandomalyTreatPeople();
-                }               
+                bool canOutputResource = true;
 
+                // Process resource consumption
+                if (input != null)
+                {
+                    if (building.City.GetResource(input.Name).Amount >= input.Amount)
+                    {
+                        building.InputResource(input);
+                    }
+                    else
+                    {
+                        canOutputResource = false;
+                    }
+                }
+
+                if (canOutputResource)
+                {
+                    float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
+                    building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier)));
+                    if (taskName.Equals("Treat People"))
+                    {
+                        RandomalyTreatPeople();
+                    }
+                }
             }
 
         }
