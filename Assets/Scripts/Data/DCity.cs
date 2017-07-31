@@ -694,7 +694,7 @@ public class DCity : ITurnUpdatable
         return returnNode;
     }
 
-    public static DCity LoadFromJSON(JSONNode jsonNode, DGame dGame)
+    public static DCity LoadFromJSON(JSONNode jsonNode, DGame dGame, bool randomBuildingPlacement=false)
     {
         // Load general info about city
         string _name = jsonNode["name"];
@@ -726,13 +726,37 @@ public class DCity : ITurnUpdatable
         foreach (JSONNode person in jsonNode["people"].AsArray)
             DPerson.LoadFromJSON(person, dCity);
 
+        // Load in all the possible locations for buildings
+        List<Vector2> possibleBuildingLocations = null;
+        if (randomBuildingPlacement)
+        {
+            possibleBuildingLocations = new List<Vector2>();
+            foreach (JSONNode buildingLoc in jsonNode["building_locations"].AsArray)
+            {
+                // Get the random positions available
+                float xPos = buildingLoc["x"].AsFloat;
+                float yPos = buildingLoc["y"].AsFloat;
+
+                possibleBuildingLocations.Add(new Vector2(xPos, yPos));
+            }
+        }
+
         // Load buildings
         foreach (JSONNode building in jsonNode["buildings"].AsArray)
         {
-            DBuilding loadedBuilding = DBuilding.LoadFromJSON(building, dCity);
+            DBuilding loadedBuilding = DBuilding.LoadFromJSON(building, dCity, randomBuildingPlacement);
 
             if (loadedBuilding.Name.Equals("Town Hall"))
+            {
                 dCity.townHall = loadedBuilding;
+            }
+            else if (randomBuildingPlacement)
+            {
+                // Pull a random building location from the list
+                int randIndex = Mathf.RoundToInt(UnityEngine.Random.Range(0, possibleBuildingLocations.Count - 1));
+                loadedBuilding.SetBuildingPosition(possibleBuildingLocations[randIndex]);
+                possibleBuildingLocations.RemoveAt(randIndex);
+            }
         }
 
         // Load resources

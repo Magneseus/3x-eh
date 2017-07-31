@@ -229,6 +229,12 @@ public class DBuilding : ITurnUpdatable {
         buildingController = bc;
     }
 
+    public void SetBuildingPosition(Vector3 position)
+    {
+        if (buildingController != null)
+            buildingController.transform.position = position;
+    }
+
     #region Assessment Components
 
     public DBuildingStatus Status
@@ -350,7 +356,7 @@ public class DBuilding : ITurnUpdatable {
         return returnNode;
     }
 
-    public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city)
+    public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city, bool setPositionManually=false)
     {
         DBuilding dBuilding = new DBuilding(city, jsonNode["name"], null, false);
 
@@ -376,11 +382,14 @@ public class DBuilding : ITurnUpdatable {
                 dBuilding.exploreTask = (DTask_Explore)(task);
         }
 
-        // Load building position
-        Vector3 position = new Vector3(
-            jsonNode["position"]["x"],
-            jsonNode["position"]["y"],
-            1);
+        // Building position
+        Vector3 position = new Vector3(0, 0, 1);
+        if (!setPositionManually)
+        {
+            // Load building position
+            position.x = jsonNode["position"]["x"];
+            position.y = jsonNode["position"]["y"];
+        }
 
         // Spawn building controller
         city.Game.GameController.CreateBuildingController(dBuilding, position);

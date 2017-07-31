@@ -86,10 +86,14 @@ public class GameController : MonoBehaviour
 
     public void SelectCity(string cityName)
     {
-        CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
+        //CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
 
+        var json = File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json");
+        DCity newCity = DCity.LoadFromJSON(JSON.Parse(json), dGame, true);
+
+        dGame.AddCity(newCity);
         dGame.SelectCity(cityName);
-        // dGame.currentCity.CityController.assignGameController(this);
+        
 
         // Spawn City UI
         cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
