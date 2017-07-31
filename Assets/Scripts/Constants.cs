@@ -16,7 +16,8 @@ public static class Constants {
     public static string TASK_TRAY_SINGLE_PREFAB_PATH = @"Prefabs/Tasks/TaskTraySingle";
     public static string MEEPLE_PREFAB_PATH = @"Prefabs/MeepleController";
 
-    public static string CITY_JSON_PATH = @"Assets/Resources/Data";
+    public static string CITY_JSON_PATH = @"Assets/Resources/Data/starting_cities";
+    public const string SAVE_JSON_PATH = @"Assets/Resources/Data/saved_games";
 
     public static string FOOD_RESOURCE_NAME = "Food";
     public static DateTime[] DEFAULT_SEASON_DATES = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
