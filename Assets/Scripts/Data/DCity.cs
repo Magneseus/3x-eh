@@ -696,29 +696,32 @@ public class DCity : ITurnUpdatable
 
     public static DCity LoadFromJSON(JSONNode jsonNode, DGame dGame, bool randomBuildingPlacement=false)
     {
-        // Load general info about city
         string _name = jsonNode["name"];
-        int _age = jsonNode["age"].AsInt;
-        float _explorationLevel = jsonNode["explorationLevel"].AsFloat;
-
-        // Load resource info
-        float _shelterTier = jsonNode["shelterTier"].AsInt;
-        float _fuelToShelterConversion = jsonNode["fuelToShelterConversion"].AsInt;
-
-        // Load health and food stuff
-        float _health = jsonNode["health"].AsFloat;
-        int _foodConsumption = jsonNode["foodConsumption"].AsInt;
-        float _notEnoughFoodHealthDecay = jsonNode["notEnoughFoodHealthDecay"].AsFloat;
-
-        // Load season
-        DSeasons._season _season = (DSeasons._season)(jsonNode["season"].AsInt);
-        bool _isDeadOfWinter = jsonNode["isDeadOfWinter"].AsBool;
+        
 
         // TODO: Store season start and end dates
         // Create city object
         DCity dCity = new DCity(_name, null, dGame.CurrentDate);
         dCity.cityController = dGame.GameController.CreateCityController(dCity);
         dCity.dGame = dGame;
+
+        // Load general info about city
+        dCity.age = RandJSON.JSONInt(jsonNode["age"]);
+        dCity.explorationLevel = RandJSON.JSONFloat(jsonNode["explorationLevel"]);
+
+        // Load resource info
+        dCity.shelterTier = RandJSON.JSONInt(jsonNode["shelterTier"]);
+        dCity.fuelToShelterConversion = RandJSON.JSONInt(jsonNode["fuelToShelterConversion"]);
+
+        // TODO: Why are these variables static?
+        // Load health and food stuff
+        //dCity.health = RandJSON.JSONFloat(jsonNode["health"]);
+        //dCity.foodConsumption = RandJSON.JSONInt(jsonNode["foodConsumption"]);
+        //dCity.notEnoughFoodHealthDecay = RandJSON.JSONFloat(jsonNode["notEnoughFoodHealthDecay"]);
+
+        // Load season
+        DSeasons._season _season = (DSeasons._season)(RandJSON.JSONInt(jsonNode["season"]));
+        bool _isDeadOfWinter = jsonNode["isDeadOfWinter"].AsBool;
 
         #region Lists of Stuff
 
@@ -734,8 +737,8 @@ public class DCity : ITurnUpdatable
             foreach (JSONNode buildingLoc in jsonNode["building_locations"].AsArray)
             {
                 // Get the random positions available
-                float xPos = buildingLoc["x"].AsFloat;
-                float yPos = buildingLoc["y"].AsFloat;
+                float xPos = RandJSON.JSONFloat(buildingLoc["x"]);
+                float yPos = RandJSON.JSONFloat(buildingLoc["y"]);
 
                 possibleBuildingLocations.Add(new Vector2(xPos, yPos));
             }
