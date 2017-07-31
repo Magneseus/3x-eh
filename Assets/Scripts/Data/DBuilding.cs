@@ -364,10 +364,10 @@ public class DBuilding : ITurnUpdatable {
         dBuilding.id = jsonNode["ID"].AsInt;
 
         // Load status info
-        dBuilding.status = (DBuildingStatus)(jsonNode["status"].AsInt);
-        dBuilding.percentInfected = jsonNode["percentInfected"].AsFloat;
-        dBuilding.percentDamaged = jsonNode["percentDamaged"].AsFloat;
-        dBuilding.percentAssessed = jsonNode["percentAssessed"].AsFloat;
+        dBuilding.status = (DBuildingStatus)(RandJSON.JSONInt(jsonNode["status"]));
+        dBuilding.percentInfected = RandJSON.JSONFloat(jsonNode["percentInfected"]);
+        dBuilding.percentDamaged = RandJSON.JSONFloat(jsonNode["percentDamaged"]);
+        dBuilding.percentAssessed = RandJSON.JSONFloat(jsonNode["percentAssessed"]);
 
         // Load tasks
         foreach (JSONNode taskNode in jsonNode["tasks"].AsArray)
