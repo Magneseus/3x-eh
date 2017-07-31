@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class DTask : ITurnUpdatable
 {
-
     private static int NEXT_ID = 0;
 
     protected int id;
@@ -18,10 +17,11 @@ public class DTask : ITurnUpdatable
 
     protected float fullAssessRequirement;
     protected DResource output;
+    protected DResource input;
     protected bool taskEnabled;
 
 
-    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement)
+    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement, DResource dInput=null)
     {
         slotList = new List<DTaskSlot>();
 
@@ -29,6 +29,7 @@ public class DTask : ITurnUpdatable
         taskName = dName;
         building = dBuilding;
         output = dOutput;
+        input = dInput;
         maxPeople = dMaxPeople;
         numPeople = 0;
         fullAssessRequirement = dFullAssessRequirement;
@@ -245,6 +246,12 @@ public class DTask : ITurnUpdatable
         else
             returnNode.Add("resourceOutput", new JSONNull());
 
+        // Resource input
+        if (input != null)
+            returnNode.Add("resourceInput", input.SaveToJSON());
+        else
+            returnNode.Add("resourceInput", new JSONNull());
+
         // Save task slot list
         JSONArray jsonSlotList = new JSONArray();
         foreach (var taskSlot in slotList)
@@ -290,7 +297,8 @@ public class DTask : ITurnUpdatable
                 DResource.LoadFromJSON(jsonNode["resourceOutput"]),
                 RandJSON.JSONInt(jsonNode["maxPeople"]),
                 jsonNode["name"],
-                RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]));
+                RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]),
+                DResource.LoadFromJSON(jsonNode["resourceInput"]));
         }
 
         // Set the other vars
@@ -387,6 +395,11 @@ public class DTask : ITurnUpdatable
     public DResource Output
     {
         get { return output; }
+    }
+
+    public DResource Input
+    {
+        get { return input; }
     }
 
     public DBuilding Building

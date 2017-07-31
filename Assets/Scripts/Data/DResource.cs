@@ -139,6 +139,9 @@ public class DResource : ITurnUpdatable
 
     public static DResource LoadFromJSON(JSONNode jsonNode)
     {
+        if (jsonNode == null)
+            return null;
+
         DResource loadedResource = Create(
             jsonNode["name"],
             RandJSON.JSONInt(jsonNode["amount"]));
