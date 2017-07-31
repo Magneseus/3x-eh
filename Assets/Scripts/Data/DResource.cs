@@ -131,7 +131,7 @@ public class DResource : ITurnUpdatable
         // Load all the currently created resources (the master list)
         foreach (JSONNode resource in jsonNode.AsArray)
         {
-            resourceMap.Add(resource["name"], resource["ID"]);
+            resourceMap.Add(resource["name"], resource["ID"].AsInt);
         }
 
         resourceNameToIDMap = resourceMap;
@@ -139,7 +139,9 @@ public class DResource : ITurnUpdatable
 
     public static DResource LoadFromJSON(JSONNode jsonNode)
     {
-        DResource loadedResource = Create(jsonNode["name"], jsonNode["amount"].AsInt);
+        DResource loadedResource = Create(
+            jsonNode["name"],
+            RandJSON.JSONInt(jsonNode["amount"]));
 
         if (loadedResource.ID != jsonNode["ID"].AsInt)
         {
