@@ -1,10 +1,60 @@
-﻿using System;
+﻿using SimpleJSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ChoiceEvent : DEvent
 {
+
+    public static void AddEventFromJSON(DCity currentCity, JSONNode json)
+    {
+        var outcomes = new outcome[json["outcomes"].AsArray.Count];
+        for(int i=0; i<outcomes.Length; i++)
+        {
+            outcomes[i] = ParseOutcome(json["outcomes"][i]);
+        }
+
+        var outcomesText = new string[json["outcomesText"].AsArray.Count];
+        for(int i=0; i<outcomesText.Length; i++)
+        {
+            outcomesText[i] = json["outcomesText"][i];
+        }
+
+        DEventSystem.AddEvent(new ChoiceEvent(
+            json["promptText"],
+            currentCity,
+            ParseActivationCondition(json["activationCondition"]),
+            outcomes,
+            outcomesText,
+            json["turnsToActivate"],
+            json["priority"]
+        ));
+    }
+
+    public static outcome ParseOutcome(JSONNode outcome)
+    {
+        string type = outcome["type"];
+        
+        switch (type)
+        {
+            case "resource":
+                outcome resource = e => e.City.AddResource(DResource.Create(outcome["value"][0], outcome["value"][1]));
+                return resource;
+            case "cityHealth":
+                string op = outcome["value"][0];
+                var amount = outcome["value"][1];
+                switch (op)
+                {
+                    case "multiply":
+                        outcome cityHealth = e => e.City.Health *= amount;
+                        return cityHealth;
+                }
+                throw new Exception("Invalid CityHealth Operator Type");
+            default:
+                throw new Exception("Invalid Outcome Type");
+        }
+    }
 
     public delegate void outcome(ChoiceEvent e);
     public outcome[] outcomes = new outcome[2];

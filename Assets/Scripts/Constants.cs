@@ -18,6 +18,16 @@ public static class Constants {
 
     public static string CITY_JSON_PATH = @"Assets/Resources/Data";
 
+    public enum EVT_TYPE
+    {
+        CHOICE,
+        MOD_RESOURCE
+    };
+
+    public static string EVT_CHOICE_EVENTS_PATH = @"Assets/Resources/Data/Events/choice-events.json";
+    public static string EVT_MOD_RESOURCE_EVENTS_PATH = @"Assets/Resources/Data/Events/modify-resource-events.json";
+
+
     public static string FOOD_RESOURCE_NAME = "Food";
     public static DateTime[] DEFAULT_SEASON_DATES = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
     public static DateTime DEFAULT_DATE = DEFAULT_SEASON_DATES[0].AddDays(1);
@@ -59,3 +69,4 @@ public static class Constants {
     public static float CITY_DEVELOPMENT_PERCENT_FROM_REPAIR = 0.4f;
     #endregion
 }
+

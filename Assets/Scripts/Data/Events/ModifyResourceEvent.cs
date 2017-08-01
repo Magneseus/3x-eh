@@ -1,18 +1,40 @@
-﻿using System;
+﻿using SimpleJSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ModifyResourceEvent : DEvent {
 
-    private DResource resource;
+    public static void AddEventFromJSON(DCity currentCity, JSONNode json)
+    {
+        var resources = new DResource[json["outcomes"].AsArray.Count];
+        for (int i = 0; i < resources.Length; i++)
+        {
+            int amount = json["resources"][i]["value"];
+            string name = json["resources"][i]["type"];
+            resources[i] = DResource.Create(name, amount);
+        }
 
-    public ModifyResourceEvent(string promptText, DCity city, DResource resource, 
+        DEventSystem.AddEvent(new ModifyResourceEvent(
+            json["promptText"],
+            currentCity,
+            resources,
+            ParseActivationCondition(json["activationCondition"]),
+            json["turnsToActivate"],
+            json["priority"]
+        ));
+    }
+
+
+    private DResource[] resources;
+
+    public ModifyResourceEvent(string promptText, DCity city, DResource[] resources, 
         activationCondition actCondition,int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT)
     {
         this.promptText = promptText;
         this.city = city;
-        this.resource = resource;
+        this.resources = resources;
         this.actCondition = actCondition;
         this.turnsToActivation = turnsToActivation;
         this.priority = priority;
@@ -31,6 +53,9 @@ public class ModifyResourceEvent : DEvent {
 
     override public void Resolve(int selection = Constants.NO_INPUT)
     {
-        city.AddResource(resource);
+        for(int i=0; i<resources.Length; i++)
+        {
+            city.AddResource(resources[i]);
+        }        
     }
 }

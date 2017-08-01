@@ -1,0 +1,15 @@
+[
+  {
+    "id": 0,
+    "priority": 1,
+    "turnsToActivate": 1,
+    "promptText": "Oh shit, you found some tacos!\nYou got 50 food.",
+    "activationCondition": "exploring",
+    "resources": [
+      {
+        "type": "Food",
+        "value": 50
+      }
+    ]
+  }
+]
