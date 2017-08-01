@@ -18,6 +18,7 @@ public class SettingManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
         mainPane.SetActive(false);
         settingPane.SetActive(false);
         confirmPane.SetActive(false);
@@ -66,9 +67,17 @@ public class SettingManager : MonoBehaviour {
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(true, 1f);
+
+        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(false, 1f);
         yield return new WaitForSeconds(10f);
         SceneManager.LoadScene("MainMenuSystem");
+    }
+
+    public void SwitchToMain()
+    {
+        MainMenuManager mainMenuManager = GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").Find("MainMenuManager")
+             .gameObject.GetComponent<MainMenuManager>();
+        mainMenuManager.SwitchToMainMenu();
     }
 
 }

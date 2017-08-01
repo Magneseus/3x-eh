@@ -58,8 +58,22 @@ public class MainMenuManager : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(true, 1f);
-        yield return new WaitForSeconds(10f);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+        yield return new WaitForSeconds(5f);
+        //UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+        SwitchToGame();
+    }
+
+    public void SwitchToGame()
+    {
+        GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
+        GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);    
+    }
+    public void SwitchToMainMenu()
+    {
+        GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(false);
+        GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(true);
+        camControl.GetComponent<CamControl>().setMount(camControl.GetComponent<CamControl>().mainMenuMount);
+        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(false, 3f);   
     }
 
     public void QuitGame()

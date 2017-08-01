@@ -61,6 +61,8 @@ public class GameController : MonoBehaviour
         {
             LoadGame();
         }
+        if (!GameObject.FindGameObjectWithTag("MainMenu").activeSelf)
+            gameObject.SetActive(true);
     }
 
     public void LoadGame()
