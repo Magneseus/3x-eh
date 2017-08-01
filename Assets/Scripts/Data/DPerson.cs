@@ -105,13 +105,13 @@ public class DPerson : ITurnUpdatable
 
     public void LockMeeple()
     {
-        if (meepleController != null)
+        if (meepleController != null && meepleController.boxCollider != null)
             meepleController.boxCollider.enabled = false;
     }
 
     public void UnlockMeeple()
     {
-        if (meepleController != null)
+        if (meepleController != null && meepleController.boxCollider != null)
             meepleController.boxCollider.enabled = true;
     }
 
