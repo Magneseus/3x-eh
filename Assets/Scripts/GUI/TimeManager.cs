@@ -39,6 +39,7 @@ public class TimeManager : MonoBehaviour {
 	private bool isSwitchIn = false;
 	private bool isSwitchOut = false;
 
+
 	private bool functionLimiter;
     /*
 	public static int randomEventCategory;
@@ -101,17 +102,18 @@ public class TimeManager : MonoBehaviour {
 		increment = 1;
 	}
     */
-	public void Switch(){
-		Debug.Log ("Switch is called");
-		bgm.volume = 0.2f;
+    public void Switch()
+    {
+        //Debug.Log ("Switch is called");
+        bgm.volume = 0.2f;
         this.GetComponent<AudioSource>().Play();
-		switchImage.enabled = true;
-		switchText.enabled = true;
-		isSwitchIn = true;
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
-		startNextTurn = true;
-	}
+        switchImage.enabled = true;
+        switchText.enabled = true;
+        isSwitchIn = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        startNextTurn = true;
+    }
     /*
 	public void IncrementResources()
 	{
@@ -210,7 +212,7 @@ public class TimeManager : MonoBehaviour {
 		this.increment = increment;
 	}*/
 
-	IEnumerator SwitchIn(){
+    IEnumerator SwitchIn(){
 		//Debug.Log ("SwitchIn is called");
 		loadingSceneManager.GetComponent<LoadingSceneManager> ().Fade (true, 1f);
 		//Debug.Log ("123456");
