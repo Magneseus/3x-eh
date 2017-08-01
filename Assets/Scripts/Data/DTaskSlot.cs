@@ -36,6 +36,24 @@ public class DTaskSlot : ITurnUpdatable
         }
     }
 
+    public void LockSlot()
+    {
+        if (!lockedIn && person != null)
+        {
+            lockedIn = true;
+
+            person.LockMeeple();
+        }
+    }
+
+    public void UnlockSlot()
+    {
+        lockedIn = false;
+
+        if (person != null)
+            person.UnlockMeeple();
+    }
+
     public void StructureDeteriorates()
     {
         structuralDamage = Mathf.Clamp(structuralDamage * DSeasons.changeStructureDamageSlots[(int)DSeasons._season.WINTER], 0f, 1f);
@@ -69,6 +87,8 @@ public class DTaskSlot : ITurnUpdatable
     {
         if (person != null)
 		{
+            UnlockSlot();
+
             person.__TaskSlot(null);
             person = null;
             task.LowerPersonCount();
@@ -79,6 +99,7 @@ public class DTaskSlot : ITurnUpdatable
     {
         if (person != null)
         {
+            UnlockSlot();
             person.MoveToTownHall();
 
             person = null;

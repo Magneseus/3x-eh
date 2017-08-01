@@ -103,6 +103,17 @@ public class DPerson : ITurnUpdatable
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
 
+    public void LockMeeple()
+    {
+        if (meepleController != null)
+            meepleController.boxCollider.enabled = false;
+    }
+
+    public void UnlockMeeple()
+    {
+        if (meepleController != null)
+            meepleController.boxCollider.enabled = true;
+    }
 
 
     #endregion

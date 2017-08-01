@@ -48,6 +48,7 @@
                     "fullAssessRequirement": 1,
                     "taskEnabled": true,
                     "resourceOutput": null,
+                    "numTurnsToComplete": 3,
                     "taskSlots": [
                         {
                             "taskName": "Idle",
