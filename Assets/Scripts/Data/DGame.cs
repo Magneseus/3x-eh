@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using SimpleJSON;
 using UnityEngine;
+using System.IO;
 
 [Serializable]
 public class DGame
@@ -102,21 +103,13 @@ public class DGame
 
     public void TEMPtestEvents()
     {
-        temp = false;
-        int turnsToActivate = 2;
+        temp = false;        
 
-        string prompt2 = "A wolverine is raising her pups in your taco pantry. Do you attempt to remove her?";
-        DEvent.activationCondition actCon2 = e => true;
-        DResource resource0 = DResource.Create("Food", -25);
-        ChoiceEvent.outcome outcome0 = e => e.City.AddResource(resource0);
-        ChoiceEvent.outcome outcome1 = e => e.City.Health *= 0.9f;
-        ChoiceEvent.outcome[] outcomes = new ChoiceEvent.outcome[] { outcome0, outcome1 };
-        string[] outcomeTexts = new string[] { "Her pups will remember the tacos fondly. Your people will not.", "Jared was only slightly maimed removing the wolverine." };
-        DEventSystem.AddEvent(new ChoiceEvent(prompt2, currentCity, actCon2, outcomes, outcomeTexts, turnsToActivate));
+        var choiceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_CHOICE_EVENTS_PATH))[0];
+        DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.CHOICE, currentCity, choiceEvtJson);
 
-        string prompt1 = "Oh shit, you found some tacos!\nYou got 50 food.";
-        DEvent.activationCondition actCon1 = e => e.City.HasPeopleInTask(typeof(DTask_Explore));
-        DEventSystem.AddEvent(new ModifyResourceEvent(prompt1, currentCity, DResource.Create("Food", 50), actCon1, turnsToActivate, Constants.EVENT_PRIORITY_INTERESTING));
+        var modResourceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_MOD_RESOURCE_EVENTS_PATH))[0];
+        DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, modResourceEvtJson);        
     }
 
     public void NextEvent()

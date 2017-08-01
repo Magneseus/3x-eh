@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SimpleJSON;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,21 @@ public class DEventSystem {
     public static List<DEvent> eventsToRemove = new List<DEvent>();
 
     public static EventController EventController { get; set; }
+
+    public static void AddEventFromJSON(Constants.EVT_TYPE eventType, DCity currentCity, JSONNode json)
+    {
+        switch (eventType)
+        {
+            case Constants.EVT_TYPE.MOD_RESOURCE:
+                ModifyResourceEvent.AddEventFromJSON(currentCity, json);
+                break;
+            case Constants.EVT_TYPE.CHOICE:
+                ChoiceEvent.AddEventFromJSON(currentCity, json);
+                break;
+            default:
+                throw new System.Exception("No EventType Specified");
+        }
+    }
 
     public static void AddEvent(DEvent e)
     {

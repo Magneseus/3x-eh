@@ -2,6 +2,23 @@
 
     public static DGame dGame { get; set; }
 
+    
+
+
+    public static activationCondition ParseActivationCondition(string condition)
+    {
+        switch (condition)
+        {
+            case "exploring":
+                activationCondition actExplore = e => e.City.HasPeopleInTask(typeof(DTask_Explore));
+                return actExplore;
+            case "true":
+            default:
+                activationCondition actTrue = e => true;
+                return actTrue;
+        }
+    }
+
     public string promptText;
     public delegate bool activationCondition(DEvent e);
     public activationCondition actCondition;
