@@ -246,9 +246,9 @@ public class DGame
 
         // Load the current date
         dGame.currentDate = new DateTime(
-            jsonNode["currentDate"]["year"].AsInt,
-            jsonNode["currentDate"]["month"].AsInt,
-            jsonNode["currentDate"]["day"].AsInt);
+            RandJSON.JSONInt(jsonNode["currentDate"]["year"]),
+            RandJSON.JSONInt(jsonNode["currentDate"]["month"]),
+            RandJSON.JSONInt(jsonNode["currentDate"]["day"]));
 
         // Load the current city
         if (jsonNode["currentCity"].IsNull)
@@ -261,9 +261,9 @@ public class DGame
         }
 
         // Load the turn information
-        dGame.turnDurationOfCity = jsonNode["turnDurationOfCity"].AsInt;
-        dGame.durationOfTurn = jsonNode["durationOfTurn"].AsInt;
-        dGame.currentTurnNumber = jsonNode["currentTurnNumber"].AsInt;
+        RandJSON.JSONInt(dGame.turnDurationOfCity = jsonNode["turnDurationOfCity"]);
+        RandJSON.JSONInt(dGame.durationOfTurn = jsonNode["durationOfTurn"]);
+        RandJSON.JSONInt(dGame.currentTurnNumber = jsonNode["currentTurnNumber"]);
 
         return dGame;
     }

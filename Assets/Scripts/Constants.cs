@@ -16,7 +16,8 @@ public static class Constants {
     public static string TASK_TRAY_SINGLE_PREFAB_PATH = @"Prefabs/Tasks/TaskTraySingle";
     public static string MEEPLE_PREFAB_PATH = @"Prefabs/MeepleController";
 
-    public static string CITY_JSON_PATH = @"Assets/Resources/Data";
+    public static string CITY_JSON_PATH = @"Assets/Resources/Data/starting_cities";
+    public const string SAVE_JSON_PATH = @"Assets/Resources/Data/saved_games";
 
     public enum EVT_TYPE
     {

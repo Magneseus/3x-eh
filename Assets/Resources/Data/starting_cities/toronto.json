@@ -1,0 +1,447 @@
+{
+    "name": "Toronto",
+    "age": 0,
+    "explorationLevel": 0,
+    "shelterTier": 1,
+    "fuelToShelterConversion": 0,
+    "health": 0.5,
+    "foodConsumption": 1,
+    "notEnoughFoodHealthDecay": 0.800000011920929,
+    "season": 3,
+    "isDeadOfWinter": false,
+    "people": [
+        {
+            "ID": 0,
+            "infectionLevel": 0,
+            "isDead": false,
+            "taskID": 1
+        },
+        {
+            "ID": 1,
+            "infectionLevel": 0,
+            "isDead": false,
+            "taskID": 0
+        },
+        {
+            "ID": 2,
+            "infectionLevel": 0,
+            "isDead": false,
+            "taskID": 0
+        }
+    ],
+    "buildings": [
+        {
+            "name": "Town Hall",
+            "ID": 0,
+            "cityName": "Toronto",
+            "status": 2,
+            "percentInfected": 0,
+            "percentDamaged": 0,
+            "percentAssessed": 1,
+            "tasks": [
+                {
+                    "ID": 0,
+                    "name": "Idle",
+                    "buildingName": "Town Hall",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 1,
+                    "taskEnabled": true,
+                    "resourceOutput": null,
+                    "taskSlots": [
+                        {
+                            "taskName": "Idle",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": 1
+                        },
+                        {
+                            "taskName": "Idle",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": 2
+                        },
+                        {
+                            "taskName": "Idle",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": null
+                        }
+                    ],
+                    "specialTask": "idle"
+                },
+                {
+                    "ID": 1,
+                    "name": "Explore",
+                    "buildingName": "Town Hall",
+                    "maxPeople": 2,
+                    "numPeople": 1,
+                    "fullAssessRequirement": 1,
+                    "taskEnabled": true,
+                    "resourceOutput": null,
+                    "taskSlots": [
+                        {
+                            "taskName": "Explore",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": 0
+                        },
+                        {
+                            "taskName": "Explore",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": null
+                        }
+                    ],
+                    "specialTask": "explore",
+                    "exploreAmount": 0.100000001490116
+                },
+                {
+                    "ID": 2,
+                    "name": "Assess Building",
+                    "buildingName": "Town Hall",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0,
+                    "taskEnabled": false,
+                    "resourceOutput": null,
+                    "taskSlots": [
+                        {
+                            "taskName": "Assess Building",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": null
+                        }
+                    ],
+                    "specialTask": "assess",
+                    "assessAmount": 0.200000002980232
+                }
+            ],
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "name": "Apartment Building",
+            "ID": 1,
+            "cityName": "Toronto",
+            "status": 0,
+            "percentInfected": 0.425732016563416,
+            "percentDamaged": 0.352013766765594,
+            "percentAssessed": 0,
+            "tasks": [
+                {
+                    "ID": 3,
+                    "name": "Assess Building",
+                    "buildingName": "Apartment Building",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0,
+                    "taskEnabled": true,
+                    "resourceOutput": null,
+                    "taskSlots": [
+                        {
+                            "taskName": "Assess Building",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": null
+                        }
+                    ],
+                    "specialTask": "assess",
+                    "assessAmount": 0.200000002980232
+                },
+                {
+                    "ID": 4,
+                    "name": "Apartment Super",
+                    "buildingName": "Apartment Building",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0.600000023841858,
+                    "taskEnabled": true,
+                    "resourceOutput": {
+                        "name": "Shelter",
+                        "ID": 0,
+                        "amount": 20
+                    },
+                    "taskSlots": [
+                        {
+                            "taskName": "Apartment Super",
+                            "taskSlotEnabled": false,
+                            "structuralDamage": 0.704027533531189,
+                            "fungalDamage": 0.851464033126831,
+                            "personID": null
+                        }
+                    ]
+                }
+            ],
+            "position": {
+                "x": -4,
+                "y": 1
+            }
+        },
+        {
+            "name": "Gas Station",
+            "ID": 2,
+            "cityName": "Toronto",
+            "status": 0,
+            "percentInfected": 0.337031781673431,
+            "percentDamaged": 0.327278673648834,
+            "percentAssessed": 0,
+            "tasks": [
+                {
+                    "ID": 5,
+                    "name": "Assess Building",
+                    "buildingName": "Gas Station",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0,
+                    "taskEnabled": true,
+                    "resourceOutput": null,
+                    "taskSlots": [
+                        {
+                            "taskName": "Assess Building",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": null
+                        }
+                    ],
+                    "specialTask": "assess",
+                    "assessAmount": 0.200000002980232
+                },
+                {
+                    "ID": 6,
+                    "name": "Fuel Pump",
+                    "buildingName": "Gas Station",
+                    "maxPeople": 2,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0.699999988079071,
+                    "taskEnabled": true,
+                    "resourceOutput": {
+                        "name": "Fuel",
+                        "ID": 1,
+                        "amount": 4
+                    },
+                    "taskSlots": [
+                        {
+                            "taskName": "Fuel Pump",
+                            "taskSlotEnabled": false,
+                            "structuralDamage": 0.542654931545258,
+                            "fungalDamage": 0.598403036594391,
+                            "personID": null
+                        },
+                        {
+                            "taskName": "Fuel Pump",
+                            "taskSlotEnabled": false,
+                            "structuralDamage": 0.766459703445435,
+                            "fungalDamage": 0.749724149703979,
+                            "personID": null
+                        }
+                    ]
+                }
+            ],
+            "position": {
+                "x": -2.70000004768372,
+                "y": 1.79999995231628
+            }
+        },
+        {
+            "name": "Library",
+            "ID": 3,
+            "cityName": "Toronto",
+            "status": 0,
+            "percentInfected": 0,
+            "percentDamaged": 0,
+            "percentAssessed": 0,
+            "tasks": [
+                {
+                    "ID": 7,
+                    "name": "Assess Building",
+                    "buildingName": "Library",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0,
+                    "taskEnabled": true,
+                    "resourceOutput": null,
+                    "taskSlots": [
+                        {
+                            "taskName": "Assess Building",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": null
+                        }
+                    ],
+                    "specialTask": "assess",
+                    "assessAmount": 0.200000002980232
+                }
+            ],
+            "position": {
+                "x": -2.79999995231628,
+                "y": -1.5
+            }
+        },
+        {
+            "name": "Grocery Store",
+            "ID": 4,
+            "cityName": "Toronto",
+            "status": 0,
+            "percentInfected": 0.476174831390381,
+            "percentDamaged": 0.297697752714157,
+            "percentAssessed": 0,
+            "tasks": [
+                {
+                    "ID": 8,
+                    "name": "Assess Building",
+                    "buildingName": "Grocery Store",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0,
+                    "taskEnabled": true,
+                    "resourceOutput": null,
+                    "taskSlots": [
+                        {
+                            "taskName": "Assess Building",
+                            "taskSlotEnabled": true,
+                            "structuralDamage": 0,
+                            "fungalDamage": 0,
+                            "personID": null
+                        }
+                    ],
+                    "specialTask": "assess",
+                    "assessAmount": 0.200000002980232
+                },
+                {
+                    "ID": 9,
+                    "name": "Food Production",
+                    "buildingName": "Grocery Store",
+                    "maxPeople": 2,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0.699999988079071,
+                    "taskEnabled": true,
+                    "resourceOutput": {
+                        "name": "Food",
+                        "ID": 2,
+                        "amount": 10
+                    },
+                    "taskSlots": [
+                        {
+                            "taskName": "Food Production",
+                            "taskSlotEnabled": false,
+                            "structuralDamage": 0.46416300535202,
+                            "fungalDamage": 0.795755982398987,
+                            "personID": null
+                        },
+                        {
+                            "taskName": "Food Production",
+                            "taskSlotEnabled": false,
+                            "structuralDamage": 0.628161668777466,
+                            "fungalDamage": 0.519119799137115,
+                            "personID": null
+                        }
+                    ]
+                },
+                {
+                    "ID": 10,
+                    "name": "Food Storage Management",
+                    "buildingName": "Grocery Store",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0.400000005960464,
+                    "taskEnabled": true,
+                    "resourceOutput": {
+                        "name": "Food Storage",
+                        "ID": 3,
+                        "amount": 20
+                    },
+                    "taskSlots": [
+                        {
+                            "taskName": "Food Storage Management",
+                            "taskSlotEnabled": false,
+                            "structuralDamage": 0.346930921077728,
+                            "fungalDamage": 0.771086573600769,
+                            "personID": null
+                        }
+                    ]
+                }
+            ],
+            "position": {
+                "x": 0.100000001490116,
+                "y": -2.29999995231628
+            }
+        }
+    ],
+    "resources": [
+        {
+            "name": "Food",
+            "ID": 2,
+            "amount": 0
+        },
+        {
+            "name": "Fuel",
+            "ID": 1,
+            "amount": 0
+        },
+        {
+            "name": "Materials",
+            "ID": 4,
+            "amount": 0
+        },
+        {
+            "name": "Medicine",
+            "ID": 5,
+            "amount": 0
+        },
+        {
+            "name": "Shelter",
+            "ID": 0,
+            "amount": 0
+        }
+    ],
+    "linked_cities": [
+        "Ottawa",
+        "Montreal"
+    ],
+    "position": {
+        "x": 209,
+        "y": -324
+    },
+    "building_locations": [
+        {
+            "x": -2.8,
+            "y": -1.5
+        },
+        {
+            "x": -4.0,
+            "y": 1.0
+        },
+        {
+            "x": 1.1,
+            "y": 1.7
+        },
+        {
+            "x": -1.3,
+            "y": -0.4
+        },
+        {
+            "x": 0.1,
+            "y": -2.3
+        },
+        {
+            "x": -2.7,
+            "y": 1.8
+        },
+        {
+            "x": -4.2,
+            "y": -0.8
+        }
+    ]
+}
