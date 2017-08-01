@@ -12,6 +12,7 @@ public class DTaskSlot : ITurnUpdatable
     private float fungalDamage;
     private bool taskSlotEnabled;
     private bool lockedIn;
+    private int numTurnsPassed;
 
     public DTaskSlot(DTask dTask, DPerson dPerson=null)
     {
@@ -23,6 +24,7 @@ public class DTaskSlot : ITurnUpdatable
 
         taskSlotEnabled = true;
         lockedIn = false;
+        numTurnsPassed = 0;
     }
 
     public void TurnUpdate(int numDaysPassed)
@@ -170,6 +172,7 @@ public class DTaskSlot : ITurnUpdatable
         returnNode.Add("taskName", new JSONString(task.Name));
         returnNode.Add("taskSlotEnabled", new JSONBool(taskSlotEnabled));
         returnNode.Add("lockedIn", new JSONBool(lockedIn));
+        returnNode.Add("numTurnsPassed", new JSONNumber(numTurnsPassed));
 
         // Save damage
         returnNode.Add("structuralDamage", new JSONNumber(structuralDamage));
@@ -188,9 +191,12 @@ public class DTaskSlot : ITurnUpdatable
     {
         DTaskSlot returnTaskSlot = new DTaskSlot(task);
 
-        // Load damage and enabled bool
+        // Load slot info
         returnTaskSlot.taskSlotEnabled = jsonNode["taskSlotEnabled"].AsBool;
         returnTaskSlot.lockedIn = jsonNode["lockedIn"].AsBool;
+        returnTaskSlot.numTurnsPassed = RandJSON.JSONInt(jsonNode["numTurnsPassed"], 0);
+
+        // Load damage
         returnTaskSlot.structuralDamage = RandJSON.JSONFloat(jsonNode["structuralDamage"]);
         returnTaskSlot.fungalDamage = RandJSON.JSONFloat(jsonNode["fungalDamage"]);
 
