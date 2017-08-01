@@ -338,11 +338,7 @@ public class DTask : ITurnUpdatable
             // Save output info
             returnTask.fullAssessRequirement = RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]);
             returnTask.taskEnabled = jsonNode["taskEnabled"].AsBool;
-
-            if (jsonNode["numTurnsToComplete"] != null)
-            {
-                returnTask.NumTurnsToComplete = RandJSON.JSONInt(jsonNode["numTurnsToComplete"]);
-            }
+            returnTask.NumTurnsToComplete = RandJSON.JSONInt(jsonNode["numTurnsToComplete"], 0);
 
             // Load the task slots
             returnTask.slotList = new List<DTaskSlot>();
