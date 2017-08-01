@@ -68,31 +68,40 @@ public class DTask : ITurnUpdatable
             {
                 bool canOutputResource = true;
 
+                // Check slot lock
+                if (!(taskSlot.NumTurnsPassed >= numTurnsToComplete))
+                    canOutputResource = false;
+
                 // Process resource consumption
-                if (input != null)
+                if (canOutputResource && input != null)
                 {
                     if (building.City.GetResource(input.Name).Amount >= input.Amount)
-                    {
-                        building.InputResource(input);
-                    }
+                        ConsumeResources();
                     else
-                    {
                         canOutputResource = false;
-                    }
                 }
 
+                // Resource production
                 if (canOutputResource)
-                {
-                    float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
-                    building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier)));
-                    if (taskName.Equals("Treat People"))
-                    {
-                        RandomalyTreatPeople();
-                    }
-                }
+                    ProduceResources(taskSlot);
             }
 
         }
+    }
+
+    private void ProduceResources(DTaskSlot taskSlot)
+    {
+        float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
+        building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier)));
+        if (taskName.Equals("Treat People"))
+        {
+            RandomalyTreatPeople();
+        }
+    }
+
+    private void ConsumeResources()
+    {
+        building.InputResource(input);
     }
 
     public void StructureDeteriorates()

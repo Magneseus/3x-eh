@@ -29,10 +29,36 @@ public class DTaskSlot : ITurnUpdatable
 
     public void TurnUpdate(int numDaysPassed)
     {
-        if (person != null && (Infected || Damaged))
+        if (person == null)
+            return;
+
+        // Repairing the slot is first and foremost
+        if ((Infected || Damaged))
         {
             float modifier = person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
-            Repair(Constants.TEMP_REPAIR_AMOUNT * modifier);            
+            Repair(Constants.TEMP_REPAIR_AMOUNT * modifier);
+        }
+        // Other behavior
+        else
+        {
+            // Locking slot
+            if (task.NumTurnsToComplete > 0)
+            {
+                // Start the lock
+                if (!lockedIn)
+                {
+                    LockSlot();
+                }
+
+                // Increment turn counter
+                numTurnsPassed++;
+
+                // Check if the lock is over
+                if (lockedIn && numTurnsPassed >= task.NumTurnsToComplete)
+                {
+                    UnlockSlot();
+                }
+            }
         }
     }
 
@@ -41,6 +67,7 @@ public class DTaskSlot : ITurnUpdatable
         if (!lockedIn && person != null)
         {
             lockedIn = true;
+            numTurnsPassed = 0;
 
             person.LockMeeple();
         }
@@ -186,6 +213,11 @@ public class DTaskSlot : ITurnUpdatable
     public bool IsLocked
     {
         get { return lockedIn; }
+    }
+
+    public int NumTurnsPassed
+    {
+        get { return numTurnsPassed; }
     }
 
     #endregion
