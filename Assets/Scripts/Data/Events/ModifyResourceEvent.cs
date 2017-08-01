@@ -29,7 +29,7 @@ public class ModifyResourceEvent : DEvent {
 
     private DResource[] resources;
 
-    public ModifyResourceEvent(string promptText, DCity city, DResource[] resources, 
+    private ModifyResourceEvent(string promptText, DCity city, DResource[] resources, 
         activationCondition actCondition,int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT)
     {
         this.promptText = promptText;

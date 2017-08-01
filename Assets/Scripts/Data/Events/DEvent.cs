@@ -2,9 +2,6 @@
 
     public static DGame dGame { get; set; }
 
-    
-
-
     public static activationCondition ParseActivationCondition(string condition)
     {
         switch (condition)

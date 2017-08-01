@@ -61,7 +61,7 @@ public class ChoiceEvent : DEvent
     public string[] outcomeTexts = new string[2];
 
 
-    public ChoiceEvent(string promptText, DCity city, activationCondition actCondition, outcome[] outcomes, 
+    private ChoiceEvent(string promptText, DCity city, activationCondition actCondition, outcome[] outcomes, 
         string[] outcomeTexts, int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT)
     {
         this.promptText = promptText;
