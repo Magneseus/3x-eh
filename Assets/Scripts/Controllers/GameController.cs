@@ -61,8 +61,6 @@ public class GameController : MonoBehaviour
         {
             //LoadGame();
         }
-        if (!GameObject.FindGameObjectWithTag("MainMenu").activeSelf)
-            gameObject.SetActive(true);
     }
 
     public void LoadGame(string savedGameFile, string pathToSavedGames=Constants.SAVE_JSON_PATH)
