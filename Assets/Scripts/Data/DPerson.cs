@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 
-public class DPerson : TurnUpdatable
+public class DPerson : ITurnUpdatable
 {
     private static int NEXT_ID = 0;
     private MeepleController meepleController;
@@ -103,8 +103,17 @@ public class DPerson : TurnUpdatable
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
 
-    
+    public void LockMeeple()
+    {
+        if (meepleController != null && meepleController.boxCollider != null)
+            meepleController.boxCollider.enabled = false;
+    }
 
+    public void UnlockMeeple()
+    {
+        if (meepleController != null && meepleController.boxCollider != null)
+            meepleController.boxCollider.enabled = true;
+    }
 
 
     #endregion
@@ -151,9 +160,18 @@ public class DPerson : TurnUpdatable
         get { return isDead; }
     }
 
+    public bool IsLocked
+    {
+        get { return taskSlot != null && taskSlot.IsLocked; }
+    }
+
     public void SetMeepleController(MeepleController mc)
     {
         this.meepleController = mc;
+
+        // Check lock
+        if (IsLocked)
+            LockMeeple();
     }
 
     #endregion
@@ -179,7 +197,7 @@ public class DPerson : TurnUpdatable
 
         // Load person info
         returnPerson.id = jsonNode["ID"];
-        returnPerson.infectionLevel = jsonNode["infectionLevel"];
+        returnPerson.infectionLevel = RandJSON.JSONInt(jsonNode["infectionLevel"]);
         returnPerson.isDead = jsonNode["isDead"];
 
         return returnPerson;

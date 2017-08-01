@@ -16,12 +16,29 @@ public static class Constants {
     public static string TASK_TRAY_SINGLE_PREFAB_PATH = @"Prefabs/Tasks/TaskTraySingle";
     public static string MEEPLE_PREFAB_PATH = @"Prefabs/MeepleController";
 
-    public static string CITY_JSON_PATH = @"Assets/Resources/Data";
+    public static string CITY_JSON_PATH = @"Assets/Resources/Data/starting_cities";
+    public const string SAVE_JSON_PATH = @"Assets/Resources/Data/saved_games";
+
+    public enum EVT_TYPE
+    {
+        CHOICE,
+        MOD_RESOURCE
+    };
+
+    public static string EVT_CHOICE_EVENTS_PATH = @"Assets/Resources/Data/Events/choice-events.json";
+    public static string EVT_MOD_RESOURCE_EVENTS_PATH = @"Assets/Resources/Data/Events/modify-resource-events.json";
+
 
     public static string FOOD_RESOURCE_NAME = "Food";
     public static DateTime[] DEFAULT_SEASON_DATES = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
     public static DateTime DEFAULT_DATE = DEFAULT_SEASON_DATES[0].AddDays(1);
     public static int DEFAULT_RESOURCE_VALUE = 0;
+
+    public const int NO_INPUT = 0;
+    public const int EVENT_PRIORITY_DEFAULT = 0;
+    public const int EVENT_PRIORITY_INTERESTING = 1;
+    public const int EVENT_PRIORITY_REQ_RESOURCES = 2;
+    public const int EVENT_PRIORITY_STORY = 3;
 
     #region Task Constants
     public static float TEMP_REPAIR_AMOUNT = 0.2f;
@@ -53,3 +70,4 @@ public static class Constants {
     public static float CITY_DEVELOPMENT_PERCENT_FROM_REPAIR = 0.4f;
     #endregion
 }
+

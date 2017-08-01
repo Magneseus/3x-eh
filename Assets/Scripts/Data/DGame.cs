@@ -3,10 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using SimpleJSON;
+using UnityEngine;
+using System.IO;
 
 [Serializable]
 public class DGame
 {
+    public enum _gameState { PLAY, EVENT, MENU, NUMELEMENTS};
+    public _gameState gameState = _gameState.PLAY;
+    public DEvent currentEvent = null;
+
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     Dictionary<string, DCompressedCity> completedCities = new Dictionary<string, DCompressedCity>();
 
@@ -24,6 +30,7 @@ public class DGame
     public DGame(GameController gameController)
     {
         this.gameController = gameController;
+        DEvent.dGame = this;
     }
 
     // Sets the specified city to be the current "active" city
@@ -71,7 +78,7 @@ public class DGame
       completedCities.Add(city.Name, new DCompressedCity(city));
     }
 
-
+    bool temp = true;
     public void EndTurnUpdate()
     {
         currentDate = currentDate.AddDays(durationOfTurn);
@@ -81,13 +88,38 @@ public class DGame
         {
             currentCity.TurnUpdate(durationOfTurn);
             currentCity.UpdateSeason(currentDate);
+            if (temp)
+                TEMPtestEvents();
         }
+        DEventSystem.TurnUpdate();
+        NextEvent();
 
         // If we've finished the current city
         if (currentTurnNumber >= turnDurationOfCity)
         {
             CompletedCurrentCity();
         }
+    }
+
+    public void TEMPtestEvents()
+    {
+        temp = false;        
+
+        var choiceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_CHOICE_EVENTS_PATH))[0];
+        DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.CHOICE, currentCity, choiceEvtJson);
+
+        var modResourceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_MOD_RESOURCE_EVENTS_PATH))[0];
+        DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, modResourceEvtJson);        
+    }
+
+    public void NextEvent()
+    {
+        gameState = _gameState.EVENT;
+        DEvent nextEvent = DEventSystem.NextEvent();
+        if (nextEvent != null)
+            ActivateEvent(nextEvent);
+        else
+            gameState = _gameState.PLAY;
     }
 
     public void AddCity(DCity dCity)
@@ -99,6 +131,23 @@ public class DGame
     {
         cities[city1Key].linkToCity(city2Key);
         cities[city2Key].linkToCity(city1Key);
+    }
+
+    public void ActivateEvent(DEvent e)
+    {
+        if (e.ActivationCondition())
+        {
+            currentEvent = e;
+            currentEvent.Activate();
+        }
+        else
+            NextEvent();
+    }
+
+    public void ResolveEvent(int selection = Constants.NO_INPUT)
+    {
+        currentEvent.Resolve(selection);
+        NextEvent();
     }
 
     #region Properties
@@ -134,6 +183,18 @@ public class DGame
     public DateTime[] DefaultSeasonStartDates
     {
         get { return defaultSeasonStartDates; }
+    }
+
+    public _gameState GameState
+    {
+        get { return gameState; }
+        set { gameState = value; }
+    }
+
+    public DEvent CurrentEvent
+    {
+        get { return currentEvent; }
+        set { currentEvent = value; }
     }
 
     public int CityDuration
@@ -185,9 +246,9 @@ public class DGame
 
         // Load the current date
         dGame.currentDate = new DateTime(
-            jsonNode["currentDate"]["year"].AsInt,
-            jsonNode["currentDate"]["month"].AsInt,
-            jsonNode["currentDate"]["day"].AsInt);
+            RandJSON.JSONInt(jsonNode["currentDate"]["year"]),
+            RandJSON.JSONInt(jsonNode["currentDate"]["month"]),
+            RandJSON.JSONInt(jsonNode["currentDate"]["day"]));
 
         // Load the current city
         if (jsonNode["currentCity"].IsNull)
@@ -200,9 +261,9 @@ public class DGame
         }
 
         // Load the turn information
-        dGame.turnDurationOfCity = jsonNode["turnDurationOfCity"].AsInt;
-        dGame.durationOfTurn = jsonNode["durationOfTurn"].AsInt;
-        dGame.currentTurnNumber = jsonNode["currentTurnNumber"].AsInt;
+        RandJSON.JSONInt(dGame.turnDurationOfCity = jsonNode["turnDurationOfCity"]);
+        RandJSON.JSONInt(dGame.durationOfTurn = jsonNode["durationOfTurn"]);
+        RandJSON.JSONInt(dGame.currentTurnNumber = jsonNode["currentTurnNumber"]);
 
         return dGame;
     }

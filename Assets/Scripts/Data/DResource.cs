@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 
-public class DResource : TurnUpdatable
+public class DResource : ITurnUpdatable
 {
     private static int resourceIDCounter = 0;
     private static Dictionary<string, int> resourceNameToIDMap = new Dictionary<string, int>();
@@ -131,7 +131,7 @@ public class DResource : TurnUpdatable
         // Load all the currently created resources (the master list)
         foreach (JSONNode resource in jsonNode.AsArray)
         {
-            resourceMap.Add(resource["name"], resource["ID"]);
+            resourceMap.Add(resource["name"], resource["ID"].AsInt);
         }
 
         resourceNameToIDMap = resourceMap;
@@ -139,7 +139,12 @@ public class DResource : TurnUpdatable
 
     public static DResource LoadFromJSON(JSONNode jsonNode)
     {
-        DResource loadedResource = Create(jsonNode["name"], jsonNode["amount"].AsInt);
+        if (jsonNode == null)
+            return null;
+
+        DResource loadedResource = Create(
+            jsonNode["name"],
+            RandJSON.JSONInt(jsonNode["amount"]));
 
         if (loadedResource.ID != jsonNode["ID"].AsInt)
         {

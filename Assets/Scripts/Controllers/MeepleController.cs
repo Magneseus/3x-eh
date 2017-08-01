@@ -100,7 +100,7 @@ public class MeepleController : MonoBehaviour {
         {
             // Reset position
             this.transform.parent = returnParent;
-			dPerson.MoveToTownHall();
+            ResetLocalPosition();
         }
         else
         {

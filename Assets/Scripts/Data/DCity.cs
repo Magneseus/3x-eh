@@ -6,7 +6,7 @@ using SimpleJSON;
 using UnityEngine;
 
 [Serializable]
-public class DCity : TurnUpdatable
+public class DCity : ITurnUpdatable
 {
     [NonSerialized]
     private DGame dGame;
@@ -319,6 +319,18 @@ public class DCity : TurnUpdatable
             fuelResource = resources[resource.ID];
     }
 
+    public void TakeResource(DResource resource)
+    {
+        if (resources.ContainsKey(resource.ID))
+        {
+            resources[resource.ID].Amount -= resource.Amount;
+        }
+        else
+        {
+            throw new ResourceNameNotFoundException(resource.Name);
+        }
+    }
+
     // todo - as resources are defined with constant names, include if checks here
     public float SeasonResourceProduceMod(DResource resource)
     {
@@ -490,6 +502,29 @@ public class DCity : TurnUpdatable
             UnExploredBuildings[index].Discover();
         }
 
+    }
+
+    public bool HasPeopleInTask(Type taskType)
+    {
+        if (taskType != typeof(DTask) && !taskType.IsSubclassOf(typeof(DTask)))
+            return false;
+
+        foreach (var entry in people)
+            if (entry.Value.Task != null && entry.Value.Task.GetType() == typeof(DTask_Explore))
+                return true;
+        return false;
+    }
+
+    public int PeopleInTask(Type taskType)
+    {
+        if (taskType != typeof(DTask) && taskType.IsSubclassOf(typeof(DTask)))
+            return 0;
+
+        int result = 0;
+        foreach (var entry in people)
+            if (entry.Value.Task != null && entry.Value.Task.GetType() == typeof(DTask_Explore))
+                result ++;
+        return result;
     }
 
     #region Properties
@@ -671,25 +706,10 @@ public class DCity : TurnUpdatable
         return returnNode;
     }
 
-    public static DCity LoadFromJSON(JSONNode jsonNode, DGame dGame)
+    public static DCity LoadFromJSON(JSONNode jsonNode, DGame dGame, bool randomBuildingPlacement=false)
     {
-        // Load general info about city
         string _name = jsonNode["name"];
-        int _age = jsonNode["age"].AsInt;
-        float _explorationLevel = jsonNode["explorationLevel"].AsFloat;
-
-        // Load resource info
-        float _shelterTier = jsonNode["shelterTier"].AsInt;
-        float _fuelToShelterConversion = jsonNode["fuelToShelterConversion"].AsInt;
-
-        // Load health and food stuff
-        float _health = jsonNode["health"].AsFloat;
-        int _foodConsumption = jsonNode["foodConsumption"].AsInt;
-        float _notEnoughFoodHealthDecay = jsonNode["notEnoughFoodHealthDecay"].AsFloat;
-
-        // Load season
-        DSeasons._season _season = (DSeasons._season)(jsonNode["season"].AsInt);
-        bool _isDeadOfWinter = jsonNode["isDeadOfWinter"].AsBool;
+        
 
         // TODO: Store season start and end dates
         // Create city object
@@ -697,19 +717,61 @@ public class DCity : TurnUpdatable
         dCity.cityController = dGame.GameController.CreateCityController(dCity);
         dCity.dGame = dGame;
 
+        // Load general info about city
+        dCity.age = RandJSON.JSONInt(jsonNode["age"]);
+        dCity.explorationLevel = RandJSON.JSONFloat(jsonNode["explorationLevel"]);
+
+        // Load resource info
+        dCity.shelterTier = RandJSON.JSONInt(jsonNode["shelterTier"]);
+        dCity.fuelToShelterConversion = RandJSON.JSONInt(jsonNode["fuelToShelterConversion"]);
+
+        // TODO: Why are these variables static?
+        // Load health and food stuff
+        //dCity.health = RandJSON.JSONFloat(jsonNode["health"]);
+        //dCity.foodConsumption = RandJSON.JSONInt(jsonNode["foodConsumption"]);
+        //dCity.notEnoughFoodHealthDecay = RandJSON.JSONFloat(jsonNode["notEnoughFoodHealthDecay"]);
+
+        // Load season
+        DSeasons._season _season = (DSeasons._season)(RandJSON.JSONInt(jsonNode["season"]));
+        bool _isDeadOfWinter = jsonNode["isDeadOfWinter"].AsBool;
+
         #region Lists of Stuff
 
         // Load people
         foreach (JSONNode person in jsonNode["people"].AsArray)
             DPerson.LoadFromJSON(person, dCity);
 
+        // Load in all the possible locations for buildings
+        List<Vector2> possibleBuildingLocations = null;
+        if (randomBuildingPlacement)
+        {
+            possibleBuildingLocations = new List<Vector2>();
+            foreach (JSONNode buildingLoc in jsonNode["building_locations"].AsArray)
+            {
+                // Get the random positions available
+                float xPos = RandJSON.JSONFloat(buildingLoc["x"]);
+                float yPos = RandJSON.JSONFloat(buildingLoc["y"]);
+
+                possibleBuildingLocations.Add(new Vector2(xPos, yPos));
+            }
+        }
+
         // Load buildings
         foreach (JSONNode building in jsonNode["buildings"].AsArray)
         {
-            DBuilding loadedBuilding = DBuilding.LoadFromJSON(building, dCity);
+            DBuilding loadedBuilding = DBuilding.LoadFromJSON(building, dCity, randomBuildingPlacement);
 
             if (loadedBuilding.Name.Equals("Town Hall"))
+            {
                 dCity.townHall = loadedBuilding;
+            }
+            else if (randomBuildingPlacement)
+            {
+                // Pull a random building location from the list
+                int randIndex = Mathf.RoundToInt(UnityEngine.Random.Range(0, possibleBuildingLocations.Count - 1));
+                loadedBuilding.SetBuildingPosition(possibleBuildingLocations[randIndex]);
+                possibleBuildingLocations.RemoveAt(randIndex);
+            }
         }
 
         // Load resources

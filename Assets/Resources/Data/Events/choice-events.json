@@ -1,0 +1,23 @@
+[
+  {
+    "id": 0,
+    "priority": 1,
+    "turnsToActivate": 2,
+    "promptText": "A wolverine is raising her pups in your taco pantry. Do you attempt to remove her?",
+    "activationCondition": "true",
+    "outcomes": [
+      {
+        "type": "resource",
+        "value": [ "Food", -25 ]
+      },
+      {
+        "type": "cityHealth",
+        "value": [ "multiply", 0.9 ]
+      }
+    ],
+    "outcomesText": [
+      "Her pups will remember the tacos fondly. Your people will not.",
+      "Jared was only slightly maimed removing the wolverine."
+    ]
+  }
+]

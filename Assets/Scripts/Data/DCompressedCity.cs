@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DCompressedCity : DBuilding, TurnUpdatable {
+public class DCompressedCity : DBuilding, ITurnUpdatable {
 
     private int population;
     private float percentInfected;

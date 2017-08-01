@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using SimpleJSON;
 using UnityEngine;
 
-public class DBuilding : TurnUpdatable {
+public class DBuilding : ITurnUpdatable {
 
     public enum DBuildingStatus
     {
@@ -197,6 +197,11 @@ public class DBuilding : TurnUpdatable {
         city.AddResource(resource);
     }
 
+    public void InputResource(DResource resource)
+    {
+        city.TakeResource(resource);
+    }
+
     public DCity City
     {
         get { return city; }
@@ -227,6 +232,12 @@ public class DBuilding : TurnUpdatable {
     public void SetBuildingController(BuildingController bc)
     {
         buildingController = bc;
+    }
+
+    public void SetBuildingPosition(Vector3 position)
+    {
+        if (buildingController != null)
+            buildingController.transform.position = position;
     }
 
     #region Assessment Components
@@ -350,7 +361,7 @@ public class DBuilding : TurnUpdatable {
         return returnNode;
     }
 
-    public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city)
+    public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city, bool setPositionManually=false)
     {
         DBuilding dBuilding = new DBuilding(city, jsonNode["name"], null, false);
 
@@ -358,10 +369,10 @@ public class DBuilding : TurnUpdatable {
         dBuilding.id = jsonNode["ID"].AsInt;
 
         // Load status info
-        dBuilding.status = (DBuildingStatus)(jsonNode["status"].AsInt);
-        dBuilding.percentInfected = jsonNode["percentInfected"].AsFloat;
-        dBuilding.percentDamaged = jsonNode["percentDamaged"].AsFloat;
-        dBuilding.percentAssessed = jsonNode["percentAssessed"].AsFloat;
+        dBuilding.status = (DBuildingStatus)(RandJSON.JSONInt(jsonNode["status"]));
+        dBuilding.percentInfected = RandJSON.JSONFloat(jsonNode["percentInfected"]);
+        dBuilding.percentDamaged = RandJSON.JSONFloat(jsonNode["percentDamaged"]);
+        dBuilding.percentAssessed = RandJSON.JSONFloat(jsonNode["percentAssessed"]);
 
         // Load tasks
         foreach (JSONNode taskNode in jsonNode["tasks"].AsArray)
@@ -376,11 +387,14 @@ public class DBuilding : TurnUpdatable {
                 dBuilding.exploreTask = (DTask_Explore)(task);
         }
 
-        // Load building position
-        Vector3 position = new Vector3(
-            jsonNode["position"]["x"],
-            jsonNode["position"]["y"],
-            1);
+        // Building position
+        Vector3 position = new Vector3(0, 0, 1);
+        if (!setPositionManually)
+        {
+            // Load building position
+            position.x = jsonNode["position"]["x"];
+            position.y = jsonNode["position"]["y"];
+        }
 
         // Spawn building controller
         city.Game.GameController.CreateBuildingController(dBuilding, position);
