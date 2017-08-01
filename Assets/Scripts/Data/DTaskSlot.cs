@@ -183,6 +183,11 @@ public class DTaskSlot : ITurnUpdatable
 		set { taskTraySlot = value; }
 	}
 
+    public bool IsLocked
+    {
+        get { return lockedIn; }
+    }
+
     #endregion
 
     public JSONNode SaveToJSON()

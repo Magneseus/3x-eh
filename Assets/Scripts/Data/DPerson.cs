@@ -160,9 +160,18 @@ public class DPerson : ITurnUpdatable
         get { return isDead; }
     }
 
+    public bool IsLocked
+    {
+        get { return taskSlot != null && taskSlot.IsLocked; }
+    }
+
     public void SetMeepleController(MeepleController mc)
     {
         this.meepleController = mc;
+
+        // Check lock
+        if (IsLocked)
+            LockMeeple();
     }
 
     #endregion
