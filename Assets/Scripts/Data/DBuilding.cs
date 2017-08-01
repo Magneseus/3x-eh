@@ -197,6 +197,11 @@ public class DBuilding : ITurnUpdatable {
         city.AddResource(resource);
     }
 
+    public void InputResource(DResource resource)
+    {
+        city.TakeResource(resource);
+    }
+
     public DCity City
     {
         get { return city; }

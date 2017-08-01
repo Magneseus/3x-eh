@@ -4,8 +4,14 @@ using SimpleJSON;
 
 public static class RandJSON
 {
-    public static int JSONInt(JSONNode node)
+    public static int JSONInt(JSONNode node, int defaultIntForNull=int.MaxValue)
     {
+        // Check for null node
+        if (defaultIntForNull != int.MaxValue && node == null)
+        {
+            return defaultIntForNull;
+        }
+
         int returnInt = int.MaxValue;
 
         // Check if it's an array of min/max
@@ -32,8 +38,14 @@ public static class RandJSON
         return returnInt;
     }
 
-    public static float JSONFloat(JSONNode node)
+    public static float JSONFloat(JSONNode node, float defaultFloatForNull=float.MaxValue)
     {
+        // Check for null node
+        if (defaultFloatForNull != float.MaxValue && node == null)
+        {
+            return defaultFloatForNull;
+        }
+
         float returnFloat = float.MaxValue;
 
         // Check if it's an array of min/max

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class DTask : ITurnUpdatable
 {
-
     private static int NEXT_ID = 0;
 
     protected int id;
@@ -18,10 +17,12 @@ public class DTask : ITurnUpdatable
 
     protected float fullAssessRequirement;
     protected DResource output;
+    protected DResource input;
     protected bool taskEnabled;
+    protected int numTurnsToComplete;
 
 
-    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement)
+    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement, DResource dInput = null)
     {
         slotList = new List<DTaskSlot>();
 
@@ -29,9 +30,11 @@ public class DTask : ITurnUpdatable
         taskName = dName;
         building = dBuilding;
         output = dOutput;
+        input = dInput;
         maxPeople = dMaxPeople;
         numPeople = 0;
         fullAssessRequirement = dFullAssessRequirement;
+        numTurnsToComplete = 0;
 
         CalculateAssessmentLevels();
 
@@ -63,16 +66,42 @@ public class DTask : ITurnUpdatable
 
             if (taskSlot.IsFunctioning())
             {
-                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
-                building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier))); 
-                if(taskName.Equals("Treat People"))
-                {
-                    RandomalyTreatPeople();
-                }               
+                bool canOutputResource = true;
 
+                // Check slot lock
+                if (!(taskSlot.NumTurnsPassed >= numTurnsToComplete))
+                    canOutputResource = false;
+
+                // Process resource consumption
+                if (canOutputResource && input != null)
+                {
+                    if (building.City.GetResource(input.Name).Amount >= input.Amount)
+                        ConsumeResources();
+                    else
+                        canOutputResource = false;
+                }
+
+                // Resource production
+                if (canOutputResource)
+                    ProduceResources(taskSlot);
             }
 
         }
+    }
+
+    private void ProduceResources(DTaskSlot taskSlot)
+    {
+        float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
+        building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier)));
+        if (taskName.Equals("Treat People"))
+        {
+            RandomalyTreatPeople();
+        }
+    }
+
+    private void ConsumeResources()
+    {
+        building.InputResource(input);
     }
 
     public void StructureDeteriorates()
@@ -93,11 +122,11 @@ public class DTask : ITurnUpdatable
     {
         if (numPeople >= maxPeople)
         {
-			
+
             throw new TaskFullException(taskName);
         }
         else if (ContainsPerson(dPerson))
-	    {
+        {
             throw new PersonAlreadyAddedException(taskName);
         }
         else
@@ -106,7 +135,7 @@ public class DTask : ITurnUpdatable
             {
                 if (taskSlot.Person == null && taskSlot.Enabled)
                 {
-					if(dPerson.Task != null)
+                    if (dPerson.Task != null)
                         dPerson.RemoveTask();
 
                     taskSlot.AddPerson(dPerson);
@@ -116,14 +145,14 @@ public class DTask : ITurnUpdatable
         }
     }
 
-	public virtual void RemovePerson(DPerson dPerson)
+    public virtual void RemovePerson(DPerson dPerson)
     {
         foreach (DTaskSlot taskSlot in slotList)
         {
             if (taskSlot.Person == dPerson)
             {
                 taskSlot.RemovePerson();
-			
+
                 return;
             }
         }
@@ -201,7 +230,7 @@ public class DTask : ITurnUpdatable
 
         for (int i = 0; i < slotList.Count; i++)
         {
-            if (i <= numEnabled-1)
+            if (i <= numEnabled - 1)
             {
                 slotList[i].Enabled = true;
             }
@@ -238,12 +267,19 @@ public class DTask : ITurnUpdatable
         // Save output info
         returnNode.Add("fullAssessRequirement", new JSONNumber(fullAssessRequirement));
         returnNode.Add("taskEnabled", new JSONBool(taskEnabled));
+        returnNode.Add("numTurnsToComplete", new JSONNumber(numTurnsToComplete));
 
         // Resource output
         if (output != null)
             returnNode.Add("resourceOutput", output.SaveToJSON());
         else
             returnNode.Add("resourceOutput", new JSONNull());
+
+        // Resource input
+        if (input != null)
+            returnNode.Add("resourceInput", input.SaveToJSON());
+        else
+            returnNode.Add("resourceInput", new JSONNull());
 
         // Save task slot list
         JSONArray jsonSlotList = new JSONArray();
@@ -290,7 +326,8 @@ public class DTask : ITurnUpdatable
                 DResource.LoadFromJSON(jsonNode["resourceOutput"]),
                 RandJSON.JSONInt(jsonNode["maxPeople"]),
                 jsonNode["name"],
-                RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]));
+                RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]),
+                DResource.LoadFromJSON(jsonNode["resourceInput"]));
         }
 
         // Set the other vars
@@ -310,6 +347,7 @@ public class DTask : ITurnUpdatable
             // Save output info
             returnTask.fullAssessRequirement = RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]);
             returnTask.taskEnabled = jsonNode["taskEnabled"].AsBool;
+            returnTask.NumTurnsToComplete = RandJSON.JSONInt(jsonNode["numTurnsToComplete"], 0);
 
             // Load the task slots
             returnTask.slotList = new List<DTaskSlot>();
@@ -389,6 +427,11 @@ public class DTask : ITurnUpdatable
         get { return output; }
     }
 
+    public DResource Input
+    {
+        get { return input; }
+    }
+
     public DBuilding Building
     {
         get { return building; }
@@ -400,8 +443,15 @@ public class DTask : ITurnUpdatable
     }
     public List<DTaskSlot> SlotList
     {
-      get {return slotList;}
+        get { return slotList; }
     }
+
+    public int NumTurnsToComplete
+    {
+        get { return numTurnsToComplete; }
+        set { numTurnsToComplete = value; }
+    }
+
     #endregion
 }
 

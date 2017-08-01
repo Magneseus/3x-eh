@@ -319,6 +319,18 @@ public class DCity : ITurnUpdatable
             fuelResource = resources[resource.ID];
     }
 
+    public void TakeResource(DResource resource)
+    {
+        if (resources.ContainsKey(resource.ID))
+        {
+            resources[resource.ID].Amount -= resource.Amount;
+        }
+        else
+        {
+            throw new ResourceNameNotFoundException(resource.Name);
+        }
+    }
+
     // todo - as resources are defined with constant names, include if checks here
     public float SeasonResourceProduceMod(DResource resource)
     {

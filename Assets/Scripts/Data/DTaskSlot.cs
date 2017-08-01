@@ -11,6 +11,8 @@ public class DTaskSlot : ITurnUpdatable
     private float structuralDamage;
     private float fungalDamage;
     private bool taskSlotEnabled;
+    private bool lockedIn;
+    private int numTurnsPassed;
 
     public DTaskSlot(DTask dTask, DPerson dPerson=null)
     {
@@ -21,15 +23,62 @@ public class DTaskSlot : ITurnUpdatable
         fungalDamage = Random.Range(Constants.TASK_MIN_FUNGAL_DMG, Constants.TASK_MAX_FUNGAL_DMG);
 
         taskSlotEnabled = true;
+        lockedIn = false;
+        numTurnsPassed = 0;
     }
 
     public void TurnUpdate(int numDaysPassed)
     {
-        if (person != null && (Infected || Damaged))
+        if (person == null)
+            return;
+
+        // Repairing the slot is first and foremost
+        if ((Infected || Damaged))
         {
             float modifier = person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
-            Repair(Constants.TEMP_REPAIR_AMOUNT * modifier);            
+            Repair(Constants.TEMP_REPAIR_AMOUNT * modifier);
         }
+        // Other behavior
+        else
+        {
+            // Locking slot
+            if (task.NumTurnsToComplete > 0)
+            {
+                // Start the lock
+                if (!lockedIn)
+                {
+                    LockSlot();
+                }
+
+                // Increment turn counter
+                numTurnsPassed++;
+
+                // Check if the lock is over
+                if (lockedIn && numTurnsPassed >= task.NumTurnsToComplete)
+                {
+                    UnlockSlot();
+                }
+            }
+        }
+    }
+
+    public void LockSlot()
+    {
+        if (!lockedIn && person != null)
+        {
+            lockedIn = true;
+            numTurnsPassed = 0;
+
+            person.LockMeeple();
+        }
+    }
+
+    public void UnlockSlot()
+    {
+        lockedIn = false;
+
+        if (person != null)
+            person.UnlockMeeple();
     }
 
     public void StructureDeteriorates()
@@ -65,6 +114,8 @@ public class DTaskSlot : ITurnUpdatable
     {
         if (person != null)
 		{
+            UnlockSlot();
+
             person.__TaskSlot(null);
             person = null;
             task.LowerPersonCount();
@@ -75,6 +126,7 @@ public class DTaskSlot : ITurnUpdatable
     {
         if (person != null)
         {
+            UnlockSlot();
             person.MoveToTownHall();
 
             person = null;
@@ -158,6 +210,16 @@ public class DTaskSlot : ITurnUpdatable
 		set { taskTraySlot = value; }
 	}
 
+    public bool IsLocked
+    {
+        get { return lockedIn; }
+    }
+
+    public int NumTurnsPassed
+    {
+        get { return numTurnsPassed; }
+    }
+
     #endregion
 
     public JSONNode SaveToJSON()
@@ -167,6 +229,8 @@ public class DTaskSlot : ITurnUpdatable
         // Save task info
         returnNode.Add("taskName", new JSONString(task.Name));
         returnNode.Add("taskSlotEnabled", new JSONBool(taskSlotEnabled));
+        returnNode.Add("lockedIn", new JSONBool(lockedIn));
+        returnNode.Add("numTurnsPassed", new JSONNumber(numTurnsPassed));
 
         // Save damage
         returnNode.Add("structuralDamage", new JSONNumber(structuralDamage));
@@ -185,8 +249,12 @@ public class DTaskSlot : ITurnUpdatable
     {
         DTaskSlot returnTaskSlot = new DTaskSlot(task);
 
-        // Load damage and enabled bool
+        // Load slot info
         returnTaskSlot.taskSlotEnabled = jsonNode["taskSlotEnabled"].AsBool;
+        returnTaskSlot.lockedIn = jsonNode["lockedIn"].AsBool;
+        returnTaskSlot.numTurnsPassed = RandJSON.JSONInt(jsonNode["numTurnsPassed"], 0);
+
+        // Load damage
         returnTaskSlot.structuralDamage = RandJSON.JSONFloat(jsonNode["structuralDamage"]);
         returnTaskSlot.fungalDamage = RandJSON.JSONFloat(jsonNode["fungalDamage"]);
 

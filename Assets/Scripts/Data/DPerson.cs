@@ -103,6 +103,17 @@ public class DPerson : ITurnUpdatable
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
 
+    public void LockMeeple()
+    {
+        if (meepleController != null && meepleController.boxCollider != null)
+            meepleController.boxCollider.enabled = false;
+    }
+
+    public void UnlockMeeple()
+    {
+        if (meepleController != null && meepleController.boxCollider != null)
+            meepleController.boxCollider.enabled = true;
+    }
 
 
     #endregion
@@ -149,9 +160,18 @@ public class DPerson : ITurnUpdatable
         get { return isDead; }
     }
 
+    public bool IsLocked
+    {
+        get { return taskSlot != null && taskSlot.IsLocked; }
+    }
+
     public void SetMeepleController(MeepleController mc)
     {
         this.meepleController = mc;
+
+        // Check lock
+        if (IsLocked)
+            LockMeeple();
     }
 
     #endregion

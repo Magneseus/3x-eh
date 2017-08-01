@@ -110,6 +110,53 @@ public class BuildingTests
     }
 
     [Test]
+    public void TaskInputWithInsufficientResources()
+    {
+        var resourceIn = DResource.Create("IN", RESOURCE_START_AMOUNT);
+        var resourceOut = DResource.Create("OUT", RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = Mock.CleanTask(building, resourceOut, resourceIn);
+        var person = new DPerson(city, Mock.Component<MeepleController>());
+        person.SetTask(task);
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
+        Assert.That(city.GetResource("OUT").Amount, Is.EqualTo(0));
+
+        city.TurnUpdate(1);
+
+        Assert.That(city.GetResource("OUT").Amount, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void PassesTaskInputToCity()
+    {
+        var resourceIn = DResource.Create("IN", RESOURCE_START_AMOUNT);
+        var resourceOut = DResource.Create("OUT", RESOURCE_START_AMOUNT);
+        var city = new DCity(CITY_NAME, Mock.Component<CityController>(), defaultSeasonStartDates, DateTime.Now);
+        var building = new DBuilding(city, BUILDING_NAME, Mock.Component<BuildingController>());
+        var task = Mock.CleanTask(building, resourceOut, resourceIn);
+        var person = new DPerson(city, Mock.Component<MeepleController>());
+        person.SetTask(task);
+
+        // temp - creating default food resource needed for city.turnupdate to work
+        DResource.Create(Constants.FOOD_RESOURCE_NAME);
+
+        // Add some of the input resource to the city
+        city.AddResource(resourceIn, RESOURCE_START_AMOUNT);
+
+        Assert.That(city.GetResource("OUT").Amount, Is.EqualTo(0));
+        Assert.That(city.GetResource("IN").Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
+
+        city.TurnUpdate(1);
+
+        Assert.That(city.GetResource("OUT").Amount, Is.EqualTo(RESOURCE_START_AMOUNT));
+        Assert.That(city.GetResource("IN").Amount, Is.EqualTo(0));
+    }
+
+    [Test]
     public void DisablingTasks()
     {
         var resource = DResource.Create(RESOURCE_NAME, RESOURCE_START_AMOUNT);
