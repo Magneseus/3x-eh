@@ -11,7 +11,7 @@ public class MeepleController : MonoBehaviour {
 
     public Collider2D boxCollider;
 
-    private TaskTraySingle parentTray;
+    private TaskTraySingle parentTray = null;
     private Transform returnParent;
     private bool dragging;
     private List<Collider2D> collisions;
@@ -21,7 +21,6 @@ public class MeepleController : MonoBehaviour {
         dragging = false;
         collisions = new List<Collider2D>();
         boxCollider = GetComponent<Collider2D>();
-        parentTray = null;
 	}
 
 	// Update is called once per frame
@@ -34,6 +33,13 @@ public class MeepleController : MonoBehaviour {
         dPerson = new DPerson(dGame.Cities[cityName], this);
 	   // dPerson.MoveToTownHall();
 
+    }
+
+    public void ConnectToDataEngine(TaskTraySingle taskTray, DPerson person)
+    {
+        parentTray = taskTray;
+        dPerson = person;
+        person.SetMeepleController(this);
     }
 
     public void ResetLocalPosition()

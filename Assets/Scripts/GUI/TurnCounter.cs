@@ -18,6 +18,6 @@ public class TurnCounter : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        turnCounterText.text = "Turn " + gameController.TurnNumber;
+        turnCounterText.text = (gameController.TurnNumber).ToString();
 	}
 }

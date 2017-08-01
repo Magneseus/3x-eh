@@ -187,19 +187,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4729194207708882, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4729194207708882, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c, type: 2}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4729194207708882, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c, type: 2}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4729194207708882, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c, type: 2}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4729194207708882, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c, type: 2}
       propertyPath: m_LocalRotation.w
@@ -209,31 +209,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1949729792796228, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1949729792796228, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c, type: 2}
-      propertyPath: m_TagString
-      value: GameController
-      objectReference: {fileID: 0}
-    - target: {fileID: 114489981260806758, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c,
-        type: 2}
-      propertyPath: CityViewUIPrefab
-      value: 
-      objectReference: {fileID: 1151925998157584, guid: 9ff86bd4d0d87784480e7609ee107aa0,
-        type: 2}
     - target: {fileID: 114489981260806758, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c,
         type: 2}
       propertyPath: UICanvas
       value: 
       objectReference: {fileID: 2004022919}
-    - target: {fileID: 114489981260806758, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c,
-        type: 2}
-      propertyPath: CountryViewUIPrefab
-      value: 
-      objectReference: {fileID: 1679999053695962, guid: dfc3bc958d6990a4aa279423ece61310,
-        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 93cd1c7dfb72b764a9d31c7c76fc6c8c, type: 2}
   m_IsPrefabParent: 0
@@ -286,7 +266,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -391,7 +371,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 443083248}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 1
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0

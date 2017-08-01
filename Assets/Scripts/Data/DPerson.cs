@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
-// using System;
+
 public class DPerson : TurnUpdatable
 {
     private static int NEXT_ID = 0;
@@ -25,7 +26,7 @@ public class DPerson : TurnUpdatable
 
         city.AddPerson(this);
     }
-
+    
     public void TurnUpdate(int numDaysPassed)
     {
       // Random random = new Random();
@@ -102,6 +103,8 @@ public class DPerson : TurnUpdatable
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
 
+    
+
 
 
     #endregion
@@ -148,5 +151,37 @@ public class DPerson : TurnUpdatable
         get { return isDead; }
     }
 
+    public void SetMeepleController(MeepleController mc)
+    {
+        this.meepleController = mc;
+    }
+
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = new JSONObject();
+
+        // Save person info
+        returnNode.Add("ID", new JSONNumber(id));
+        returnNode.Add("infectionLevel", new JSONNumber(infectionLevel));
+        returnNode.Add("isDead", new JSONBool(isDead));
+
+        // Save task info
+        returnNode.Add("taskID", new JSONNumber(taskSlot.Task.ID));
+
+        return returnNode;
+    }
+
+    public static DPerson LoadFromJSON(JSONNode jsonNode, DCity city)
+    {
+        DPerson returnPerson = new DPerson(city, null);
+
+        // Load person info
+        returnPerson.id = jsonNode["ID"];
+        returnPerson.infectionLevel = jsonNode["infectionLevel"];
+        returnPerson.isDead = jsonNode["isDead"];
+
+        return returnPerson;
+    }
 }
