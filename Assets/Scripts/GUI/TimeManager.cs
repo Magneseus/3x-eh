@@ -73,8 +73,8 @@ public class TimeManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-        /*
-		time.text = year + " - " + month.ToString("00");
+        
+		//time.text = year + " - " + month.ToString("00");
 		if (isSwitchIn) {
 			switchText.color = Color.Lerp (switchText.color, Color.white, Time.deltaTime);
 			StartCoroutine (SwitchIn ());
@@ -84,7 +84,7 @@ public class TimeManager : MonoBehaviour {
 			switchText.color = Color.Lerp (switchText.color, new Color(255,255,255,0), Time.deltaTime);
 			StartCoroutine (SwitchOut());
 			functionLimiter = false;
-		}*/
+		}
 	}
     /*
 	public void IncrementTime()
@@ -102,7 +102,7 @@ public class TimeManager : MonoBehaviour {
 	}
     */
 	public void Switch(){
-		//Debug.Log ("Switch is called");
+		Debug.Log ("Switch is called");
 		//bgm.volume = 0.2f;
 		this.GetComponent<AudioSource> ().Play ();
 		switchImage.enabled = true;

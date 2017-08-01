@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CityViewUI : MonoBehaviour
 {
     private GameController gameController;
+    public GameObject timeManager;
     private Button endTurnButton;
 
 	// Use this for initialization
