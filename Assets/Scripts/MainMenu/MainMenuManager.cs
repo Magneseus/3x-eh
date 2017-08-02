@@ -66,7 +66,10 @@ public class MainMenuManager : MonoBehaviour {
     public void SwitchToGame()
     {
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
-        GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);    
+        GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
     public void SwitchToMainMenu()
     {
