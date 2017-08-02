@@ -38,6 +38,7 @@ public class SettingManager : MonoBehaviour {
     {
         settingPane.SetActive(true);
         mainPane.SetActive(true);
+		GameObject.Find ("SoundLibrary").GetComponents<AudioSource>()[6].Play();
     }
 
     public void HideSettings()

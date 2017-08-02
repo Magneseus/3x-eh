@@ -45,6 +45,7 @@ public class FuelToShelter : MonoBehaviour
         if (gameController.dGame.currentCity != null)
         {
             gameController.dGame.currentCity.RaiseFuelConversion();
+			GameObject.Find ("SoundLibrary").GetComponents<AudioSource>() [5].Play ();
         }
     }
 
@@ -53,6 +54,7 @@ public class FuelToShelter : MonoBehaviour
         if (gameController.dGame.currentCity != null)
         {
             gameController.dGame.currentCity.LowerFuelConversion();
+			GameObject.Find ("SoundLibrary").GetComponents<AudioSource>() [4].Play ();
         }
     }
 }
