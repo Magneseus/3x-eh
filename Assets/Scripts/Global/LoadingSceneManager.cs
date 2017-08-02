@@ -34,6 +34,7 @@ public class LoadingSceneManager : MonoBehaviour {
 
     public void Fade(bool isShowing, float duration)
     {
+        Debug.Log("Fade is called");
         this.isShowing = isShowing;
         this.duration = duration;
         isInTrans = true;
