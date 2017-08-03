@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CityViewUI : MonoBehaviour
 {
     private GameController gameController;
+    public GameObject timeManager;
     private Button endTurnButton;
 
 	// Use this for initialization
@@ -24,7 +25,7 @@ public class CityViewUI : MonoBehaviour
                 endTurnButton = button;
             }
         }
-        endTurnButton.onClick.AddListener(gameController.dGame.EndTurnUpdate);
+		endTurnButton.onClick.AddListener(gameController.EndTurnButtonCallback);
 	}
 
     void Awake()
