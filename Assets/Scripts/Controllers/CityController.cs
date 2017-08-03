@@ -23,15 +23,22 @@ public void assignGameController(GameController game)
 }
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
-      GetComponent<SpriteRenderer>().sprite =
-      Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + cityName);
+        Sprite sp = Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + cityName);
+        GetComponent<SpriteRenderer>().sprite = sp;
         dCity = new DCity(cityName, this, dGame.DefaultSeasonStartDates, dGame.CurrentDate);
         dGame.Cities.Add(cityName, dCity);
+
+        //resize
+        GetComponent<SpriteRenderer>().transform.localScale = new Vector3(Screen.width / (sp.bounds.size.x * 100), Screen.height / (sp.bounds.size.y * 100), 1);
     }
 
     public void ConnectToDataEngine(DGame dGame, DCity dCity)
     {
+        Sprite sp = Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + dCity.Name);
+        GetComponent<SpriteRenderer>().sprite = sp;
         this.dCity = dCity;
-        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + dCity.Name);
+
+        //resize
+        GetComponent<SpriteRenderer>().transform.localScale = new Vector3(Screen.width / (sp.bounds.size.x * 100), Screen.height / (sp.bounds.size.y * 100), 1);
     }
 }
