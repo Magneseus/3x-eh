@@ -107,12 +107,15 @@ public class TimeManager : MonoBehaviour {
         //Debug.Log ("Switch is called");
         bgm.volume = 0.2f;
         this.GetComponent<AudioSource>().Play();
+
+        /* UNCOMMENT THIS TO BRING BACK THE End turn transition!
         switchImage.enabled = true;
         switchText.enabled = true;
         isSwitchIn = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         startNextTurn = true;
+        */
     }
     /*
 	public void IncrementResources()
