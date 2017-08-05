@@ -779,8 +779,8 @@ public class DCity : ITurnUpdatable
             dCity.AddResource(DResource.LoadFromJSON(resource));
 
         // Load linked cities
-        foreach (var linkedCity in jsonNode["linked_cities"].AsArray)
-            dCity.linkToCity(linkedCity.ToString());
+        foreach (JSONNode linkedCity in jsonNode["linked_cities"].AsArray)
+            dCity.linkToCity(linkedCity.Value);
 
         #endregion
 
