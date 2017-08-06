@@ -31,7 +31,7 @@ public class IdlePanel : MonoBehaviour {
             for(int i=0; i< idleTask.NumPeople; i++)
             {
                 GameObject go = Instantiate(PanelMeeplePrefab, this.transform);
-                go.GetComponent<MeepleController>().dPerson = idleTask.SlotList[i].Person;
+                go.GetComponentInChildren<MeepleController>().dPerson = idleTask.SlotList[i].Person;
                 meeples.Add(go);
             }
         }

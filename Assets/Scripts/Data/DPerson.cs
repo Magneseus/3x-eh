@@ -173,6 +173,12 @@ public class DPerson : ITurnUpdatable
         if (IsLocked)
             LockMeeple();
     }
+    public MeepleController MeepleController
+    {
+        get { return meepleController; }
+
+    }
+
 
     #endregion
 
