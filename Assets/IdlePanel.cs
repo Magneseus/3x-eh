@@ -8,6 +8,7 @@ public class IdlePanel : MonoBehaviour {
     private GameController gameController;
     private DTask_Idle idleTask;
     private List<GameObject> meeples = new List<GameObject>();
+    private bool init = false;
 	// Use this for initialization
 	void Start () {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
@@ -19,6 +20,11 @@ public class IdlePanel : MonoBehaviour {
         {
             idleTask = gameController.dGame.currentCity.townHall.getIdleTask();
             idleTask.SidePanel = this;
+            if (!init)
+            {
+                init = true;
+                GenerateMeeples();
+            }
         }
 		
 	}
@@ -28,7 +34,7 @@ public class IdlePanel : MonoBehaviour {
             DeleteMeeples();
         if(idleTask.NumPeople > 0)
         {
-            for(int i=0; i< idleTask.NumPeople; i++)
+            for(int i= idleTask.NumPeople-1; i>= 0; i--)
             {
                 GameObject go = Instantiate(PanelMeeplePrefab, this.transform);
                 go.GetComponentInChildren<MeepleController>().dPerson = idleTask.SlotList[i].Person;

@@ -188,6 +188,18 @@ public class DTask : ITurnUpdatable
         taskEnabled = true;
     }
 
+    public DPerson lastPerson()
+    {
+        DPerson last = null;
+        foreach (DTaskSlot slot in slotList)
+        {
+            if (slot.Person != null)
+                last = slot.Person;
+
+        }
+        return last;
+    }
+
     public void DisableTask()
     {
         // Remove people from task

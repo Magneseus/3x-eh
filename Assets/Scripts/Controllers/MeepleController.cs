@@ -74,7 +74,6 @@ public class MeepleController : MonoBehaviour {
         returnParent = this.transform.parent;
         dragging = true;
         this.transform.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-        Debug.Log("down");
         if (parentTray != null)
             parentTray.taskController.IncreaseMouseOverCount();
     }
@@ -88,7 +87,6 @@ public class MeepleController : MonoBehaviour {
             pos.z = 1;
             this.transform.position = pos;
         }
-        Debug.Log("drag");
     }
 
     public void OnMouseUp()
@@ -159,13 +157,13 @@ public class MeepleController : MonoBehaviour {
 
         if (oldParentTray != null)
             oldParentTray.taskController.DecreaseMouseOverCount();
-        Debug.Log("up");
     }
 
     public void idlePanelMouseDown(TaskTraySingle closestTray)
     {
-        MeepleController mp = dPerson.MeepleController;
-        TaskTraySingle oldParentTray = dPerson.TaskSlot.TaskTraySlot;
+        DPerson person = dPerson.Task.lastPerson();
+        MeepleController mp = person.MeepleController;
+        TaskTraySingle oldParentTray = person.TaskSlot.TaskTraySlot;
         if (closestTray.taskSlot.Person == null && closestTray.taskSlot.Enabled
               && closestTray.taskController == oldParentTray.taskController)
         {
@@ -184,7 +182,7 @@ public class MeepleController : MonoBehaviour {
         else
         {
             // Set the new task
-            dPerson.SetTaskSlot(closestTray.taskSlot);
+            person.SetTaskSlot(closestTray.taskSlot);
 
             // Set the new parent transform
             mp.transform.parent = closestTray.transform;
@@ -203,7 +201,6 @@ public class MeepleController : MonoBehaviour {
 
         if (oldParentTray != null)
             oldParentTray.taskController.DecreaseMouseOverCount();
-        Debug.Log("up");
     }
 
     

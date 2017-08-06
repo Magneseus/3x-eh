@@ -230,7 +230,6 @@ GameObject:
   - component: {fileID: 224821135529494836}
   - component: {fileID: 222030876871721578}
   - component: {fileID: 114171678016018514}
-  - component: {fileID: 114922122685997654}
   m_Layer: 5
   m_Name: MeeplePane
   m_TagString: Untagged
@@ -6346,19 +6345,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Save
---- !u!114 &114922122685997654
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1078540955434692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fa0361257fc5a841a77ad7d0e919ffc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PanelMeeplePrefab: {fileID: 1612707791441940, guid: b866842823c28f346a47addebba53af4,
-    type: 2}
 --- !u!114 &114922126693925758
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -29,16 +29,16 @@ public class DTask_Idle : DTask {
     {
         base.RemovePerson(dPerson);
         Reszie();
-
-
+        if (sidePanel != null)
+            sidePanel.GenerateMeeples();
     }
     public override void AddPerson(DPerson dPerson)
     {
         base.AddPerson(dPerson);
         Reszie();
-
+          if (sidePanel != null)
+            sidePanel.GenerateMeeples();
     }
-
 
     private void Reszie()
     {
@@ -46,8 +46,6 @@ public class DTask_Idle : DTask {
             AddSlot();
         if (maxPeople - numPeople >= 2)
             RemoveSlot();
-        if (sidePanel != null)
-            sidePanel.GenerateMeeples();
     }
 
     private void AddSlot()
