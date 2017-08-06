@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using UnityEngine.Assertions;
 using UnityEngine;
 
 public class TaskController : MonoBehaviour {
@@ -13,8 +14,10 @@ public class TaskController : MonoBehaviour {
 
     private int MouseOverCount = 0;
     private List<TaskTraySingle> listOfTraySingles;
+    private List<TaskTraySingle> listOfSidePanelSingles;
     private GameController gameController;
-
+    private GameObject idlePane;
+    
 	// Use this for initialization
 	void Start ()
     {
@@ -24,16 +27,17 @@ public class TaskController : MonoBehaviour {
         }
 
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-    }
 
+    }
+	
 	// Update is called once per frame
 	void Update () {
         taskText.text = dTask.Name;
 
-        if (dTask == dTask.Building.getIdleTask()||dTask.Name.Equals("Explore")) {
+        if (dTask == dTask.Building.City.townHall.getIdleTask()||dTask.Name.Equals("Explore")) {
 			Resize();
 		}
-
+		
 	}
 
     #region MouseOver Functions
@@ -97,11 +101,11 @@ public class TaskController : MonoBehaviour {
             for (int i = 0; i < dTask.MaxPeople; i++)
             {
                 // Find where in the tray we will position each single
-                xOffset =
-                    ((float)(i) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) *
+                xOffset = 
+                    ((float)(i) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) * 
                     TaskTraySingle.WIDTH_CONST;
 
-                GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);
+                GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);                
                 Vector3 currentPosition = go.transform.position;
                 currentPosition.x += xOffset;
                 go.transform.position = currentPosition;
@@ -122,6 +126,8 @@ public class TaskController : MonoBehaviour {
                     MeepleController meeple = gameController.CreateMeepleController(tts, tts.taskSlot.Person);
                     meeple.SetParentTrayAndTransfrom(tts);
                 }
+               
+                
             }
         }
     }
@@ -135,14 +141,14 @@ public class TaskController : MonoBehaviour {
 			RemoveSlot();
 	}
 	private void AddSlot()
-	{
-
+	{ 
+		
 			// Find where in the tray we will position each single
-			float xOffset =
-			((float)(listOfTraySingles.Count+1) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) *
+			float xOffset = 
+			((float)(listOfTraySingles.Count+1) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) * 
 				TaskTraySingle.WIDTH_CONST;
 
-			GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);
+			GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);  
 			Vector3 currentPosition = go.transform.position;
 			currentPosition.x += xOffset;
 			go.transform.position = currentPosition;
@@ -154,16 +160,17 @@ public class TaskController : MonoBehaviour {
 			go.GetComponent<TaskTraySingle>().UpdateSprite();
 
 			listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
-		OrganizeSlot();
+		    OrganizeSlot();
 
 	}
 	private void RemoveSlot()
 	{
-		GameObject slot = listOfTraySingles[listOfTraySingles.Count - 1].gameObject;
-		listOfTraySingles.RemoveAt(listOfTraySingles.Count-1);
-		Destroy(slot);
+            GameObject slot = listOfTraySingles[listOfTraySingles.Count - 1].gameObject;
 
-		OrganizeSlot();
+            listOfTraySingles.RemoveAt(listOfTraySingles.Count - 1);
+            Destroy(slot);
+
+            OrganizeSlot();
 	}
 	private void OrganizeSlot()
 	{
@@ -182,27 +189,28 @@ public class TaskController : MonoBehaviour {
 		for (int i = 0; i < listOfTraySingles.Count; i++)
 		{
 			// Find where in the tray we will position each single
-			xOffset =
-				((float)(i) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) *
+			xOffset = 
+				((float)(i) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) * 
 				TaskTraySingle.WIDTH_CONST;
 
-			GameObject go = listOfTraySingles[i].gameObject;
+			GameObject go = listOfTraySingles[i].gameObject;             
 			Vector3 currentPosition = transform.position;
 			currentPosition.x += xOffset;
 			go.transform.position = currentPosition;
 
-			// Set the parent TaskController & task slot
+            // Set the parent TaskController & task slot
 
-		}
+        }
 
 	}
+   
 
     internal void UpdateSprite()
     {
         foreach(var entry in listOfTraySingles)
         {
             entry.UpdateSprite();
-        }
+        }       
     }
 
     internal void ConnectToDataEngine(DTask dTask)
@@ -211,7 +219,11 @@ public class TaskController : MonoBehaviour {
             gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         this.dTask = dTask;
+       
         GenerateTaskTrays();
+ 
+        
+
     }
 }
 
