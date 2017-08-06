@@ -95,9 +95,11 @@ public class DCity : ITurnUpdatable
     public void TurnUpdate(int numDaysPassed)
     {
         // Set shelter resource to zero, cannot accumulate shelter
+        prevResources.Clear();
         foreach(var entry in resources)
         {
-          prevResources[entry.Key] =  DResource.Create(entry.Value);
+          prevResources.Add(entry.Key,  DResource.Create(entry.Value));
+          prevResources[entry.Key].Amount = entry.Value.Amount;
         }
         if (shelterResource != null)
             shelterResource.Amount = 0;
@@ -395,10 +397,9 @@ public class DCity : ITurnUpdatable
       {
         if (entry.Key == entry0.Key)
         {
-          // Debug.Log(entry.Value.Amount);
-          // Debug.Log(entry0.Value.Amount);
-
-          resourceRates[entry.Key] =DResource.Create(entry.Value,  entry.Value.Amount- entry0.Value.Amount);
+          int change = entry.Value.Amount - entry0.Value.Amount;
+          Debug.Log(entry0.Value.Name +"[prev]: "+ entry0.Value.Amount);
+          resourceRates[entry.Key] = DResource.Create(entry.Value,  change);
           break;
         }
       }
