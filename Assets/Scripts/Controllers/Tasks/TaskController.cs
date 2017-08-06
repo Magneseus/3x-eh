@@ -34,7 +34,7 @@ public class TaskController : MonoBehaviour {
 	void Update () {
         taskText.text = dTask.Name;
 
-        if (dTask == dTask.Building.City.townHall.getIdleTask()||dTask.Name.Equals("Explore")) {
+        if (dTask == dTask.Building.City.townHall.getIdleTask()|| dTask == dTask.Building.City.townHall.getExploreTask()) {
 			Resize();
 		}
 		
