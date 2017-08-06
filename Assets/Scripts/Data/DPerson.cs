@@ -69,7 +69,7 @@ public class DPerson : ITurnUpdatable
 		if(dTaskSlot.Task==city.townHall.getIdleTask())
 			((DTask_Idle)dTaskSlot.Task).AddPerson(this);
         else if (dTaskSlot.Task.Name.Equals("Explore"))
-            ((DTask_Explore)dTaskSlot.Task).AddPerson(this);
+            ((DTask_Explore)dTaskSlot.Task).AddPerson(this,dTaskSlot);
         else
         	dTaskSlot.AddPerson(this);
     }

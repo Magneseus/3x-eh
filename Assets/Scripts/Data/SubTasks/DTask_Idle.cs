@@ -7,55 +7,53 @@ public class DTask_Idle : DTask {
 
     private IdlePanel sidePanel;
 
-	public DTask_Idle(DBuilding dBuilding, string dName) : base(dBuilding, null, 1, dName, 1.0f)
-	{
-		
-		ForceClean ();
-		ForceFixed ();
-		Reszie();
-	}
+    public DTask_Idle(DBuilding dBuilding, string dName) : base(dBuilding, null, 1, dName, 1.0f)
+    {
 
-	public override void TurnUpdate(int numDaysPassed)
-	{
+        ForceClean();
+        ForceFixed();
+        Reszie();
+    }
 
-		foreach (DTaskSlot taskSlot in slotList)
-		{
-			taskSlot.TurnUpdate(numDaysPassed);
-				
-		}
-	}
-	
-	public override void RemovePerson(DPerson dPerson)
-	{
-		base.RemovePerson(dPerson);
-		Reszie();
-       
+    public override void TurnUpdate(int numDaysPassed)
+    {
 
-	}
-	public override void AddPerson(DPerson dPerson)
-	{
-		base.AddPerson(dPerson);
-		Reszie();
-        
-	}
+        foreach (DTaskSlot taskSlot in slotList)
+        {
+            taskSlot.TurnUpdate(numDaysPassed);
+
+        }
+    }
+
+    public override void RemovePerson(DPerson dPerson)
+    {
+        base.RemovePerson(dPerson);
+        Reszie();
 
 
-	private void Reszie()
-	{
-		if(numPeople == maxPeople)
-			AddSlot();
-		if(maxPeople - numPeople >= 2)
-			RemoveSlot();
-        if(sidePanel != null)
-                sidePanel.GenerateMeeples();
-	}
+    }
+    public override void AddPerson(DPerson dPerson)
+    {
+        base.AddPerson(dPerson);
+        Reszie();
 
-	private void AddSlot()
-	{
-        Debug.Log(numPeople);
-        
+    }
+
+
+    private void Reszie()
+    {
+        if (numPeople == maxPeople)
+            AddSlot();
+        if (maxPeople - numPeople >= 2)
+            RemoveSlot();
+        if (sidePanel != null)
+            sidePanel.GenerateMeeples();
+    }
+
+    private void AddSlot()
+    { 
         maxPeople = numPeople + 1;
-        Debug.Log(maxPeople);
+    
         slotList.Add(new DTaskSlot(this));
 		ForceClean();
 		ForceFixed();
@@ -66,7 +64,7 @@ public class DTask_Idle : DTask {
         maxPeople = numPeople + 1;
       
 	    slotList.RemoveAt(slotList.Count - 1);
-		
+
 	}
 
     public override JSONNode SaveToJSON()

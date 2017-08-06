@@ -5,21 +5,21 @@ using UnityEngine;
 public class IdlePanel : MonoBehaviour {
     public GameObject PanelMeeplePrefab;
 
-    private DGame dGame;
+    private GameController gameController;
     private DTask_Idle idleTask;
     private List<GameObject> meeples = new List<GameObject>();
 	// Use this for initialization
 	void Start () {
-        dGame = GameObject.Find("GameController").GetComponent<GameController>().dGame;
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (dGame.currentCity.townHall != null)
+       /* if (gameController.dGame.currentCity.townHall.getIdleTask() != null)
         {
-            idleTask = dGame.currentCity.townHall.getIdleTask();
+            idleTask = gameController.dGame.currentCity.townHall.getIdleTask();
             idleTask.SidePanel = this;
-        }
+        }*/
 		
 	}
     public void GenerateMeeples()
