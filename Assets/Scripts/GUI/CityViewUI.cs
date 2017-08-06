@@ -25,7 +25,7 @@ public class CityViewUI : MonoBehaviour
                 endTurnButton = button;
             }
         }
-        endTurnButton.onClick.AddListener(gameController.dGame.EndTurnUpdate);
+		endTurnButton.onClick.AddListener(gameController.EndTurnButtonCallback);
 	}
 
     void Awake()

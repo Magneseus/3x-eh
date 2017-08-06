@@ -19,7 +19,7 @@ public class LoadingSceneManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         colorRecorder = loadingPic.color;
-       
+        Fade(false, 3f);
         audioPlayer.Play();		
 	}
 	

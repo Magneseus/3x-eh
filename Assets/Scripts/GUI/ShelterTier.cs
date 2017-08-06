@@ -45,6 +45,7 @@ public class ShelterTier : MonoBehaviour
         if (gameController.dGame.currentCity != null)
         {
             gameController.dGame.currentCity.RaiseShelterTier();
+			GameObject.Find ("SoundLibrary").GetComponents<AudioSource>() [5].Play ();
         }
     }
 
@@ -53,6 +54,7 @@ public class ShelterTier : MonoBehaviour
         if (gameController.dGame.currentCity != null)
         {
             gameController.dGame.currentCity.LowerShelterTier();
+			GameObject.Find ("SoundLibrary").GetComponents<AudioSource>() [4].Play ();
         }
     }
 }

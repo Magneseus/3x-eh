@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DCompressedCity : DBuilding, ITurnUpdatable {
+public class DCompressedCity : DBuilding {
 
     private int population;
     private float percentInfected;
     private float development;
     private float[] prosperityMeasures = new float[(int)Constants._prosperityMeasures.NUMELEMENTS];
     private Dictionary<int, DResource> finalResources = new Dictionary<int, DResource>();
-    private Dictionary<DResource, int> resourceRates = new Dictionary<DResource, int>();
+    private Dictionary<int, DResource> resourceRates = new Dictionary<int, DResource>();
 
     public DCompressedCity(DCity baseCity): base ( baseCity.Name)
 
@@ -27,27 +27,21 @@ public class DCompressedCity : DBuilding, ITurnUpdatable {
     {
       base.City = city;
       base.City.CityController.gameController.CreateBuildingController(this, new Vector3(1,1,0));
-
-      // this.City.AddBuilding(this);
     }
     public override void TurnUpdate(int numDaysPassed)
     {
-      Debug.Log("Last City stuff is in here.");
-      foreach(var entry in  City.Resources)
-        foreach (var rate in resourceRates)
-        {
-          if(entry.Value == rate.Key) City.AddResource(rate.Key, rate.Value);
-        }
+      foreach (var rate in resourceRates)
+      {
+        City.AddResource(rate.Value);
+      }
     }
     public float[] CalculateProsperityMeasures(DCity city)
     {
         float[] results = new float[(int)Constants._prosperityMeasures.NUMELEMENTS];
-
         results[(int)Constants._prosperityMeasures.HEALTH] = CalculateHealthProsperity(city);
         results[(int)Constants._prosperityMeasures.MORALE] = CalculateMoraleProsperity(city);
         results[(int)Constants._prosperityMeasures.ORDER] = CalculateOrderProsperity(city);
         results[(int)Constants._prosperityMeasures.EDUCATION] = CalculateEducationProsperity(city);
-
         return results;
     }
 
@@ -75,8 +69,7 @@ public class DCompressedCity : DBuilding, ITurnUpdatable {
         return 0f;
     }
 
-    // stub for integration with city rate of resource change function(s)
-    // public Dictionary<int, DResource>[] CalculateResourceRates(DCity city)
+    // moved to DCity CalculateResourceRates(DCity city)
     // {
     //     Dictionary<int, DResource>[] results = new Dictionary<int, DResource>[(int)DSeasons._season.NUMELEMENTS];
     //
@@ -114,7 +107,7 @@ public class DCompressedCity : DBuilding, ITurnUpdatable {
         set { finalResources = value; }
     }
 
-    public Dictionary<DResource, int> ResourceRates
+    public Dictionary<int, DResource> ResourceRates
     {
         get { return resourceRates; }
         set { resourceRates = value; }

@@ -365,6 +365,16 @@ public class DTask : ITurnUpdatable
             foreach (JSONNode taskSlotJSON in jsonNode["taskSlots"].AsArray)
             {
                 returnTask.SlotList.Add(DTaskSlot.LoadFromJSON(taskSlotJSON, returnTask));
+
+
+            }
+
+            // Verify that the number of people is correct
+            if (returnTask.numPeople  != jsonNode["numPeople"].AsInt)
+            {
+              // Debug.Log (returnTask.numPeople+ ":" + jsonNode["numPeople"]);
+
+                // throw new TaskLoadException("Num people does not match.");
             }
         }
 
@@ -484,6 +494,25 @@ public class TaskFullException : System.Exception
     }
 
     protected TaskFullException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
+}
+
+public class TaskLoadException : System.Exception
+{
+    public TaskLoadException()
+    {
+    }
+
+    public TaskLoadException(string message) : base(message)
+    {
+    }
+
+    public TaskLoadException(string message, System.Exception innerException) : base(message, innerException)
+    {
+    }
+
+    protected TaskLoadException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 }

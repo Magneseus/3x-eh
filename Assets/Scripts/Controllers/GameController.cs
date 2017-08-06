@@ -56,10 +56,12 @@ public class GameController : MonoBehaviour
         if (Input.GetKeyUp("s"))
         {
             //File.WriteAllText(@"Assets/Resources/testLoad.json", dGame.SaveToJSON().ToString());
+            SaveGame("test.json");
         }
         else if (Input.GetKeyUp("l"))
         {
             //LoadGame();
+            LoadGame("test.json");
         }
     }
 
@@ -138,6 +140,7 @@ public class GameController : MonoBehaviour
     public void EndTurnButtonCallback()
     {
         dGame.EndTurnUpdate();
+		GameObject.Find ("SoundLibrary").GetComponents<AudioSource>()[2].Play();
     }
 
     #region Controller Spawners
