@@ -405,7 +405,7 @@ public class DCity : ITurnUpdatable
       }
 
     }
-    foreach (var entry in resourceRates)
+    // foreach (var entry in resourceRates)
     // Debug.Log(entry.Value.Name +":  "+ entry.Value.Amount);
   }
     public DResource GetResource(string name)
