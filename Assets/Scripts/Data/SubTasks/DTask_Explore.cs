@@ -62,30 +62,6 @@ public class DTask_Explore : DTask
         }
     }
 
-    public void AddPerson(DPerson dPerson, DTaskSlot taskSlot)
-    {
-        if (numPeople >= maxPeople)
-        {
-
-            throw new TaskFullException(taskName);
-        }
-        else if (ContainsPerson(dPerson))
-        {
-            throw new PersonAlreadyAddedException(taskName);
-        }
-        else
-        {
-            if (taskSlot.Person == null && taskSlot.Enabled)
-            {
-                if (dPerson.Task != null)
-                    dPerson.RemoveTask();
-
-                taskSlot.AddPerson(dPerson);
-                Reszie();
-                return;
-            }
-        }
-    }
 
     public override void RemovePerson(DPerson dPerson)
     {

@@ -74,7 +74,7 @@ public class MeepleController : MonoBehaviour {
         returnParent = this.transform.parent;
         dragging = true;
         this.transform.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-
+        
         if (parentTray != null)
             parentTray.taskController.IncreaseMouseOverCount();
     }
@@ -113,12 +113,20 @@ public class MeepleController : MonoBehaviour {
                 if (colDist.isValid && colDist.distance < minDist)
                 {
                     minDist = colDist.distance;
-                    closestTray = col.GetComponent<TaskTraySingle>();
+                    closestTray = col.GetComponent<TaskTraySingle>();        
                 }
             }
+            // Same tray reset to inital position
+            if (closestTray.taskSlot.Person == null && closestTray.taskSlot.Enabled 
+                && closestTray.taskController == oldParentTray.taskController)
+            {
+                    this.transform.parent = returnParent;
+                    this.transform.localPosition = new Vector3(0, 0, -3);
+            } 
+            
 
             // If the closest tray is full, reset
-            if (closestTray.taskSlot.Person != null && closestTray.taskSlot.Enabled)
+            else if (closestTray.taskSlot.Person != null && closestTray.taskSlot.Enabled)
             {
                 // Reset position
                 this.transform.parent = returnParent;
@@ -128,7 +136,7 @@ public class MeepleController : MonoBehaviour {
             {
                 // Set the new task
                 dPerson.SetTaskSlot(closestTray.taskSlot);
-
+              
                 // Set the new parent transform
                 this.transform.parent = closestTray.transform;
                 this.transform.localPosition = new Vector3(0, 0, -3);

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using UnityEngine.Assertions;
 using UnityEngine;
 
 public class TaskController : MonoBehaviour {
@@ -13,7 +14,9 @@ public class TaskController : MonoBehaviour {
 
     private int MouseOverCount = 0;
     private List<TaskTraySingle> listOfTraySingles;
+    private List<TaskTraySingle> listOfSidePanelSingles;
     private GameController gameController;
+    private GameObject idlePane;
     
 	// Use this for initialization
 	void Start ()
@@ -24,13 +27,14 @@ public class TaskController : MonoBehaviour {
         }
 
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+
     }
 	
 	// Update is called once per frame
 	void Update () {
         taskText.text = dTask.Name;
 
-        if (dTask == dTask.Building.getIdleTask()||dTask.Name.Equals("Explore")) {
+        if (dTask == dTask.Building.City.townHall.getIdleTask()||dTask.Name.Equals("Explore")) {
 			Resize();
 		}
 		
@@ -122,6 +126,8 @@ public class TaskController : MonoBehaviour {
                     MeepleController meeple = gameController.CreateMeepleController(tts, tts.taskSlot.Person);
                     meeple.SetParentTrayAndTransfrom(tts);
                 }
+               
+                
             }
         }
     }
@@ -154,16 +160,17 @@ public class TaskController : MonoBehaviour {
 			go.GetComponent<TaskTraySingle>().UpdateSprite();
 
 			listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
-		//OrganizeSlot();
+		    OrganizeSlot();
 
 	}
 	private void RemoveSlot()
 	{
-		GameObject slot = listOfTraySingles[listOfTraySingles.Count - 1].gameObject;
-		listOfTraySingles.RemoveAt(listOfTraySingles.Count-1);
-		Destroy(slot);
+            GameObject slot = listOfTraySingles[listOfTraySingles.Count - 1].gameObject;
 
-		//OrganizeSlot();
+            listOfTraySingles.RemoveAt(listOfTraySingles.Count - 1);
+            Destroy(slot);
+
+            OrganizeSlot();
 	}
 	private void OrganizeSlot()
 	{
@@ -191,11 +198,12 @@ public class TaskController : MonoBehaviour {
 			currentPosition.x += xOffset;
 			go.transform.position = currentPosition;
 
-			// Set the parent TaskController & task slot
+            // Set the parent TaskController & task slot
 
-		}
+        }
 
 	}
+   
 
     internal void UpdateSprite()
     {
@@ -211,7 +219,11 @@ public class TaskController : MonoBehaviour {
             gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         this.dTask = dTask;
+       
         GenerateTaskTrays();
+ 
+        
+
     }
 }
 

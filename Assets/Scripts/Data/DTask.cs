@@ -341,7 +341,6 @@ public class DTask : ITurnUpdatable
             returnTask.id = jsonNode["ID"].AsInt;
 
             // Load person info
-            returnTask.numPeople = RandJSON.JSONInt(jsonNode["numPeople"]);
             returnTask.maxPeople = RandJSON.JSONInt(jsonNode["maxPeople"]);
 
             // Save output info
