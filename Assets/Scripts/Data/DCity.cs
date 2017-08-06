@@ -398,7 +398,7 @@ public class DCity : ITurnUpdatable
         if (entry.Key == entry0.Key)
         {
           int change = entry.Value.Amount - entry0.Value.Amount;
-          Debug.Log(entry0.Value.Name +"[prev]: "+ entry0.Value.Amount);
+          // Debug.Log(entry0.Value.Name +"[prev]: "+ entry0.Value.Amount);
           resourceRates[entry.Key] = DResource.Create(entry.Value,  change);
           break;
         }
@@ -406,7 +406,7 @@ public class DCity : ITurnUpdatable
 
     }
     foreach (var entry in resourceRates)
-    Debug.Log(entry.Value.Name +":  "+ entry.Value.Amount);
+    // Debug.Log(entry.Value.Name +":  "+ entry.Value.Amount);
   }
     public DResource GetResource(string name)
     {
