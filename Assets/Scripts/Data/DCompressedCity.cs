@@ -9,7 +9,7 @@ public class DCompressedCity : DBuilding, ITurnUpdatable {
     private float development;
     private float[] prosperityMeasures = new float[(int)Constants._prosperityMeasures.NUMELEMENTS];
     private Dictionary<int, DResource> finalResources = new Dictionary<int, DResource>();
-    private Dictionary<DResource, int> resourceRates = new Dictionary<DResource, int>();
+    private Dictionary<int, DResource> resourceRates = new Dictionary<int, DResource>();
 
     public DCompressedCity(DCity baseCity): base ( baseCity.Name)
 
@@ -32,11 +32,13 @@ public class DCompressedCity : DBuilding, ITurnUpdatable {
     }
     public override void TurnUpdate(int numDaysPassed)
     {
-      Debug.Log("Last City stuff is in here.");
-      foreach(var entry in  City.Resources)
+      // Debug.Log("Last City stuff is in here.");
+      // foreach(var entry in  City.Resources)
         foreach (var rate in resourceRates)
         {
-          if(entry.Value == rate.Key) City.AddResource(rate.Key, rate.Value);
+          // if(entry.Key == rate.Key)
+          City.AddResource(rate.Value);
+          // Debug.Log(rate.Value.Amount);
         }
     }
     public float[] CalculateProsperityMeasures(DCity city)
@@ -114,7 +116,7 @@ public class DCompressedCity : DBuilding, ITurnUpdatable {
         set { finalResources = value; }
     }
 
-    public Dictionary<DResource, int> ResourceRates
+    public Dictionary<int, DResource> ResourceRates
     {
         get { return resourceRates; }
         set { resourceRates = value; }

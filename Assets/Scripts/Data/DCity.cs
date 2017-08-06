@@ -16,7 +16,7 @@ public class DCity : ITurnUpdatable
     private Dictionary<int, DResource> resources = new Dictionary<int, DResource>();
     private Dictionary<int, DResource> prevResources = new Dictionary<int, DResource>();
 
-    private Dictionary<DResource, int> resourceRates = new Dictionary<DResource, int>();
+    private Dictionary<int, DResource> resourceRates = new Dictionary<int, DResource>();
 
     private Dictionary<int, DPerson> people = new Dictionary<int, DPerson>();
     private List<string> linkedCityKeys = new List<string>();
@@ -95,7 +95,10 @@ public class DCity : ITurnUpdatable
     public void TurnUpdate(int numDaysPassed)
     {
         // Set shelter resource to zero, cannot accumulate shelter
-        prevResources = resources; // does this copy or just ref??
+        foreach(var entry in resources)
+        {
+          prevResources[entry.Key] =  DResource.Create(entry.Value);
+        }
         if (shelterResource != null)
             shelterResource.Amount = 0;
 
@@ -119,7 +122,6 @@ public class DCity : ITurnUpdatable
         }
 
         age += numDaysPassed;
-        CalculateResourceRates();
     }
 
     // TODO: Account for infection in people
@@ -190,6 +192,8 @@ public class DCity : ITurnUpdatable
                 entry.Value.Amount -= fuelToShelterConversion;
             }
         }
+        CalculateResourceRates();
+
     }
 
     private void UpdatePeople(int numDaysPassed)
@@ -391,13 +395,17 @@ public class DCity : ITurnUpdatable
       {
         if (entry.Key == entry0.Key)
         {
-          resourceRates[entry.Value]= entry0.Value.Amount - entry.Value.Amount;
+          // Debug.Log(entry.Value.Amount);
+          // Debug.Log(entry0.Value.Amount);
+
+          resourceRates[entry.Key] =DResource.Create(entry.Value,  entry.Value.Amount- entry0.Value.Amount);
           break;
         }
       }
 
     }
-    Debug.Log(resourceRates);
+    foreach (var entry in resourceRates)
+    Debug.Log(entry.Value.Name +":  "+ entry.Value.Amount);
   }
     public DResource GetResource(string name)
     {
@@ -539,7 +547,7 @@ public class DCity : ITurnUpdatable
         get { return health; }
         set { health = value; }
     }
-    public Dictionary<DResource, int> ResourceRates
+    public Dictionary<int, DResource> ResourceRates
     {
       get { return resourceRates; }
       set { resourceRates = value; }
@@ -709,7 +717,7 @@ public class DCity : ITurnUpdatable
     public static DCity LoadFromJSON(JSONNode jsonNode, DGame dGame, bool randomBuildingPlacement=false)
     {
         string _name = jsonNode["name"];
-        
+
 
         // TODO: Store season start and end dates
         // Create city object
