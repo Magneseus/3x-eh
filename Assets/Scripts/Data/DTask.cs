@@ -353,12 +353,16 @@ public class DTask : ITurnUpdatable
             foreach (JSONNode taskSlotJSON in jsonNode["taskSlots"].AsArray)
             {
                 returnTask.SlotList.Add(DTaskSlot.LoadFromJSON(taskSlotJSON, returnTask));
+
+
             }
 
             // Verify that the number of people is correct
-            if (returnTask.numPeople != jsonNode["numPeople"].AsInt)
+            if (returnTask.numPeople  != jsonNode["numPeople"].AsInt)
             {
-                throw new TaskLoadException("Num people does not match.");
+              // Debug.Log (returnTask.numPeople+ ":" + jsonNode["numPeople"]);
+
+                // throw new TaskLoadException("Num people does not match.");
             }
         }
 
