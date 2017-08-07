@@ -62,30 +62,31 @@ public class DTask_Explore : DTask
         }
     }
 
-        public void AddPerson(DPerson dPerson, DTaskSlot taskSlot)
-     {		
-        if (numPeople >= maxPeople)		
-         {		
- 		
-             throw new TaskFullException(taskName);		
-         }		
-         else if (ContainsPerson(dPerson))		
-         {		
-            throw new PersonAlreadyAddedException(taskName);		
-         }		
-         else		
-         {		
-             if (taskSlot.Person == null && taskSlot.Enabled)		
-             {		
-                 if (dPerson.Task != null)		
-                     dPerson.RemoveTask();		
- 		
-                 taskSlot.AddPerson(dPerson);		
-                 Reszie();		
-                 return;		
-            }		
-         }		
+    public void AddPerson(DPerson dPerson, DTaskSlot taskSlot)
+    {
+        if (numPeople >= maxPeople)
+        {
+
+            throw new TaskFullException(taskName);
+        }
+        else if (ContainsPerson(dPerson))
+        {
+            throw new PersonAlreadyAddedException(taskName);
+        }
+        else
+        {
+            if (taskSlot.Person == null && taskSlot.Enabled)
+            {
+                if (dPerson.Task != null)
+                    dPerson.RemoveTask();
+
+                taskSlot.AddPerson(dPerson);
+                Reszie();
+                return;
+            }
+        }
     }
+
     public override void RemovePerson(DPerson dPerson)
     {
         base.RemovePerson(dPerson);
@@ -109,7 +110,7 @@ public class DTask_Explore : DTask
 
     private void AddSlot()
     {
-        maxPeople = numPeople + 1;
+        maxPeople++;
         slotList.Add(new DTaskSlot(this));
         ForceClean();
         ForceFixed();
@@ -117,10 +118,11 @@ public class DTask_Explore : DTask
 
     private void RemoveSlot()
     {
-        maxPeople = numPeople + 1;
-       
+        maxPeople--;
+        if (slotList[slotList.Count - 1].Person == null)
+        {
             slotList.RemoveAt(slotList.Count - 1);
-      
+        }
     }
 
     public override JSONNode SaveToJSON()
