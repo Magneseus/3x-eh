@@ -91,15 +91,14 @@ public class GameController : MonoBehaviour
         //CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
 
         var json = File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json");
-        cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
         DCity newCity = DCity.LoadFromJSON(JSON.Parse(json), dGame, true);
-        
+
         dGame.AddCity(newCity);
         dGame.SelectCity(cityName);
         
 
         // Spawn City UI
-        
+        cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
 
         // Disable Country View
         countryView.SetActive(false);
@@ -140,7 +139,7 @@ public class GameController : MonoBehaviour
     public void EndTurnButtonCallback()
     {
         dGame.EndTurnUpdate();
-		GameObject.Find ("SoundLibrary").GetComponents<AudioSource>()[2].Play();
+		GameObject.Find ("SfxLibrary").GetComponents<AudioSource>()[2].Play();
     }
 
     #region Controller Spawners

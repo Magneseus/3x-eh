@@ -5,64 +5,85 @@ using SimpleJSON;
 
 public class DTask_Idle : DTask {
 
-    private IdlePanel sidePanel;
 
-    public DTask_Idle(DBuilding dBuilding, string dName) : base(dBuilding, null, 1, dName, 1.0f)
-    {
 
-        ForceClean();
-        ForceFixed();
-        Reszie();
-    }
+	public DTask_Idle(DBuilding dBuilding, string dName) : base(dBuilding, null, 1, dName, 1.0f)
+	{
+		
+		ForceClean ();
+		ForceFixed ();
+		Reszie();
+	}
 
-    public override void TurnUpdate(int numDaysPassed)
-    {
+	public override void TurnUpdate(int numDaysPassed)
+	{
 
-        foreach (DTaskSlot taskSlot in slotList)
-        {
-            taskSlot.TurnUpdate(numDaysPassed);
+		foreach (DTaskSlot taskSlot in slotList)
+		{
+			taskSlot.TurnUpdate(numDaysPassed);
+				
+		}
+	}
+	public void AddPerson(DPerson dPerson, DTaskSlot taskSlot)
+	{
+		if (numPeople >= maxPeople)
+		{
 
-        }
-    }
+			throw new TaskFullException(taskName);
+		}
+		else if (ContainsPerson(dPerson))
+		{
+			throw new PersonAlreadyAddedException(taskName);
+		}
+		else
+		{
+				if (taskSlot.Person == null && taskSlot.Enabled)
+				{
+					if(dPerson.Task != null)
+						dPerson.RemoveTask();
 
-    public override void RemovePerson(DPerson dPerson)
-    {
-        base.RemovePerson(dPerson);
-        Reszie();
-        if (sidePanel != null)
-            sidePanel.GenerateMeeples();
-    }
-    public override void AddPerson(DPerson dPerson)
-    {
-        base.AddPerson(dPerson);
-        Reszie();
-          if (sidePanel != null)
-            sidePanel.GenerateMeeples();
-    }
+					taskSlot.AddPerson(dPerson);
+					Reszie();
+					return;
+				}
+		}
+	}
+	public override void RemovePerson(DPerson dPerson)
+	{
+		base.RemovePerson(dPerson);
+		Reszie();
 
-    private void Reszie()
-    {
-        if (numPeople == maxPeople)
-            AddSlot();
-        if (maxPeople - numPeople >= 2)
-            RemoveSlot();
-    }
+	}
+	public override void AddPerson(DPerson dPerson)
+	{
+		base.AddPerson(dPerson);
+		Reszie();
+	}
 
-    private void AddSlot()
-    { 
-        maxPeople = numPeople + 1;
-    
-        slotList.Add(new DTaskSlot(this));
+
+	private void Reszie()
+	{
+		if(numPeople == maxPeople)
+			AddSlot();
+		if(maxPeople - numPeople >= 2)
+			RemoveSlot();
+	}
+
+	private void AddSlot()
+	{
+		maxPeople++;
+		slotList.Add(new DTaskSlot(this));
 		ForceClean();
 		ForceFixed();
 	}
 
 	private void RemoveSlot()
 	{
-        maxPeople = numPeople + 1;
-      
-	    slotList.RemoveAt(slotList.Count - 1);
-
+		maxPeople--;
+		if(slotList[slotList.Count - 1].Person == null)
+		{
+			slotList.RemoveAt(slotList.Count - 1);
+		}
 	}
 
     public override JSONNode SaveToJSON()
@@ -72,10 +93,5 @@ public class DTask_Idle : DTask {
         returnNode.Add("specialTask", new JSONString("idle"));
 
         return returnNode;
-    }
-    public IdlePanel SidePanel
-    {
-        get { return sidePanel; }
-        set { sidePanel = value; }
     }
 }

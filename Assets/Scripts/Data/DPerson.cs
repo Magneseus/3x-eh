@@ -67,9 +67,9 @@ public class DPerson : ITurnUpdatable
 		if(taskSlot != null)
 			Task.RemovePerson(this);
 		if(dTaskSlot.Task==city.townHall.getIdleTask())
-			((DTask_Idle)dTaskSlot.Task).AddPerson(this);
-        else if (dTaskSlot.Task == city.townHall.getExploreTask())
-            ((DTask_Explore)dTaskSlot.Task).AddPerson(this,dTaskSlot);
+			((DTask_Idle)dTaskSlot.Task).AddPerson(this, dTaskSlot);
+        else if (dTaskSlot.Task.Name.Equals("Explore"))
+            ((DTask_Explore)dTaskSlot.Task).AddPerson(this, dTaskSlot);
         else
         	dTaskSlot.AddPerson(this);
     }
@@ -173,12 +173,6 @@ public class DPerson : ITurnUpdatable
         if (IsLocked)
             LockMeeple();
     }
-    public MeepleController MeepleController
-    {
-        get { return meepleController; }
-
-    }
-
 
     #endregion
 
