@@ -140,7 +140,7 @@ public class GameController : MonoBehaviour
     public void EndTurnButtonCallback()
     {
         dGame.EndTurnUpdate();
-		GameObject.Find ("SoundLibrary").GetComponents<AudioSource>()[2].Play();
+		GameObject.Find ("SfxLibrary").GetComponents<AudioSource>()[2].Play();
     }
 
     #region Controller Spawners
