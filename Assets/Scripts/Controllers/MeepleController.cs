@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class MeepleController : MonoBehaviour {
+public class MeepleController : MonoBehaviour
+{
 
     public DPerson dPerson;
 
@@ -16,22 +17,24 @@ public class MeepleController : MonoBehaviour {
     private bool dragging;
     private List<Collider2D> collisions;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         dragging = false;
         collisions = new List<Collider2D>();
         boxCollider = GetComponent<Collider2D>();
-	}
+    }
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update()
+    {
 
-	}
+    }
 
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
         dPerson = new DPerson(dGame.Cities[cityName], this);
-	   // dPerson.MoveToTownHall();
+        // dPerson.MoveToTownHall();
 
     }
 
@@ -112,21 +115,21 @@ public class MeepleController : MonoBehaviour {
                 if (colDist.isValid && colDist.distance < minDist)
                 {
                     minDist = colDist.distance;
-                    closestTray = col.GetComponent<TaskTraySingle>();        
+                    closestTray = col.GetComponent<TaskTraySingle>();
                 }
             }
-            if (returnParent.name.Contains("Panel"))
+            if (this.name.Contains("Panel"))
                 idlePanelMouseDown(closestTray);
-    
-            
-            // Same tray reset to inital position
-            if (closestTray.taskSlot.Person == null && closestTray.taskSlot.Enabled 
-                && closestTray.taskController == oldParentTray.taskController)
+            else
+
+                // Same tray reset to inital position
+                if (closestTray.taskSlot.Person == null && closestTray.taskSlot.Enabled
+                    && closestTray.taskController == oldParentTray.taskController)
             {
-                    this.transform.parent = returnParent;
-                    this.transform.localPosition = new Vector3(0, 0, -3);
-            } 
-            
+                this.transform.parent = returnParent;
+                this.transform.localPosition = new Vector3(0, 0, -3);
+            }
+
 
             // If the closest tray is full, reset
             else if (closestTray.taskSlot.Person != null && closestTray.taskSlot.Enabled)
@@ -139,7 +142,7 @@ public class MeepleController : MonoBehaviour {
             {
                 // Set the new task
                 dPerson.SetTaskSlot(closestTray.taskSlot);
-              
+
                 // Set the new parent transform
                 this.transform.parent = closestTray.transform;
                 this.transform.localPosition = new Vector3(0, 0, -3);
@@ -203,9 +206,9 @@ public class MeepleController : MonoBehaviour {
             oldParentTray.taskController.DecreaseMouseOverCount();
     }
 
-    
 
-    public void SetParentTrayAndTransfrom (TaskTraySingle parentTray)
+
+    public void SetParentTrayAndTransfrom(TaskTraySingle parentTray)
     {
         this.parentTray = parentTray;
 

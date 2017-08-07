@@ -16,14 +16,18 @@ public class IdlePanel : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (gameController.dGame.currentCity.townHall.getIdleTask() != null)
+        if (gameController.dGame.currentCity != null)
         {
-            idleTask = gameController.dGame.currentCity.townHall.getIdleTask();
-            idleTask.SidePanel = this;
-            if (!init)
+            if (gameController.dGame.currentCity.townHall.getIdleTask() != null)
             {
-                init = true;
-                GenerateMeeples();
+
+                idleTask = gameController.dGame.currentCity.townHall.getIdleTask();
+                idleTask.SidePanel = this;
+                if (!init)
+                {
+                    init = true;
+                    GenerateMeeples();
+                }
             }
         }
 		
