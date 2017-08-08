@@ -477,7 +477,7 @@ public class DTask : ITurnUpdatable
 
     public override string ToString()
     {
-        if (taskEnabled)
+        if (taskEnabled && CalculateAssessmentLevels() > 0)
         {
             string text = taskName + ": " + numPeople + " / " + maxPeople + ",\t turns: " + numTurnsToComplete + ", + " + (output.Amount*numPeople) + " " + output.Name;
             return text;
