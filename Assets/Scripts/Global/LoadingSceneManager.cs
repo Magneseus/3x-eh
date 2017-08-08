@@ -15,6 +15,7 @@ public class LoadingSceneManager : MonoBehaviour {
     private bool isShowing = false;
     private float duration;
     private Color colorRecorder;
+    private bool introMusic = true;
 
 	// Use this for initialization
 	void Start () {
@@ -29,7 +30,10 @@ public class LoadingSceneManager : MonoBehaviour {
        // transition += isShowing ? Time.deltaTime / duration : -Time.deltaTime / duration;
         transition = Time.deltaTime/duration;
         loadingPic.color = Color.Lerp(loadingPic.color, colorRecorder, transition);
-        audioPlayer.volume += isShowing ? -Time.deltaTime / duration : Time.deltaTime / duration;
+        if(introMusic)
+           audioPlayer.volume += isShowing ? -Time.deltaTime / duration : Time.deltaTime / duration;
+        if (audioPlayer.volume >= 1)
+            introMusic = false;
 	}
 
     public void Fade(bool isShowing, float duration)
