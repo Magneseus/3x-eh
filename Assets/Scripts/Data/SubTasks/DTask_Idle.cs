@@ -78,4 +78,10 @@ public class DTask_Idle : DTask {
         get { return sidePanel; }
         set { sidePanel = value; }
     }
+
+    public override string ToString()
+    {
+        string text = taskName + ": " + numPeople + "";
+        return text;
+    }
 }

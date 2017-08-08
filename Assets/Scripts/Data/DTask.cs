@@ -474,6 +474,12 @@ public class DTask : ITurnUpdatable
     }
 
     #endregion
+
+    public override string ToString()
+    {
+        string text = taskName + ": " + numPeople + " / " + maxPeople + ", turns: " + numTurnsToComplete;
+        return text;
+    }
 }
 
 
