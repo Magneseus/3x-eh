@@ -104,10 +104,11 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
     private string getTasksAsText() {
         string text = "";
-        for(int i = 0; i < dBuilding.Tasks.Count; i++)
+        foreach (KeyValuePair<int, DTask> t in dBuilding.Tasks)
         {
-            text += dBuilding.Tasks[i] + "\n";
+            text += t.Value + "\n";
         }
+
         return text;
     }
     #endregion

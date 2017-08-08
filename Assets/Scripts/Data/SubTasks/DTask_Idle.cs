@@ -81,7 +81,11 @@ public class DTask_Idle : DTask {
 
     public override string ToString()
     {
-        string text = taskName + ": " + numPeople + "";
-        return text;
+        if (taskEnabled)
+        {
+            string text = taskName + ": " + numPeople + "";
+            return text;
+        }
+        return "";
     }
 }

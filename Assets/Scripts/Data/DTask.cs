@@ -477,8 +477,12 @@ public class DTask : ITurnUpdatable
 
     public override string ToString()
     {
-        string text = taskName + ": " + numPeople + " / " + maxPeople + ", turns: " + numTurnsToComplete;
-        return text;
+        if (taskEnabled)
+        {
+            string text = taskName + ": " + numPeople + " / " + maxPeople + ", turns: " + numTurnsToComplete;
+            return text;
+        }
+        return "";
     }
 }
 
