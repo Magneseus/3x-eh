@@ -11,7 +11,6 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
     private float taskControllerVisibilityTimeout = 0.2f;
     private bool taskControllerVisible;
     private int MouseOverCount = 0;
-    private bool selected = false;
 
 	// Use this for initialization
 	void Start () {
@@ -91,22 +90,20 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
     #endregion
 
     #region Mouse Click Functions
-
+    //used for building modal
     private void OnMouseUpAsButton()
     {
-        selected = !selected;
         GameObject BM = GameObject.Find("BuildingModal");
-        if (selected) {
-            BM.transform.Find("BName").GetComponent<Text>().text = dBuilding.Name;
-            BM.transform.Find("Text").GetComponent<Text>().text = getTasksAsText();
-        }
+        BM.transform.Find("BName").GetComponent<Text>().text = dBuilding.Name;
+        BM.transform.Find("Text").GetComponent<Text>().text = getTasksAsText();
     }
 
     private string getTasksAsText() {
         string text = "";
         foreach (KeyValuePair<int, DTask> t in dBuilding.Tasks)
         {
-            text += t.Value + "\n";
+            if(!("" + t.Value).Equals(""))
+                text += t.Value + "\n";
         }
 
         return text;

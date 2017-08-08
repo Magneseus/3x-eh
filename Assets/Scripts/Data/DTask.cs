@@ -479,7 +479,7 @@ public class DTask : ITurnUpdatable
     {
         if (taskEnabled)
         {
-            string text = taskName + ": " + numPeople + " / " + maxPeople + ", turns: " + numTurnsToComplete;
+            string text = taskName + ": " + numPeople + " / " + maxPeople + ",\t turns: " + numTurnsToComplete + ", + " + (output.Amount*numPeople) + " " + output.Name;
             return text;
         }
         return "";
