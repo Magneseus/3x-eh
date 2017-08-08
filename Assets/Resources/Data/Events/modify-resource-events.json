@@ -11,5 +11,22 @@
         "value": 50
       }
     ]
+  },
+  {
+    "id": 1,
+    "priority": 1,
+    "turnsToActivate": 7,
+    "promptText": "A weekly shipment of food has arrived!",
+    "activationCondition": true,
+    "resources": [
+      {
+        "type": "Food",
+        "value": 1000
+      }
+    ],
+    "nextEvent": {
+      "id": 1,
+      "type": "modify"
+    }
   }
 ]

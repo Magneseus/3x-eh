@@ -28,7 +28,8 @@ public class ChoiceEvent : DEvent
             outcomes,
             outcomesText,
             json["turnsToActivate"],
-            json["priority"]
+            json["priority"],
+            json["nextEvent"]
         ));
     }
 
@@ -62,7 +63,7 @@ public class ChoiceEvent : DEvent
 
 
     private ChoiceEvent(string promptText, DCity city, activationCondition actCondition, outcome[] outcomes, 
-        string[] outcomeTexts, int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT)
+        string[] outcomeTexts, int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT, JSONNode nextEvent = null)
     {
         this.promptText = promptText;
         this.city = city;
@@ -71,6 +72,7 @@ public class ChoiceEvent : DEvent
         this.outcomeTexts = outcomeTexts;
         this.turnsToActivation = turnsToActivation;
         this.priority = priority;
+        this.nextEvent = nextEvent;
     }
 
     public override void Activate()
