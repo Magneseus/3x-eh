@@ -94,6 +94,8 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
     private void OnMouseUpAsButton()
     {
         GameObject BM = GameObject.Find("BuildingModal");
+        GameObject SI = GameObject.Find("SelectionIndicator");
+        SI.transform.position = transform.position + new Vector3(0, 0, 1);
         BM.transform.Find("BName").GetComponent<Text>().text = dBuilding.Name;
         BM.transform.Find("Text").GetComponent<Text>().text = getTasksAsText();
     }
