@@ -103,13 +103,11 @@ public class DGame
 
     public void TEMPtestEvents()
     {
-        temp = false;        
-
-        var choiceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_CHOICE_EVENTS_PATH))[0];
-        DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.CHOICE, currentCity, choiceEvtJson);
-
-        var modResourceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_MOD_RESOURCE_EVENTS_PATH))[1];
-        DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, modResourceEvtJson);        
+        temp = false;                
+        DEventSystem.AddEventFromId(Constants.EVT_TYPE.CHOICE, currentCity, 0);
+        
+        DEventSystem.AddEventFromId(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, 0);
+        DEventSystem.AddEventFromId(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, 1);
     }
 
     public void NextEvent()
