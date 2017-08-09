@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114474285378052400}
   - component: {fileID: 61693535134525416}
   m_Layer: 0
-  m_Name: Building
+  m_Name: Building_Iqaluit_Airport
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,7 +121,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.024, y: 1.024}
+    oldSize: {x: 1.28, y: 1.28}
     newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -194,7 +194,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ea5dbb3652ab099499921aee8eeb80dc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 41b069cfa2ac4974a9345941bc3e19d6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

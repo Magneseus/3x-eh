@@ -5,19 +5,43 @@ using UnityEngine;
 
 public static class Constants {
 
-    
 
+    #region Paths
     public static string OTTAWA_PREFAB_PATH = @"Prefabs/Cities/Ottawa";
     public static string CITY_PREFAB_PATH = @"Prefabs/Cities/City";
     public static string CITY_SPRITE_PATH = @"Sprites/";
 
     public static string BUILDING_PREFAB_PATH = @"Prefabs/Buildings/Building";
+    public static string BUILDING_PREFAB_PATH_MED_00 = @"Prefabs/Buildings/Building_Med_00";
+    public static string BUILDING_PREFAB_PATH_MED_01 = @"Prefabs/Buildings/Building_Med_01";
+    public static string[] BUILDING_PREFAB_PATHS_MED = { BUILDING_PREFAB_PATH_MED_00, BUILDING_PREFAB_PATH_MED_01 };
+
+    public static string BUILDING_PREFAB_PATH_IQALUIT_HALL = @"Prefabs/Buildings/Building_Iqaluit_Hall";
+    public static string BUILDING_PREFAB_PATH_IQALUIT_AIRPORT = @"Prefabs/Buildings/Building_Iqaluit_Airport";
+    public static string BUILDING_PREFAB_PATH_IQALUIT_NAKASUK = @"Prefabs/Buildings/Building_Iqaluit_Nakasuk";
+
     public static string TASK_TRAY_PREFAB_PATH = @"Prefabs/Tasks/TaskTray";
     public static string TASK_TRAY_SINGLE_PREFAB_PATH = @"Prefabs/Tasks/TaskTraySingle";
     public static string MEEPLE_PREFAB_PATH = @"Prefabs/MeepleController";
-
+    
     public static string CITY_JSON_PATH = @"Assets/Resources/Data/starting_cities";
     public const string SAVE_JSON_PATH = @"Assets/Resources/Data/saved_games";
+    #endregion
+
+    public enum BUILDING_TYPE
+    {
+        SMALL,
+        MEDIUM,
+        IQALUIT_HALL,
+        IQALUIT_AIRPORT,
+        IQALUIT_NAKASUK,
+        OTTAWA_HALL,
+        OTTAWA_PARLIAMENT,
+        OTTAWA_RIVER,
+        VANCOUVER_HALL,
+        VANCOUVER_UBC,
+        VANCOUVER_CANADA_PLACE
+    };
 
     public enum EVT_TYPE
     {
