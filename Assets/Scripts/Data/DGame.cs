@@ -58,6 +58,23 @@ public class DGame
                   }
               }
             }
+            LoadCityEvents();
+        }
+    }
+
+    public void LoadCityEvents()
+    {
+        var choiceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_CHOICE_EVENTS_PATH));
+        for (int i = 0; i < choiceEvtJson.Count; i++)
+        {
+            DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.CHOICE, currentCity, choiceEvtJson[i]);
+        }
+        
+
+        var modResourceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_MOD_RESOURCE_EVENTS_PATH));
+        for (int i = 0; i < modResourceEvtJson.Count; i++)
+        {
+            DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, modResourceEvtJson[i]);
         }
     }
 
@@ -88,8 +105,6 @@ public class DGame
         {
             currentCity.TurnUpdate(durationOfTurn);
             currentCity.UpdateSeason(currentDate);
-            if (temp)
-                TEMPtestEvents();
         }
         DEventSystem.TurnUpdate();
         NextEvent();
@@ -99,15 +114,6 @@ public class DGame
         {
             CompletedCurrentCity();
         }
-    }
-
-    public void TEMPtestEvents()
-    {
-        temp = false;                
-        DEventSystem.AddEventFromId(Constants.EVT_TYPE.CHOICE, currentCity, 0);
-        
-        DEventSystem.AddEventFromId(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, 0);
-        DEventSystem.AddEventFromId(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, 1);
     }
 
     public void NextEvent()

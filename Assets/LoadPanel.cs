@@ -8,6 +8,7 @@ public class LoadPanel : MonoBehaviour {
     public GameObject LoadObjectPrefab;
 
     private GameController gameController;
+    private MainMenuManager menuManager;
     private List<GameObject> loadButtons;
     private string fileNameToLoad;
 
@@ -15,6 +16,7 @@ public class LoadPanel : MonoBehaviour {
     void Start () {
         fileNameToLoad = null;
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        menuManager = GameObject.Find("MainMenuManager").GetComponent<MainMenuManager>();
         loadButtons = new List<GameObject>();
         displayFiles(gameController.listSavedGames());
 	}
@@ -41,6 +43,6 @@ public class LoadPanel : MonoBehaviour {
     public void load()
     {
         if (fileNameToLoad != null)
-            GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").transform.Find("MainMenuManager").GetComponent<MainMenuManager>().LoadGame(fileNameToLoad+".json");
+            menuManager.LoadGame(fileNameToLoad+".json");
     }
 }

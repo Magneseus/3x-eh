@@ -169,7 +169,8 @@ public class GameController : MonoBehaviour
 
     public BuildingController CreateBuildingController(DBuilding building, Vector3 position)
     {
-        BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH, this.transform);
+        string prefab_path = DBuilding.RandomBuildingPrefabPath(building.BuildType);
+        BuildingController buildingController = InstantiatePrefab<BuildingController>(prefab_path, this.transform);
         buildingController.ConnectToDataEngine(building);
 
         // Set position
