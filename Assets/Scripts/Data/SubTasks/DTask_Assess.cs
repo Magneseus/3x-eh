@@ -54,4 +54,14 @@ public class DTask_Assess : DTask
     }
 
     #endregion
+
+    public override string ToString()
+    {
+        if (taskEnabled)
+        {
+            string text = taskName + ": " + numPeople + " / " + maxPeople;
+            return text;
+        }
+        return "";
+    }
 }

@@ -474,6 +474,16 @@ public class DTask : ITurnUpdatable
     }
 
     #endregion
+
+    public override string ToString()
+    {
+        if (taskEnabled && CalculateAssessmentLevels() > 0)
+        {
+            string text = taskName + ": " + numPeople + " / " + CalculateAssessmentLevels() + ",\t turns: " + numTurnsToComplete + ", + " + (output.Amount*numPeople) + " " + output.Name;
+            return text;
+        }
+        return "";
+    }
 }
 
 

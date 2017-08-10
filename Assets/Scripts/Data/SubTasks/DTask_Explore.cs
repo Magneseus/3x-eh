@@ -132,4 +132,14 @@ public class DTask_Explore : DTask
 
         return returnNode;
     }
+
+    public override string ToString()
+    {
+        if (taskEnabled)
+        {
+            string text = taskName + ": " + numPeople + "";
+            return text;
+        }
+        return "";
+    }
 }

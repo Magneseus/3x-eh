@@ -89,6 +89,29 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
     #endregion
 
+    #region Mouse Click Functions
+    //used for building modal
+    private void OnMouseUpAsButton()
+    {
+        GameObject BM = GameObject.Find("BuildingModal");
+        GameObject SI = GameObject.Find("SelectionIndicator");
+        SI.transform.position = transform.position + new Vector3(0, 0, 1);
+        BM.transform.Find("BName").GetComponent<Text>().text = dBuilding.Name;
+        BM.transform.Find("Text").GetComponent<Text>().text = getTasksAsText();
+    }
+
+    private string getTasksAsText() {
+        string text = "";
+        foreach (KeyValuePair<int, DTask> t in dBuilding.Tasks)
+        {
+            if(!("" + t.Value).Equals(""))
+                text += t.Value + "\n";
+        }
+
+        return text;
+    }
+    #endregion
+
     #region TaskController Functions
 
     public void SetTaskControllerVisibility(bool visibility)
