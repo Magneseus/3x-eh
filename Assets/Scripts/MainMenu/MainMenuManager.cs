@@ -65,6 +65,7 @@ public class MainMenuManager : MonoBehaviour {
 
     public void SwitchToGame()
     {
+        
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
 
@@ -77,6 +78,15 @@ public class MainMenuManager : MonoBehaviour {
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(true);
         camControl.GetComponent<CamControl>().setMount(camControl.GetComponent<CamControl>().mainMenuMount);
         loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(false, 3f);   
+    }
+    public void LoadGame(string s)
+    {
+        GameObject.Find("GameController").GetComponent<GameController>().LoadGame(s);
+        GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
+        GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void QuitGame()
