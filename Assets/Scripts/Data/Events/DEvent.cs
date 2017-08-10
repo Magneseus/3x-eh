@@ -11,6 +11,15 @@ public abstract class DEvent {
             case "exploring":
                 activationCondition actExplore = e => e.City.HasPeopleInTask(typeof(DTask_Explore));
                 return actExplore;
+            case Constants.IQALUIT_CITY_NAME:
+                activationCondition actIqaluit = e => e.City.Name == Constants.IQALUIT_CITY_NAME;
+                return actIqaluit;
+            case Constants.OTTAWA_CITY_NAME:
+                activationCondition actOttawa = e => e.City.Name == Constants.OTTAWA_CITY_NAME;
+                return actOttawa;
+            case Constants.VANCOUVER_CITY_NAME:
+                activationCondition actVancouver = e => e.City.Name == Constants.VANCOUVER_CITY_NAME;
+                return actVancouver;
             case "true":
             default:
                 activationCondition actTrue = e => true;

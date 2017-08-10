@@ -15,18 +15,30 @@
   {
     "id": 1,
     "priority": 1,
-    "turnsToActivate": 7,
-    "promptText": "A weekly shipment of food has arrived!",
-    "activationCondition": true,
+    "turnsToActivate": 3,
+    "promptText": "The team has returned from the wreck, a cargo ship full of canned food that's been keeping Iqaluit fed these past months. This latest haul is larger than usual. The team explains this was the last of it. It should last a while, but we'll need a new source of food before long. You gain XXX food, and the returning team is available to work other jobs.\nYou got 300 food.",
+    "activationCondition": "Iqaluit",
     "resources": [
       {
         "type": "Food",
-        "value": 1000
+        "value": 300
       }
-    ],
-    "nextEvent": {
-      "id": 1,
-      "type": "modify"
-    }
+    ]
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "turnsToActivate": 5,
+    "promptText": "Anxious chatter has been spreading around town. There's plenty of food, but for how long? And what next?",
+    "activationCondition": "Iqaluit",
+    "resources": []
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "turnsToActivate": 8,
+    "promptText": "Concern is growing over finding food. Some families are debating leaving for the mainland, others want to establish contact with other settlements, and some think searching farther for more ships is the answer.",
+    "activationCondition": "Iqaluit",
+    "resources": []
   }
 ]
