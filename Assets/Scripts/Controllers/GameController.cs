@@ -112,8 +112,7 @@ public class GameController : MonoBehaviour
         
         foreach(string s in Directory.GetFiles(pathToSavedGames, "*.json"))
         {
-			Debug.Log(s);
-            string newS = s.Split('/')[4];
+            string newS = s.Split(Path.DirectorySeparatorChar)[1];
             listSavedGames.Add(newS.Split('.')[0]);
         }
         
