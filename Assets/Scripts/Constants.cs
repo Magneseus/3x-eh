@@ -53,6 +53,13 @@ public static class Constants {
         NUMELEMENTS
     };
 
+    #region Names
+    public const string FOOD_RESOURCE_NAME = "Food";
+    public const string IQALUIT_CITY_NAME = "Iqaluit";
+    public const string OTTAWA_CITY_NAME = "Ottawa";
+    public const string VANCOUVER_CITY_NAME = "Vancouver";
+    #endregion
+
     public enum EVT_TYPE
     {
         CHOICE,
@@ -63,7 +70,7 @@ public static class Constants {
     public static string EVT_MOD_RESOURCE_EVENTS_PATH = @"Assets/Resources/Data/Events/modify-resource-events.json";
 
 
-    public static string FOOD_RESOURCE_NAME = "Food";
+    
     public static DateTime[] DEFAULT_SEASON_DATES = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
     public static DateTime DEFAULT_DATE = DEFAULT_SEASON_DATES[0].AddDays(1);
     public static int DEFAULT_RESOURCE_VALUE = 0;
