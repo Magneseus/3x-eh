@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114474285378052400}
   - component: {fileID: 61693535134525416}
   m_Layer: 0
-  m_Name: Building_Ottawa_Hall
+  m_Name: Building_Vancouver_Hall
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
