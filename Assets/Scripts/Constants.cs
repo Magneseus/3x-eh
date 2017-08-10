@@ -16,9 +16,16 @@ public static class Constants {
     public static string BUILDING_PREFAB_PATH_MED_01 = @"Prefabs/Buildings/Building_Med_01";
     public static string[] BUILDING_PREFAB_PATHS_MED = { BUILDING_PREFAB_PATH_MED_00, BUILDING_PREFAB_PATH_MED_01 };
 
+    public static string BUILDING_PREFAB_PATH_SM_00 = @"Prefabs/Buildings/Building_Small_00";
+    public static string[] BUILDING_PREFAB_PATHS_SM = { BUILDING_PREFAB_PATH_SM_00 };
+
     public static string BUILDING_PREFAB_PATH_IQALUIT_HALL = @"Prefabs/Buildings/Building_Iqaluit_Hall";
     public static string BUILDING_PREFAB_PATH_IQALUIT_AIRPORT = @"Prefabs/Buildings/Building_Iqaluit_Airport";
     public static string BUILDING_PREFAB_PATH_IQALUIT_NAKASUK = @"Prefabs/Buildings/Building_Iqaluit_Nakasuk";
+
+    public static string BUILDING_PREFAB_PATH_OTTAWA_HALL = @"Prefabs/Buildings/Building_Ottawa_Hall";
+    public static string BUILDING_PREFAB_PATH_OTTAWA_PARLIAMENT = @"Prefabs/Buildings/Building_Ottawa_Parliament";
+    public static string BUILDING_PREFAB_PATH_OTTAWA_RIVER = @"Prefabs/Buildings/Building_Ottawa_River";
 
     public static string TASK_TRAY_PREFAB_PATH = @"Prefabs/Tasks/TaskTray";
     public static string TASK_TRAY_SINGLE_PREFAB_PATH = @"Prefabs/Tasks/TaskTraySingle";

@@ -34,7 +34,7 @@
             "name": "Town Hall",
             "ID": 0,
             "cityName": "Ottawa",
-			"type": "MEDIUM",
+			"type": "OTTAWA_HALL",
             "status": 2,
             "percentInfected": 0,
             "percentDamaged": 0,
