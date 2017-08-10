@@ -105,6 +105,20 @@ public class GameController : MonoBehaviour
         countryView.SetActive(false);
     }
 
+    public List<string> listSavedGames(string pathToSavedGames = Constants.SAVE_JSON_PATH)
+    {
+        List<string> listSavedGames = new List<string>();
+
+        
+        foreach(string s in Directory.GetFiles(pathToSavedGames, "*.json"))
+        {
+            string newS = s.Split('\\')[1];
+            listSavedGames.Add(newS.Split('.')[0]);
+        }
+        
+        return listSavedGames;
+    }
+
     public void ReturnToMap(bool destroyCityView=false)
     {
         if (destroyCityView)
