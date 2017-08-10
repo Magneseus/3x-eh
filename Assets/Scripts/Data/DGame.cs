@@ -58,6 +58,23 @@ public class DGame
                   }
               }
             }
+            LoadCityEvents();
+        }
+    }
+
+    public void LoadCityEvents()
+    {
+        var choiceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_CHOICE_EVENTS_PATH));
+        for (int i = 0; i < choiceEvtJson.Count; i++)
+        {
+            DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.CHOICE, currentCity, choiceEvtJson[i]);
+        }
+        
+
+        var modResourceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_MOD_RESOURCE_EVENTS_PATH));
+        for (int i = 0; i < modResourceEvtJson.Count; i++)
+        {
+            DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, modResourceEvtJson[i]);
         }
     }
 
@@ -105,11 +122,7 @@ public class DGame
     {
         temp = false;        
 
-        var choiceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_CHOICE_EVENTS_PATH))[0];
-        DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.CHOICE, currentCity, choiceEvtJson);
-
-        var modResourceEvtJson = JSON.Parse(File.ReadAllText(Constants.EVT_MOD_RESOURCE_EVENTS_PATH))[0];
-        DEventSystem.AddEventFromJSON(Constants.EVT_TYPE.MOD_RESOURCE, currentCity, modResourceEvtJson);        
+               
     }
 
     public void NextEvent()
