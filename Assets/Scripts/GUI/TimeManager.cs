@@ -216,11 +216,12 @@ public class TimeManager : MonoBehaviour {
 	}*/
 
     IEnumerator SwitchIn(){
-		//Debug.Log ("SwitchIn is called");
+		Debug.Log ("SwitchIn is called");
 		loadingSceneManager.GetComponent<LoadingSceneManager> ().Fade (true, 1f);
 		//Debug.Log ("123456");
 
-		yield return new WaitForSeconds(5f);
+        //speed up to 1 second
+		yield return new WaitForSeconds(1f);
 
 		isSwitchIn = false;
 		isSwitchOut = true;
@@ -228,10 +229,10 @@ public class TimeManager : MonoBehaviour {
 	}
 
 	IEnumerator SwitchOut(){
-		//Debug.Log ("SwitchOut is called");
+		Debug.Log ("SwitchOut is called");
 		loadingSceneManager.GetComponent<LoadingSceneManager> ().Fade (false, 1f);
-
-		yield return new WaitForSeconds(5f);
+        //speed up to 1 second
+        yield return new WaitForSeconds(1f);
 
 		if (functionLimiter == false){
 			ResetSwitch ();

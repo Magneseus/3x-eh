@@ -105,8 +105,6 @@ public class DGame
         {
             currentCity.TurnUpdate(durationOfTurn);
             currentCity.UpdateSeason(currentDate);
-            if (temp)
-                TEMPtestEvents();
         }
         DEventSystem.TurnUpdate();
         NextEvent();
@@ -116,13 +114,6 @@ public class DGame
         {
             CompletedCurrentCity();
         }
-    }
-
-    public void TEMPtestEvents()
-    {
-        temp = false;        
-
-               
     }
 
     public void NextEvent()

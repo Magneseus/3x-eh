@@ -1,6 +1,7 @@
 ﻿using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class DEventSystem {
@@ -20,6 +21,21 @@ public class DEventSystem {
                 break;
             case Constants.EVT_TYPE.CHOICE:
                 ChoiceEvent.AddEventFromJSON(currentCity, json);
+                break;
+            default:
+                throw new System.Exception("No EventType Specified");
+        }
+    }
+
+    public static void AddEventFromId(Constants.EVT_TYPE eventType, DCity currentCity, int id)
+    {
+        switch (eventType)
+        {
+            case Constants.EVT_TYPE.MOD_RESOURCE:
+                AddEventFromJSON(eventType, currentCity, JSON.Parse(File.ReadAllText(Constants.EVT_MOD_RESOURCE_EVENTS_PATH))[id]);
+                break;
+            case Constants.EVT_TYPE.CHOICE:
+                AddEventFromJSON(eventType, currentCity, JSON.Parse(File.ReadAllText(Constants.EVT_MOD_RESOURCE_EVENTS_PATH))[id]);
                 break;
             default:
                 throw new System.Exception("No EventType Specified");

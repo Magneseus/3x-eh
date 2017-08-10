@@ -1,4 +1,6 @@
-﻿public abstract class DEvent {
+﻿using SimpleJSON;
+
+public abstract class DEvent {
 
     public static DGame dGame { get; set; }
 
@@ -31,6 +33,7 @@
     public DCity city;
     public int priority = Constants.EVENT_PRIORITY_DEFAULT;
     public int turnsToActivation;
+    public JSONNode nextEvent;
 
     public abstract void Activate();
     public abstract void Resolve(int selection = Constants.NO_INPUT);
