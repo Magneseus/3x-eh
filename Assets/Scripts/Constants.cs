@@ -40,7 +40,8 @@ public static class Constants {
         OTTAWA_RIVER,
         VANCOUVER_HALL,
         VANCOUVER_UBC,
-        VANCOUVER_CANADA_PLACE
+        VANCOUVER_CANADA_PLACE,
+        NUMELEMENTS
     };
 
     public enum EVT_TYPE
