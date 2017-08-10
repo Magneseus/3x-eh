@@ -447,6 +447,9 @@ public class DBuilding : ITurnUpdatable {
             case Constants.BUILDING_TYPE.OTTAWA_RIVER:
                 result = Constants.BUILDING_PREFAB_PATH_OTTAWA_RIVER;
                 break;
+            case Constants.BUILDING_TYPE.VANCOUVER_HALL:
+                result = Constants.BUILDING_PREFAB_PATH_VANCOUVER_HALL;
+                break;
             default:
                 result = Constants.BUILDING_PREFAB_PATH;
                 break;
