@@ -40,5 +40,21 @@
     "promptText": "Concern is growing over finding food. Some families are debating leaving for the mainland, others want to establish contact with other settlements, and some think searching farther for more ships is the answer.",
     "activationCondition": "Iqaluit",
     "resources": []
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "turnsToActivate": 10,
+    "promptText": "Migrants arrive in Iqaluit travelling from the west. While settling in one woman mentions they came through Cape Dorset. The people there recently established contact with Salluit on the mainland.",
+    "activationCondition": "Iqaluit",
+    "resources": []
+  },
+  {
+    "id": 5,
+    "priority": 1,
+    "turnsToActivate": 13,
+    "promptText": "A man who previously left by boat for the mainland has just returned. He says he found a stable settlement at Quaqtaq. Talking to the people there, they are willing to help us with food, but lack the manpower to build, and operate a big enough boat.",
+    "activationCondition": "Iqaluit",
+    "resources": []
   }
 ]
