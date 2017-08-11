@@ -106,6 +106,21 @@ public class GameController : MonoBehaviour
         countryView.SetActive(false);
     }
 
+    public List<string> listSavedGames(string pathToSavedGames = Constants.SAVE_JSON_PATH)
+    {
+        List<string> listSavedGames = new List<string>();
+
+        
+        foreach(string s in Directory.GetFiles(pathToSavedGames, "*.json"))
+        {
+            SaveNum++;
+            string newS = s.Split(Path.DirectorySeparatorChar)[1];
+            listSavedGames.Add(newS.Split('.')[0]);
+        }
+        
+        return listSavedGames;
+    }
+
     public void ReturnToMap(bool destroyCityView=false)
     {
         if (destroyCityView)
@@ -156,7 +171,8 @@ public class GameController : MonoBehaviour
 
     public BuildingController CreateBuildingController(DBuilding building, Vector3 position)
     {
-        BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH, this.transform);
+        string prefab_path = DBuilding.RandomBuildingPrefabPath(building.BuildType);
+        BuildingController buildingController = InstantiatePrefab<BuildingController>(prefab_path, this.transform);
         buildingController.ConnectToDataEngine(building);
 
         // Set position

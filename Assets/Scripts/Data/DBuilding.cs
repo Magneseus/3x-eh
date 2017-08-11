@@ -20,6 +20,7 @@ public class DBuilding : ITurnUpdatable {
     private int id;
     private DCity city;
     private String buildingName;
+    private Constants.BUILDING_TYPE buildType = Constants.BUILDING_TYPE.MEDIUM;
     private DBuildingStatus status;
     public Dictionary<int, DTask> tasks = new Dictionary<int, DTask>();
 
@@ -224,6 +225,12 @@ public class DBuilding : ITurnUpdatable {
         get { return id; }
     }
 
+    public Constants.BUILDING_TYPE BuildType
+    {
+        get { return buildType; }
+        set { buildType = value; }
+    }
+
 	public BuildingController Controller
 	{
 		get { return buildingController; }
@@ -367,6 +374,9 @@ public class DBuilding : ITurnUpdatable {
 
         // Load basic info
         dBuilding.id = jsonNode["ID"].AsInt;
+        string typeString = jsonNode["type"];
+        if (typeString != null)
+            dBuilding.buildType = (Constants.BUILDING_TYPE)Enum.Parse(typeof(Constants.BUILDING_TYPE), typeString);
 
         // Load status info
         dBuilding.status = (DBuildingStatus)(RandJSON.JSONInt(jsonNode["status"]));
@@ -400,6 +410,52 @@ public class DBuilding : ITurnUpdatable {
         city.Game.GameController.CreateBuildingController(dBuilding, position);
 
         return dBuilding;
+    }
+
+    public static string RandomBuildingPrefabPath(Constants.BUILDING_TYPE buildType)
+    {
+        float roll = UnityEngine.Random.value;
+        roll = Mathf.Clamp(roll, 0f, 0.99f);
+        string result;
+        switch (buildType)
+        {
+            case Constants.BUILDING_TYPE.MEDIUM:
+                float interval = 1f / Constants.BUILDING_PREFAB_PATHS_MED.Length;
+                int index = (int)Mathf.Floor(roll / interval);
+                result = Constants.BUILDING_PREFAB_PATHS_MED[index];
+                break;
+            case Constants.BUILDING_TYPE.SMALL:
+                interval = 1f / Constants.BUILDING_PREFAB_PATHS_SM.Length;
+                index = (int)Mathf.Floor(roll / interval);
+                result = Constants.BUILDING_PREFAB_PATHS_MED[index];
+                break;
+            case Constants.BUILDING_TYPE.IQALUIT_HALL:
+                result = Constants.BUILDING_PREFAB_PATH_IQALUIT_HALL;
+                break;
+            case Constants.BUILDING_TYPE.IQALUIT_AIRPORT:
+                result = Constants.BUILDING_PREFAB_PATH_IQALUIT_AIRPORT;
+                break;
+            case Constants.BUILDING_TYPE.IQALUIT_NAKASUK:
+                result = Constants.BUILDING_PREFAB_PATH_IQALUIT_NAKASUK;
+                break;
+            case Constants.BUILDING_TYPE.OTTAWA_HALL:
+                result = Constants.BUILDING_PREFAB_PATH_OTTAWA_HALL;
+                break;
+            case Constants.BUILDING_TYPE.OTTAWA_PARLIAMENT:
+                result = Constants.BUILDING_PREFAB_PATH_OTTAWA_PARLIAMENT;
+                break;
+            case Constants.BUILDING_TYPE.OTTAWA_RIVER:
+                result = Constants.BUILDING_PREFAB_PATH_OTTAWA_RIVER;
+                break;
+            case Constants.BUILDING_TYPE.VANCOUVER_HALL:
+                result = Constants.BUILDING_PREFAB_PATH_VANCOUVER_HALL;
+                break;
+            default:
+                result = Constants.BUILDING_PREFAB_PATH;
+                break;
+        }
+
+        return result;
     }
 }
 

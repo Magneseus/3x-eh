@@ -146,6 +146,7 @@ public class DResource : ITurnUpdatable
             jsonNode["name"],
             RandJSON.JSONInt(jsonNode["amount"]));
 
+        /* TODO: Fix this properly
         if (loadedResource.ID != jsonNode["ID"].AsInt)
         {
             throw new ResourceDictionaryMismatchException(
@@ -155,6 +156,7 @@ public class DResource : ITurnUpdatable
                     jsonNode["ID"])
                 );
         }
+        */
 
         return loadedResource;
     }
