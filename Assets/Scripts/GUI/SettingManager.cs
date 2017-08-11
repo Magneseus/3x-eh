@@ -11,6 +11,8 @@ public class SettingManager : MonoBehaviour {
     public GameObject confirmPane;
     public GameObject mainPane;
     public Image loadingImage;
+
+    public GameObject saveHint;
     
 
 
@@ -81,4 +83,8 @@ public class SettingManager : MonoBehaviour {
         mainMenuManager.SwitchToMainMenu();
     }
 
+    public void SetSaveHint(bool isActive)
+    {
+        saveHint.SetActive(isActive);
+    }
 }

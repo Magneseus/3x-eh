@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     private GameObject countryView;
     private CountryMap countryMap;
     private GameObject cityView;
+    public static int SaveNum = 0;
 
     // Initialization
     void Start()
@@ -112,6 +113,7 @@ public class GameController : MonoBehaviour
         
         foreach(string s in Directory.GetFiles(pathToSavedGames, "*.json"))
         {
+            SaveNum++;
             string newS = s.Split(Path.DirectorySeparatorChar)[1];
             listSavedGames.Add(newS.Split('.')[0]);
         }
