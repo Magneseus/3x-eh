@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     private GameObject countryView;
     private CountryMap countryMap;
     private GameObject cityView;
+    public static int SaveNum = 0;
 
     // Initialization
     void Start()
