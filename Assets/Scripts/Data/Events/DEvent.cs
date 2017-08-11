@@ -30,10 +30,14 @@ public abstract class DEvent {
     public string promptText;
     public delegate bool activationCondition(DEvent e);
     public activationCondition actCondition;
+    public string actConditionString;
+
     public DCity city;
     public int priority = Constants.EVENT_PRIORITY_DEFAULT;
     public int turnsToActivation;
     public JSONNode nextEvent;
+
+    protected string json;
 
     public abstract void Activate();
     public abstract void Resolve(int selection = Constants.NO_INPUT);
@@ -65,4 +69,7 @@ public abstract class DEvent {
         get { return turnsToActivation; }
         set { turnsToActivation = value; }
     }
+
+    public abstract JSONNode SaveToJSON();
+    public abstract void LoadFromJSON(JSONNode json, DCity city);
 }

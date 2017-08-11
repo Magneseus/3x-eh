@@ -9,6 +9,7 @@ public class ChoiceEvent : DEvent
 
     public static void AddEventFromJSON(DCity currentCity, JSONNode json)
     {
+        var outcomeJSON = json["outcomes"];
         var outcomes = new outcome[json["outcomes"].AsArray.Count];
         for(int i=0; i<outcomes.Length; i++)
         {
@@ -26,10 +27,11 @@ public class ChoiceEvent : DEvent
             currentCity,
             ParseActivationCondition(json["activationCondition"]),
             outcomes,
+            outcomeJSON,
             outcomesText,
             json["turnsToActivate"],
             json["priority"],
-            json["nextEvent"]
+            json["nextEvent"]            
         ));
     }
 
@@ -59,16 +61,18 @@ public class ChoiceEvent : DEvent
 
     public delegate void outcome(ChoiceEvent e);
     public outcome[] outcomes = new outcome[2];
+    public JSONNode outcomeJSON;
     public string[] outcomeTexts = new string[2];
 
 
-    private ChoiceEvent(string promptText, DCity city, activationCondition actCondition, outcome[] outcomes, 
+    private ChoiceEvent(string promptText, DCity city, activationCondition actCondition, outcome[] outcomes, JSONNode outcomeJSON,
         string[] outcomeTexts, int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT, JSONNode nextEvent = null)
     {
         this.promptText = promptText;
         this.city = city;
         this.actCondition = actCondition;
         this.outcomes = outcomes;
+        this.outcomeJSON = outcomeJSON;
         this.outcomeTexts = outcomeTexts;
         this.turnsToActivation = turnsToActivation;
         this.priority = priority;
@@ -94,5 +98,29 @@ public class ChoiceEvent : DEvent
             outcomes[selection](this);
             Debug.Log(outcomeTexts[selection]);    // for UI - replace
         }
+    }
+
+    public override JSONNode SaveToJSON()
+    {
+        JSONArray outcomeTextsJSON = new JSONArray();
+        foreach (var o in outcomeTexts)
+        {
+            outcomeTextsJSON.Add(o);
+        }
+
+        return new JSONObject
+        {
+            { "priority", priority },
+            { "turnsToActivate", turnsToActivation },
+            { "promptText", promptText },
+            { "activationCondition", actConditionString },
+            { "outcomes", outcomeJSON.AsArray },
+            { "outcomesText", outcomeTextsJSON }
+        };
+    }
+
+    public override void LoadFromJSON(JSONNode json, DCity city)
+    {
+        AddEventFromJSON(city, json);
     }
 }

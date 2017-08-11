@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class DEventSystem {
+public static class DEventSystem {
 
     public static List<DEvent> eventPool = new List<DEvent>();
     public static List<DEvent> eventsToAdd = new List<DEvent>();
@@ -78,5 +78,37 @@ public class DEventSystem {
                     result = e;
         eventPool.Remove(result);
         return result;
+    }
+
+    public static JSONNode SaveToJSON()
+    {
+        var allEvents = new List<DEvent>();
+
+        foreach (var e in eventPool)
+        {
+            allEvents.Add(e);
+        }
+        foreach (var e in eventsToAdd)
+        {
+            allEvents.Add(e);
+        }
+
+        foreach (var e in eventsToRemove)
+        {
+            allEvents.Remove(e);
+        }
+
+        JSONNode returnNode = new JSONObject();
+        foreach (var e in allEvents)
+        {
+            returnNode.Add(e.SaveToJSON());
+        }
+
+        return returnNode;
+    }
+
+    public static void LoadFromJSON(JSONNode json, DCity city)
+    {
+        // TODO
     }
 }

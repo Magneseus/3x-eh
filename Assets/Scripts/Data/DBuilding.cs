@@ -337,18 +337,20 @@ public class DBuilding : ITurnUpdatable {
 
     public JSONNode SaveToJSON()
     {
-        JSONNode returnNode = new JSONObject();
+        JSONNode returnNode = new JSONObject
+        {
 
-        // Save basic building info
-        returnNode.Add("name", new JSONString(buildingName));
-        returnNode.Add("ID", new JSONNumber(id));
-        returnNode.Add("cityName", new JSONString(city.Name));
+            // Save basic building info
+            { "name", new JSONString(buildingName) },
+            { "ID", new JSONNumber(id) },
+            { "cityName", new JSONString(city.Name) },
 
-        // Save status information
-        returnNode.Add("status", new JSONNumber((int)(status)));
-        returnNode.Add("percentInfected", new JSONNumber(percentInfected));
-        returnNode.Add("percentDamaged", new JSONNumber(percentDamaged));
-        returnNode.Add("percentAssessed", new JSONNumber(percentAssessed));
+            // Save status information
+            { "status", new JSONNumber((int)(status)) },
+            { "percentInfected", new JSONNumber(percentInfected) },
+            { "percentDamaged", new JSONNumber(percentDamaged) },
+            { "percentAssessed", new JSONNumber(percentAssessed) }
+        };
 
         // Save tasks
         JSONArray jsonTaskList = new JSONArray();
@@ -359,10 +361,11 @@ public class DBuilding : ITurnUpdatable {
         returnNode.Add("tasks", jsonTaskList);
 
         // Save building position
-        JSONNode position = new JSONObject();
-        position.Add("x", new JSONNumber(buildingController.transform.position.x));
-        position.Add("y", new JSONNumber(buildingController.transform.position.y));
-
+        JSONNode position = new JSONObject
+        {
+            { "x", new JSONNumber(buildingController.transform.position.x) },
+            { "y", new JSONNumber(buildingController.transform.position.y) }
+        };
         returnNode.Add("position", position);
 
         return returnNode;

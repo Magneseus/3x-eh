@@ -20,10 +20,11 @@ public class ModifyResourceEvent : DEvent {
             json["promptText"],
             currentCity,
             resources,
-            ParseActivationCondition(json["activationCondition"]),
+            json["activationCondition"],
             json["turnsToActivate"],
             json["priority"],
-            json["nextEvent"]
+            json["nextEvent"],
+            json.ToString()
         ));
     }
 
@@ -31,15 +32,16 @@ public class ModifyResourceEvent : DEvent {
     private DResource[] resources;
 
     private ModifyResourceEvent(string promptText, DCity city, DResource[] resources, 
-        activationCondition actCondition,int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT, JSONNode nextEvent = null)
+        string actConditionString, int turnsToActivation = 0, int priority = Constants.EVENT_PRIORITY_DEFAULT, JSONNode nextEvent = null, string json)
     {
         this.promptText = promptText;
         this.city = city;
         this.resources = resources;
-        this.actCondition = actCondition;
+        this.actCondition = ParseActivationCondition(actConditionString);
+        this.actConditionString = actConditionString;
         this.turnsToActivation = turnsToActivation;
         this.priority = priority;
-        this.nextEvent = nextEvent;
+        this.nextEvent = nextEvent;        
     }
 
     public override void Activate()
@@ -76,5 +78,32 @@ public class ModifyResourceEvent : DEvent {
                     throw new Exception("Event type not recognized");
             }
         }
+    }
+
+    public override JSONNode SaveToJSON()
+    {
+        JSONNode resourceJSON = new JSONObject();
+        foreach (var r in resources)
+        {
+            resourceJSON.Add(new JSONObject
+            {
+                { "type", r.Name },
+                { "value", r.Amount }
+            });
+        }
+
+        return new JSONObject
+        {            
+            { "priority", priority },
+            { "turnsToActivate", turnsToActivation },
+            { "promptText", promptText },
+            { "activationCondition", actConditionString },
+            { "resources", resourceJSON.AsArray }
+        };     
+    }
+
+    public override void LoadFromJSON(JSONNode json, DCity city)
+    {
+        AddEventFromJSON(city, json);
     }
 }
