@@ -156,6 +156,11 @@ public class DGame
         currentEvent.Resolve(selection);
         NextEvent();
     }
+    public void Reset()
+    {
+        cities = new Dictionary<string, DCity>();
+        completedCities = new Dictionary<string, DCompressedCity>();
+    }
 
     #region Properties
 

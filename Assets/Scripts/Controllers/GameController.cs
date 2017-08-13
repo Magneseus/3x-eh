@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     public GameObject UICanvas;
     public GameObject CountryViewUIPrefab;
     public GameObject CityViewUIPrefab;
+    
 
     private GameObject countryView;
     private CountryMap countryMap;
@@ -65,6 +66,51 @@ public class GameController : MonoBehaviour
         {
             //LoadGame();
             LoadGame("test.json");
+        }
+    }
+
+    public void NewGame()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (cityView != null)
+        {
+            destroyCityAndBuildings();
+            Destroy(cityView);
+            dGame.Reset();
+        }
+        countryView.SetActive(true);
+
+
+
+        foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
+        {
+            if (Path.GetExtension(file) == ".json")
+            {
+                var cityJSON = JSON.Parse(File.ReadAllText(file));
+
+                List<string> edges = new List<string>();
+                for (int i = 0; i < cityJSON["linked_cities"].AsArray.Count; i++)
+                {
+                    edges.Add((cityJSON["linked_cities"].AsArray[i]));
+                }
+                countryMap.SpawnCityNode(
+                    cityJSON["name"],
+                    new Vector3(cityJSON["position"]["x"], cityJSON["position"]["y"], -1),
+                    edges);
+
+            }
+        }
+        countryMap.SpawnEdges();
+    }
+
+
+    public void destroyCityAndBuildings()
+    {
+        foreach(Transform t in this.transform)
+        {
+            Destroy(t.gameObject);
         }
     }
 
