@@ -42,6 +42,9 @@ public class LoadPanel : MonoBehaviour {
     public void load()
     {
         if (fileNameToLoad != null)
-            menuManager.GetComponent<MainMenuManager>().LoadGame(fileNameToLoad+".json");
+            if (menuManager != null)
+                menuManager.GetComponent<MainMenuManager>().LoadGame(fileNameToLoad + ".json");
+            else
+                gameController.LoadGame(fileNameToLoad + ".json");
     }
 }

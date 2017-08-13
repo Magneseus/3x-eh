@@ -1670,7 +1670,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224920650049528542}
   - component: {fileID: 222517727832554832}
-  - component: {fileID: 114511770922082706}
   - component: {fileID: 114059109184851916}
   - component: {fileID: 114473643934268808}
   m_Layer: 0
@@ -3449,7 +3448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 874a458545d71a04ba7ba323115e4c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LoadObjectPrefab: {fileID: 1601504644923692, guid: d63c728e94cc6d040aab67c73872f0f1,
+  LoadObjectPrefab: {fileID: 1866162645543296, guid: cc952ea3db87c4a4093c36ac67424002,
     type: 2}
   menuManager: {fileID: 0}
 --- !u!114 &114067352144541124
@@ -5983,11 +5982,11 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 0
 --- !u!114 &114474960349811472
 MonoBehaviour:
@@ -6129,39 +6128,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114511770922082706
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1588790440744862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: 4bb49ec5eb539b74593e26abf335b993, type: 3}
-    m_FontSize: 20
-    m_FontStyle: 1
-    m_BestFit: 0
-    m_MinSize: 2
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: CLick file to load
 --- !u!114 &114528559947973140
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9092,7 +9058,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114668379179713394}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114059109184851916}
+        m_MethodName: load
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114976007984280022

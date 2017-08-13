@@ -7019,6 +7019,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadObjectPrefab: {fileID: 1601504644923692, guid: d63c728e94cc6d040aab67c73872f0f1,
     type: 2}
+  menuManager: {fileID: 1878706688009848}
 --- !u!114 &114904500205796696
 MonoBehaviour:
   m_ObjectHideFlags: 1
