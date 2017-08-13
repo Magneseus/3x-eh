@@ -23,14 +23,13 @@ public class SaveManager : MonoBehaviour {
     {
         if (saveName.text == null)
         {
-            gameControl.SaveGame(placeholder.text);
+
+            gameControl.SaveGame(placeholder.text+".json");
         }
         else
         {
-            gameControl.SaveGame(saveName.text + " - " + gameControl.listSavedGames().Count);
+            gameControl.SaveGame(saveName.text + " - " + gameControl.listSavedGames().Count + ".json");
         }
-
-        GameController.SaveNum++;
 
     }
 }
