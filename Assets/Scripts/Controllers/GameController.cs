@@ -36,6 +36,9 @@ public class GameController : MonoBehaviour
             {
                 var cityJSON = JSON.Parse(File.ReadAllText(file));
 
+                // Add city to list of available cities for the game
+                dGame.availableCities.Add(cityJSON["name"]);
+
                 List<string> edges = new List<string>();
                 for(int i=0; i< cityJSON["linked_cities"].AsArray.Count; i++)
                 {
@@ -78,10 +81,20 @@ public class GameController : MonoBehaviour
             // Disable Country View
             countryView.SetActive(false);
         }
+        else
+        {
+            ReturnToMap(true);
+        }
     }
 
     public void SaveGame(string savedGameFile, string pathToSavedGames = Constants.SAVE_JSON_PATH)
     {
+        // Add the .json extension if not present
+        if (!savedGameFile.EndsWith(".json"))
+        {
+            savedGameFile += ".json";
+        }
+
         var json = dGame.SaveToJSON();
         File.WriteAllText(pathToSavedGames + @"/" + savedGameFile, json.ToString());
     }
@@ -133,16 +146,24 @@ public class GameController : MonoBehaviour
             // Disable all cities
             countryMap.DisableAllNodes();
 
-            // Enable cities connected to completed city
-            List<string> linkedCities = new List<string>();
-            foreach (var cityName in dGame.currentCity.LinkedCityKeys)
+            if (dGame.currentCity != null)
             {
-                // If we haven't previously completed this city
-                if (!dGame.Cities.ContainsKey(cityName))
-                    linkedCities.Add(cityName);
-            }
+                // Enable cities connected to completed city
+                List<string> linkedCities = new List<string>();
+                foreach (var cityName in dGame.currentCity.LinkedCityKeys)
+                {
+                    // If we haven't previously completed this city
+                    if (!dGame.Cities.ContainsKey(cityName))
+                        linkedCities.Add(cityName);
+                }
 
-            countryMap.SetCitiesEnabled(linkedCities, true);
+                countryMap.SetCitiesEnabled(linkedCities, true);
+            }
+            else
+            {
+                // Only show available cities
+                countryMap.SetCitiesEnabled(dGame.availableCities, true);
+            }
 
             // Reset the turn counter
             dGame.TurnNumber = 0;

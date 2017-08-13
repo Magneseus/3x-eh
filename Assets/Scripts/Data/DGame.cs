@@ -15,6 +15,7 @@ public class DGame
 
     Dictionary<string, DCity> cities = new Dictionary<string, DCity>();
     Dictionary<string, DCompressedCity> completedCities = new Dictionary<string, DCompressedCity>();
+    public List<string> availableCities;
 
     private DateTime currentDate = new DateTime(2017,4,1);
     private DateTime[] defaultSeasonStartDates = { new DateTime(2017, 4, 1), new DateTime(2017, 6, 1), new DateTime(2017, 8, 1), new DateTime(2017, 12, 1) };
@@ -31,6 +32,7 @@ public class DGame
     {
         this.gameController = gameController;
         DEvent.dGame = this;
+        availableCities = new List<string>();
     }
 
     // Sets the specified city to be the current "active" city
@@ -81,6 +83,7 @@ public class DGame
     // Called when the current city is completed
     public void CompletedCurrentCity()
     {
+        availableCities.Remove(currentCity.Name);
         CollapseCity(currentCity);
 
         gameController.ReturnToMap(true);
@@ -92,7 +95,7 @@ public class DGame
     // Collapses the city into a set of passive bonuses for future cities
     public void CollapseCity(DCity city)
     {
-      completedCities.Add(city.Name, new DCompressedCity(city));
+        completedCities.Add(city.Name, new DCompressedCity(city));
     }
 
     bool temp = true;
@@ -238,6 +241,14 @@ public class DGame
         returnNode.Add("durationOfTurn", new JSONNumber(durationOfTurn));
         returnNode.Add("currentTurnNumber", new JSONNumber(currentTurnNumber));
 
+        // Save the list of available cities
+        JSONArray availableCityList = new JSONArray();
+        foreach (string cityName in availableCities)
+        {
+            availableCityList.Add(new JSONString(cityName));
+        }
+        returnNode.Add("availableCities", availableCityList);
+
         return returnNode;
     }
 
@@ -268,6 +279,12 @@ public class DGame
         RandJSON.JSONInt(dGame.turnDurationOfCity = jsonNode["turnDurationOfCity"]);
         RandJSON.JSONInt(dGame.durationOfTurn = jsonNode["durationOfTurn"]);
         RandJSON.JSONInt(dGame.currentTurnNumber = jsonNode["currentTurnNumber"]);
+
+        // Load the list of available cities
+        foreach (JSONString node in jsonNode["availableCities"].AsArray)
+        {
+            dGame.availableCities.Add(node.Value);
+        }
 
         return dGame;
     }
