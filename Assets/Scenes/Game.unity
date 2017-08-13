@@ -256,6 +256,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114887106362283158, guid: f394c79802ea5ca45a53975618de32bf,
+        type: 2}
+      propertyPath: bgmLibrary
+      value: 
+      objectReference: {fileID: 1286066720}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f394c79802ea5ca45a53975618de32bf, type: 2}
   m_IsPrefabParent: 0
@@ -348,6 +353,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1286066720 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1702950672544548, guid: 84fe87d2b1fda2644b2c07f65540d30a,
+    type: 2}
+  m_PrefabInternal: {fileID: 1728627264}
 --- !u!1001 &1728627264
 Prefab:
   m_ObjectHideFlags: 0
