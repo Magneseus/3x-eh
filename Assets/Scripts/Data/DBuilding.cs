@@ -450,6 +450,12 @@ public class DBuilding : ITurnUpdatable {
             case Constants.BUILDING_TYPE.VANCOUVER_HALL:
                 result = Constants.BUILDING_PREFAB_PATH_VANCOUVER_HALL;
                 break;
+            case Constants.BUILDING_TYPE.VANCOUVER_CANADA_PLACE:
+                result = Constants.BUILDING_PREFAB_PATH_VANCOUVER_CP;
+                break;
+            case Constants.BUILDING_TYPE.VANCOUVER_UBC:
+                result = Constants.BUILDING_PREFAB_PATH_VANCOUVER_UBC;
+                break;
             default:
                 result = Constants.BUILDING_PREFAB_PATH;
                 break;
