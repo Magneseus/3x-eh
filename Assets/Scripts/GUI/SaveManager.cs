@@ -16,7 +16,7 @@ public class SaveManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        placeholder.text = "Save Data - " + GameController.SaveNum;
+        placeholder.text = "Save Data - " + gameControl.listSavedGames().Count;
 	}
 
     public void SaveGame()
@@ -27,7 +27,7 @@ public class SaveManager : MonoBehaviour {
         }
         else
         {
-            gameControl.SaveGame(saveName.text + " - " + GameController.SaveNum);
+            gameControl.SaveGame(saveName.text + " - " + gameControl.listSavedGames().Count);
         }
 
         GameController.SaveNum++;
