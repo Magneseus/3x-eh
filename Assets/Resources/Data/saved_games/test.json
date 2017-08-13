@@ -1,1 +1,1 @@
-{"resourceNames":[{"name":"Shelter","ID":0},{"name":"Fuel","ID":1},{"name":"Food","ID":2},{"name":"Food Storage","ID":3},{"name":"Materials","ID":4},{"name":"Medicine","ID":5}],"currentCity":null,"currentDate":{"day":16,"month":6,"year":2018},"turnDurationOfCity":52,"durationOfTurn":7,"currentTurnNumber":11}
+{"resourceNames":[],"currentCity":null,"currentDate":{"day":1,"month":4,"year":2017},"turnDurationOfCity":52,"durationOfTurn":7,"currentTurnNumber":0,"availableCities":["Iqaluit","Montreal","Ottawa","Toronto","Vancouver"]}

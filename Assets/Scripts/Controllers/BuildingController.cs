@@ -32,6 +32,18 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
     }
 
+    public void ToggleBuildingModal(bool toggle)
+    {
+        if (toggle)
+        {
+            IncreaseMouseOverCount();
+        }
+        else
+        {
+            DecreaseMouseOverCount();
+        }
+    }
+
     #region MouseOver Functions
 
     public void OnMouseEnter()
@@ -68,9 +80,11 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
         if (MouseOverCount == 0)
         {
-          // deletes building info text
-          transform.Find("BuildingInfo").GetComponent<TextMesh>().text = "";
-            StartCoroutine("MouseOffBuildingTimer");
+            // deletes building info text
+            transform.Find("BuildingInfo").GetComponent<TextMesh>().text = "";
+
+            if (isActiveAndEnabled)
+                StartCoroutine("MouseOffBuildingTimer");
         }
     }
 

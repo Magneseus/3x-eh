@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
     private CountryMap countryMap;
     private GameObject cityView;
 
+    private bool buildingToggle = false;
+
     // Initialization
     void Start()
     {
@@ -65,6 +67,12 @@ public class GameController : MonoBehaviour
         {
             //LoadGame();
             LoadGame("test.json");
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            ToggleBuildingModals(!buildingToggle);
+            buildingToggle = !buildingToggle;
         }
     }
 
@@ -176,6 +184,19 @@ public class GameController : MonoBehaviour
     {
         dGame.EndTurnUpdate();
 		GameObject.Find ("SfxLibrary").GetComponents<AudioSource>()[2].Play();
+    }
+
+    public void ToggleBuildingModals(bool toggle)
+    {
+        // Toggle all building controllers
+        var children = new List<BuildingController>();
+        foreach (Transform child in transform)
+        {
+            BuildingController bc = child.gameObject.GetComponent<BuildingController>();
+            if (bc != null)
+                children.Add(bc);
+        }
+        children.ForEach(child => child.ToggleBuildingModal(toggle));
     }
 
     #region Controller Spawners
