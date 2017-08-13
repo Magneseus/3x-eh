@@ -67,7 +67,6 @@ public class MainMenuManager : MonoBehaviour {
     {
         
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
-        GameObject.Find("GameController").GetComponent<GameController>().NewGame();
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
