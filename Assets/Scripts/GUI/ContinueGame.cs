@@ -7,7 +7,8 @@ public class ContinueGame : MonoBehaviour {
 
     private GameController gameController;
     private Button continueButton;
-    public string continueFileName;
+    public GameObject menuManager;
+    public static string continueFileName = "__Continue.json";
 
 	// Use this for initialization
 	void Start () {
@@ -29,14 +30,15 @@ public class ContinueGame : MonoBehaviour {
 
     public void Continue()
     {
-        gameController.LoadGame(continueFileName);
+        if (menuManager != null)
+            menuManager.GetComponent<MainMenuManager>().LoadGame(continueFileName);
     }
 
     private void CheckIfContinueExists()
     {
         if (gameController != null && continueButton != null)
         {
-            if (gameController.listSavedGames().Contains(continueFileName))
+            if (gameController.listSavedGames().Contains(continueFileName.Substring(0, continueFileName.Length-5)))
             {
                 continueButton.interactable = true;
             }
