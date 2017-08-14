@@ -249,13 +249,16 @@ public class DCity : ITurnUpdatable
     public void UpdateCityFood()
     {
         DResource resource = GetResource(Constants.FOOD_RESOURCE_NAME);
-        int consumeAmount = (int)(foodConsumption * DSeasons.modFoodConsumption[(int)season]);
-        if (resource.Amount >= foodConsumption)
-            ConsumeResource(resource, foodConsumption);
+        // int consumeAmount = (int)(foodConsumption * DSeasons.modFoodConsumption[(int)season]);
+
+        //TODO: why is this always 1?!
+        int consumeAmount = foodConsumption * people.Count;
+        if (resource.Amount >= consumeAmount)
+            ConsumeResource(resource, consumeAmount);
         else
         {
             ConsumeResource(resource);
-            NotEnoughFood(foodConsumption - resource.Amount);
+            NotEnoughFood(consumeAmount - resource.Amount);
         }
     }
 

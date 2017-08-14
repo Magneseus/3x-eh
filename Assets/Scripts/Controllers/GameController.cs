@@ -93,13 +93,13 @@ public class GameController : MonoBehaviour
         var json = File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json");
         cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
         DCity newCity = DCity.LoadFromJSON(JSON.Parse(json), dGame, true);
-        
+
         dGame.AddCity(newCity);
         dGame.SelectCity(cityName);
-        
+
 
         // Spawn City UI
-        
+
 
         // Disable Country View
         countryView.SetActive(false);
@@ -108,14 +108,14 @@ public class GameController : MonoBehaviour
     public List<string> listSavedGames(string pathToSavedGames = Constants.SAVE_JSON_PATH)
     {
         List<string> listSavedGames = new List<string>();
+        // Debug.Log();
 
-        
         foreach(string s in Directory.GetFiles(pathToSavedGames, "*.json"))
         {
-            string newS = s.Split('\\')[1];
+            string newS = s.Split(Path.DirectorySeparatorChar)[1];
             listSavedGames.Add(newS.Split('.')[0]);
         }
-        
+
         return listSavedGames;
     }
 
