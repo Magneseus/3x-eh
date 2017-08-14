@@ -27,7 +27,9 @@ public static class Constants {
     public static string BUILDING_PREFAB_PATH_OTTAWA_PARLIAMENT = @"Prefabs/Buildings/Building_Ottawa_Parliament";
     public static string BUILDING_PREFAB_PATH_OTTAWA_RIVER = @"Prefabs/Buildings/Building_Ottawa_River";
 
+    public static string BUILDING_PREFAB_PATH_VANCOUVER_CP = @"Prefabs/Buildings/Building_Vancouver_CP";
     public static string BUILDING_PREFAB_PATH_VANCOUVER_HALL = @"Prefabs/Buildings/Building_Vancouver_Hall";
+    public static string BUILDING_PREFAB_PATH_VANCOUVER_UBC = @"Prefabs/Buildings/Building_Vancouver_UBC";
 
     public static string TASK_TRAY_PREFAB_PATH = @"Prefabs/Tasks/TaskTray";
     public static string TASK_TRAY_SINGLE_PREFAB_PATH = @"Prefabs/Tasks/TaskTraySingle";

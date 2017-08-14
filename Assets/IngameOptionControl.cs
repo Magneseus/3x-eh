@@ -25,12 +25,9 @@ public class IngameOptionControl : MonoBehaviour {
     // Use this for initialization
     void Start () {
         sfxLibrary = GameObject.Find("SfxLibrary");
-        Debug.Log(sfxLibrary);
         bgmLibrary = GameObject.Find("BGMAudio");
-        Debug.Log(bgmLibrary);
         sfxs = sfxLibrary.GetComponents<AudioSource>();
         bgms = bgmLibrary.GetComponents<AudioSource>();
-        Debug.Log(bgms);
         masterVolume = AudioListener.volume;
 
     }

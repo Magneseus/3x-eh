@@ -15,6 +15,7 @@ public class OptionControl : MonoBehaviour {
 
 	public GameObject sfxLibrary;
 	public GameObject bgmLibrary;
+	public GameObject menuBGM;
 	public AudioSource[] sfxs;
 	public AudioSource[] bgms;
 
@@ -33,7 +34,7 @@ public class OptionControl : MonoBehaviour {
 		bgms = bgmLibrary.GetComponents<AudioSource> ();
 		masterVolume = AudioListener.volume;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (GameObject.Find("FSswitchInGame") != null){
@@ -49,7 +50,7 @@ public class OptionControl : MonoBehaviour {
 		if (GameObject.Find ("SFXSliderInGame") != null) {
 			ingameSFXVolume = GameObject.Find ("SFXSliderInGame");
 		}
-		
+
 	}
 
 	public void FullscreenOnClick(){
@@ -69,7 +70,8 @@ public class OptionControl : MonoBehaviour {
 		foreach (AudioSource bgm in bgms) {
 			bgm.volume = bgmVolume * masterVolume;
 		}
-			
+		menuBGM.GetComponent<AudioSource> ().volume = bgmVolume * masterVolume;
+
 	}
 
 	public void SfxVolumeValueControl(){

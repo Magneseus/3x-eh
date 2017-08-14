@@ -130,7 +130,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
+  m_BackGroundColor: {r: 0.17485979, g: 0.16479237, b: 0.17647058, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -200,12 +200,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dGame:
     gameState: 0
+    availableCities: []
   UICanvas: {fileID: 1835198792797868}
   CountryViewUIPrefab: {fileID: 1679999053695962, guid: dfc3bc958d6990a4aa279423ece61310,
     type: 2}
   CityViewUIPrefab: {fileID: 1151925998157584, guid: 9ff86bd4d0d87784480e7609ee107aa0,
     type: 2}
-  GameCamera: {fileID: 0}
 --- !u!114 &114870356272465104
 MonoBehaviour:
   m_ObjectHideFlags: 1

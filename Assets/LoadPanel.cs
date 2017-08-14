@@ -8,7 +8,7 @@ public class LoadPanel : MonoBehaviour {
     public GameObject LoadObjectPrefab;
 
     private GameController gameController;
-    private MainMenuManager menuManager;
+    public GameObject menuManager;
     private List<GameObject> loadButtons;
     private string fileNameToLoad;
 
@@ -16,17 +16,19 @@ public class LoadPanel : MonoBehaviour {
     void Start () {
         fileNameToLoad = null;
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
-        menuManager = GameObject.Find("MainMenuManager").GetComponent<MainMenuManager>();
         loadButtons = new List<GameObject>();
         displayFiles(gameController.listSavedGames());
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
-    void displayFiles(List<string> fileNames)
+    }
+    public void displayFiles(List<string> fileNames)
     {
+        foreach(GameObject go in loadButtons)
+        {
+            Destroy(go);
+        }
         foreach(string s in fileNames)
         {
            GameObject go = Instantiate(LoadObjectPrefab, this.transform) as GameObject;
@@ -34,6 +36,7 @@ public class LoadPanel : MonoBehaviour {
            t.text = s;
             Button b = go.GetComponentInChildren<Button>();
             b.onClick.AddListener(delegate{ setFileName(s); });
+            loadButtons.Add(go);
         }
     }
     void setFileName(string s)
@@ -43,6 +46,9 @@ public class LoadPanel : MonoBehaviour {
     public void load()
     {
         if (fileNameToLoad != null)
-            menuManager.LoadGame(fileNameToLoad+".json");
+            if (menuManager != null)
+                menuManager.GetComponent<MainMenuManager>().LoadGame(fileNameToLoad + ".json");
+            else
+                gameController.LoadGame(fileNameToLoad + ".json");
     }
 }

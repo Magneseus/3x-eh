@@ -67,22 +67,28 @@ public class MainMenuManager : MonoBehaviour {
     {
         
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
+        GameObject.Find("Game").transform.Find("UI Canvas").gameObject.SetActive(true);
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
-
+        GameObject.Find("GameController").GetComponent<GameController>().NewGame();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
     public void SwitchToMainMenu()
     {
+        
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(false);
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(true);
         camControl.GetComponent<CamControl>().setMount(camControl.GetComponent<CamControl>().mainMenuMount);
-        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(false, 3f);   
+        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(false, 3f);
+        camControl.GetComponent<CamControl>().setMount(camControl.GetComponent<CamControl>().mainMenuMount);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
     public void LoadGame(string s)
     {
         GameObject.Find("GameController").GetComponent<GameController>().LoadGame(s);
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
+        GameObject.Find("Game").transform.Find("UI Canvas").gameObject.SetActive(true);
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;

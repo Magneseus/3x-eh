@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
     private CountryMap countryMap;
     private GameObject cityView;
 
+    private bool buildingToggle = false;
+
     // Initialization
     void Start()
     {
@@ -35,6 +37,9 @@ public class GameController : MonoBehaviour
             if (Path.GetExtension(file) == ".json")
             {
                 var cityJSON = JSON.Parse(File.ReadAllText(file));
+
+                // Add city to list of available cities for the game
+                dGame.availableCities.Add(cityJSON["name"]);
 
                 List<string> edges = new List<string>();
                 for(int i=0; i< cityJSON["linked_cities"].AsArray.Count; i++)
@@ -63,25 +68,44 @@ public class GameController : MonoBehaviour
             //LoadGame();
             LoadGame("test.json");
         }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            ToggleBuildingModals(!buildingToggle);
+            buildingToggle = !buildingToggle;
+        }
     }
 
     public void LoadGame(string savedGameFile, string pathToSavedGames=Constants.SAVE_JSON_PATH)
     {
+        destroyCityAndBuildings();
+        Destroy(cityView);
         var json = File.ReadAllText(pathToSavedGames + @"/" + savedGameFile);
         dGame = DGame.LoadFromJSON(JSON.Parse(json), this);
 
         if (dGame.currentCity != null)
         {
+            
             // Spawn City UI
             cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
 
             // Disable Country View
             countryView.SetActive(false);
         }
+        else
+        {
+            ReturnToMap(true);
+        }
     }
 
     public void SaveGame(string savedGameFile, string pathToSavedGames = Constants.SAVE_JSON_PATH)
     {
+        // Add the .json extension if not present
+        if (!savedGameFile.EndsWith(".json"))
+        {
+            savedGameFile += ".json";
+        }
+
         var json = dGame.SaveToJSON();
         File.WriteAllText(pathToSavedGames + @"/" + savedGameFile, json.ToString());
     }
@@ -133,16 +157,24 @@ public class GameController : MonoBehaviour
             // Disable all cities
             countryMap.DisableAllNodes();
 
-            // Enable cities connected to completed city
-            List<string> linkedCities = new List<string>();
-            foreach (var cityName in dGame.currentCity.LinkedCityKeys)
+            if (dGame.currentCity != null)
             {
-                // If we haven't previously completed this city
-                if (!dGame.Cities.ContainsKey(cityName))
-                    linkedCities.Add(cityName);
-            }
+                // Enable cities connected to completed city
+                List<string> linkedCities = new List<string>();
+                foreach (var cityName in dGame.currentCity.LinkedCityKeys)
+                {
+                    // If we haven't previously completed this city
+                    if (!dGame.Cities.ContainsKey(cityName))
+                        linkedCities.Add(cityName);
+                }
 
-            countryMap.SetCitiesEnabled(linkedCities, true);
+                countryMap.SetCitiesEnabled(linkedCities, true);
+            }
+            else
+            {
+                // Only show available cities
+                countryMap.SetCitiesEnabled(dGame.availableCities, true);
+            }
 
             // Reset the turn counter
             dGame.TurnNumber = 0;
@@ -155,6 +187,63 @@ public class GameController : MonoBehaviour
     {
         dGame.EndTurnUpdate();
 		GameObject.Find ("SfxLibrary").GetComponents<AudioSource>()[2].Play();
+    }
+    public void NewGame()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (cityView != null)
+        {
+            destroyCityAndBuildings();
+            Destroy(cityView);
+            dGame.Reset();
+        }
+        countryView.SetActive(true);
+
+
+
+        foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
+        {
+            if (Path.GetExtension(file) == ".json")
+            {
+                var cityJSON = JSON.Parse(File.ReadAllText(file));
+
+                List<string> edges = new List<string>();
+                for (int i = 0; i < cityJSON["linked_cities"].AsArray.Count; i++)
+                {
+                    edges.Add((cityJSON["linked_cities"].AsArray[i]));
+                }
+                countryMap.SpawnCityNode(
+                    cityJSON["name"],
+                    new Vector3(cityJSON["position"]["x"], cityJSON["position"]["y"], -1),
+                    edges);
+
+            }
+        }
+        countryMap.SpawnEdges();
+    }
+
+
+    public void destroyCityAndBuildings()
+    {
+        foreach (Transform t in this.transform)
+        {
+            Destroy(t.gameObject);
+        }
+    }
+
+    public void ToggleBuildingModals(bool toggle)
+    {
+        // Toggle all building controllers
+        var children = new List<BuildingController>();
+        foreach (Transform child in transform)
+        {
+            BuildingController bc = child.gameObject.GetComponent<BuildingController>();
+            if (bc != null)
+                children.Add(bc);
+        }
+        children.ForEach(child => child.ToggleBuildingModal(toggle));
     }
 
     #region Controller Spawners
