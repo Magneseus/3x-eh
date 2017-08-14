@@ -48,7 +48,6 @@ public class TaskTraySingle : MonoBehaviour {
     {
         if (taskSlot.Infected)
         {
-            Debug.Log("infected" + taskSlot.Task.Output.Name);
             if (taskSlot.Task.Output.Name.Contains("Food"))
                 spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-food-infected");
             if (taskSlot.Task.Output.Name.Contains("Fuel"))
@@ -62,7 +61,6 @@ public class TaskTraySingle : MonoBehaviour {
         }
         else if (taskSlot.Damaged)
         {
-            Debug.Log("damaged"+ taskSlot.Task.Output.Name);
             if (taskSlot.Task.Output.Name.Contains("Food"))
                 spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-food-damaged");
             if (taskSlot.Task.Output.Name.Contains("Fuel"))
