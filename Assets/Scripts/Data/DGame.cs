@@ -157,6 +157,17 @@ public class DGame
         NextEvent();
     }
 
+    public void Reset()
+    {
+        cities = new Dictionary<string, DCity>();
+        completedCities = new Dictionary<string, DCompressedCity>();
+
+        currentDate = new DateTime(2017, 4, 1);
+
+        currentCity = null;
+        currentTurnNumber = 0;
+}
+
     #region Properties
 
     public Dictionary<string, DCity> Cities

@@ -22,10 +22,13 @@ public class LoadPanel : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
-    void displayFiles(List<string> fileNames)
+    }
+    public void displayFiles(List<string> fileNames)
     {
+        foreach(GameObject go in loadButtons)
+        {
+            Destroy(go);
+        }
         foreach(string s in fileNames)
         {
            GameObject go = Instantiate(LoadObjectPrefab, this.transform) as GameObject;
@@ -33,6 +36,7 @@ public class LoadPanel : MonoBehaviour {
            t.text = s;
             Button b = go.GetComponentInChildren<Button>();
             b.onClick.AddListener(delegate{ setFileName(s); });
+            loadButtons.Add(go);
         }
     }
     void setFileName(string s)
