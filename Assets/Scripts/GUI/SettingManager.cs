@@ -18,6 +18,8 @@ public class SettingManager : MonoBehaviour {
 
     private bool isQuit = false;
 
+    private GameController gameController;
+
 	// Use this for initialization
 	void Start () {
 
@@ -26,6 +28,8 @@ public class SettingManager : MonoBehaviour {
         confirmPane.SetActive(false);
         loadingImage.color = Color.clear;
         loadingImage.enabled = false;
+
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 	}
 	
 	// Update is called once per frame
@@ -78,6 +82,9 @@ public class SettingManager : MonoBehaviour {
 
     public void SwitchToMain()
     {
+        // Save the "continue" game
+        gameController.SaveGame(ContinueGame.continueFileName);
+
         MainMenuManager mainMenuManager = GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").Find("MainMenuManager")
              .gameObject.GetComponent<MainMenuManager>();
         mainMenuManager.SwitchToMainMenu();
