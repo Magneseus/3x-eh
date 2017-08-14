@@ -260,6 +260,14 @@ public class DGame
         }
         returnNode.Add("availableCities", availableCityList);
 
+        // Save the list of compressed cities
+        JSONArray compressedCities = new JSONArray();
+        foreach (var kvp in completedCities)
+        {
+            availableCityList.Add(kvp.Value.SaveToJSON());
+        }
+        returnNode.Add("compressedCities", compressedCities);
+
         return returnNode;
     }
 
@@ -295,6 +303,12 @@ public class DGame
         foreach (JSONString node in jsonNode["availableCities"].AsArray)
         {
             dGame.availableCities.Add(node.Value);
+        }
+
+        // Load the list of compressed cities
+        foreach (JSONNode node in jsonNode["compressedCities"].AsArray)
+        {
+            dGame.completedCities.Add(node["name"], DCompressedCity.LoadFromJSON(node));
         }
 
         return dGame;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 public class DCompressedCity : DBuilding {
 
@@ -113,4 +114,14 @@ public class DCompressedCity : DBuilding {
         set { resourceRates = value; }
     }
     #endregion
+
+    public static DCompressedCity LoadFromJSON(JSONNode jsonNode)
+    {
+        return null;
+    }
+
+    public new JSONNode SaveToJSON()
+    {
+        return new JSONObject();
+    }
 }
