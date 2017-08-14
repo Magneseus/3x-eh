@@ -88,6 +88,8 @@ public class SettingManager : MonoBehaviour {
         MainMenuManager mainMenuManager = GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").Find("MainMenuManager")
              .gameObject.GetComponent<MainMenuManager>();
         mainMenuManager.SwitchToMainMenu();
+        GameObject.Find("BGMAudio").SetActive(false);
+        GameObject.Find("UI Canvas").SetActive(false);
     }
 
     public void SetSaveHint(bool isActive)
