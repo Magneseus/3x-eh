@@ -31,7 +31,11 @@ public class ContinueGame : MonoBehaviour {
     public void Continue()
     {
         if (menuManager != null)
-            menuManager.GetComponent<MainMenuManager>().LoadGame(continueFileName);
+        {
+            gameController.LoadGame(continueFileName);
+            menuManager.GetComponent<MainMenuManager>().camControl.GetComponent<CamControl>()
+             .setMount(menuManager.GetComponent<MainMenuManager>().newGameMount);
+        }
     }
 
     private void CheckIfContinueExists()

@@ -53,7 +53,8 @@ public class LoadPanel : MonoBehaviour {
         if (fileNameToLoad != null)
         {
             gameController.LoadGame(fileNameToLoad + ".json");
-            menuManager.GetComponent<MainMenuManager>().camControl.GetComponent<CamControl>().setMount(menuManager.GetComponent<MainMenuManager>().newGameMount);
+            menuManager.GetComponent<MainMenuManager>().camControl.GetComponent<CamControl>()
+                .setMount(menuManager.GetComponent<MainMenuManager>().newGameMount);
         }
     }
     public void delete()
