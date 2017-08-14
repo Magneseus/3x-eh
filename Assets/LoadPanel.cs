@@ -27,6 +27,7 @@ public class LoadPanel : MonoBehaviour {
     {
         foreach(GameObject go in loadButtons)
         {
+
             Destroy(go);
         }
         foreach(string s in fileNames)
@@ -39,6 +40,10 @@ public class LoadPanel : MonoBehaviour {
             loadButtons.Add(go);
         }
     }
+    public void reloadFiles()
+    {
+        displayFiles(gameController.listSavedGames());
+    }
     void setFileName(string s)
     {
         fileNameToLoad = s;
@@ -46,9 +51,15 @@ public class LoadPanel : MonoBehaviour {
     public void load()
     {
         if (fileNameToLoad != null)
-            if (menuManager != null)
-                menuManager.GetComponent<MainMenuManager>().LoadGame(fileNameToLoad + ".json");
-            else
-                gameController.LoadGame(fileNameToLoad + ".json");
+        {
+            gameController.LoadGame(fileNameToLoad + ".json");
+            menuManager.GetComponent<MainMenuManager>().camControl.GetComponent<CamControl>().setMount(menuManager.GetComponent<MainMenuManager>().newGameMount);
+        }
+    }
+    public void delete()
+    {
+        if (fileNameToLoad != null)
+            gameController.DeleteGame(fileNameToLoad + ".json");
+        reloadFiles();
     }
 }

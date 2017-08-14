@@ -49,11 +49,13 @@ public class DTask_Idle : DTask {
     }
 
     private void AddSlot()
-    { 
+    {
         maxPeople = numPeople + 1;
-    
-        slotList.Add(new DTaskSlot(this));
-		ForceClean();
+        DTaskSlot slot= new DTaskSlot(this);
+        slotList.Add(slot);
+        taskController.Resize();
+
+        ForceClean();
 		ForceFixed();
 	}
 
@@ -62,8 +64,9 @@ public class DTask_Idle : DTask {
         maxPeople = numPeople + 1;
       
 	    slotList.RemoveAt(slotList.Count - 1);
+        taskController.Resize();
 
-	}
+    }
 
     public override JSONNode SaveToJSON()
     {

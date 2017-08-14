@@ -122,36 +122,36 @@ public class MeepleController : MonoBehaviour
                 idlePanelMouseDown(closestTray);
             else
 
-                // Same tray reset to inital position
+                 // Same tray reset to inital position
                 if (closestTray.taskSlot.Person == null && closestTray.taskSlot.Enabled
                     && closestTray.taskController == oldParentTray.taskController)
-            {
-                this.transform.parent = returnParent;
-                this.transform.localPosition = new Vector3(0, 0, -3);
-            }
+                {
+                    this.transform.parent = returnParent;
+                    this.transform.localPosition = new Vector3(0, 0, -3);
+                }
 
 
-            // If the closest tray is full, reset
-            else if (closestTray.taskSlot.Person != null && closestTray.taskSlot.Enabled)
-            {
-                // Reset position
-                this.transform.parent = returnParent;
-                this.transform.localPosition = new Vector3(0, 0, -3);
-            }
-            else
-            {
-                // Set the new task
-                dPerson.SetTaskSlot(closestTray.taskSlot);
+                // If the closest tray is full, reset
+                else if (closestTray.taskSlot.Person != null && closestTray.taskSlot.Enabled)
+                {
+                    // Reset position
+                    this.transform.parent = returnParent;
+                    this.transform.localPosition = new Vector3(0, 0, -3);
+                }
+                else
+                {
+                    // Set the new task
+                    dPerson.SetTaskSlot(closestTray.taskSlot);
 
-                // Set the new parent transform
-                this.transform.parent = closestTray.transform;
-                this.transform.localPosition = new Vector3(0, 0, -3);
-                this.parentTray = closestTray;
-                this.dPerson.Building = closestTray.taskController.buildingController.dBuilding;
-                this.dPerson.Building.CalculateDamages();
-                // oldBuilding.CalculateDamages();
+                    // Set the new parent transform
+                    this.transform.parent = closestTray.transform;
+                    this.transform.localPosition = new Vector3(0, 0, -3);
+                    this.parentTray = closestTray;
+                    this.dPerson.Building = closestTray.taskController.buildingController.dBuilding;
+                    this.dPerson.Building.CalculateDamages();
+                    // oldBuilding.CalculateDamages();
 
-            }
+                }
         }
 
 

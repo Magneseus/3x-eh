@@ -113,6 +113,7 @@ public class DTask_Explore : DTask
         slotList.Add(new DTaskSlot(this));
         ForceClean();
         ForceFixed();
+        taskController.Resize();
     }
 
     private void RemoveSlot()
@@ -120,7 +121,8 @@ public class DTask_Explore : DTask
         maxPeople = numPeople + 1;
        
             slotList.RemoveAt(slotList.Count - 1);
-      
+        taskController.Resize();
+
     }
 
     public override JSONNode SaveToJSON()

@@ -48,29 +48,35 @@ public class TaskTraySingle : MonoBehaviour {
     {
         if (taskSlot.Infected)
         {
-            if (taskSlot.Task.Output.Name.Contains("Food"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-food-infected");
-            if (taskSlot.Task.Output.Name.Contains("Fuel"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-fuel-infected");
-            if (taskSlot.Task.Output.Name.Contains("Materials"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-materials-infected");
-            if (taskSlot.Task.Output.Name.Contains("Shelter"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-shelter-infected");
-            if (taskSlot.Task.Output.Name.Contains("Storage"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-storage-infected");
+            if (taskSlot.Task.Output != null)
+            {
+                if (taskSlot.Task.Output.Name.Contains("Food"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-food-infected");
+                if (taskSlot.Task.Output.Name.Contains("Fuel"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-fuel-infected");
+                if (taskSlot.Task.Output.Name.Contains("Materials"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-materials-infected");
+                if (taskSlot.Task.Output.Name.Contains("Shelter"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-shelter-infected");
+                if (taskSlot.Task.Output.Name.Contains("Storage"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-storage-infected");
+            }
         }
         else if (taskSlot.Damaged)
         {
-            if (taskSlot.Task.Output.Name.Contains("Food"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-food-damaged");
-            if (taskSlot.Task.Output.Name.Contains("Fuel"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-fuel-damaged");
-            if (taskSlot.Task.Output.Name.Contains("Materials"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-materials-damaged");
-            if (taskSlot.Task.Output.Name.Contains("Shelter"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-shelter-damaged");
-            if (taskSlot.Task.Output.Name.Contains("Storage"))
-                spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-storage-damaged");
+            if (taskSlot.Task.Output != null)
+            {
+                if (taskSlot.Task.Output.Name.Contains("Food"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-food-damaged");
+                if (taskSlot.Task.Output.Name.Contains("Fuel"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-fuel-damaged");
+                if (taskSlot.Task.Output.Name.Contains("Materials"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-materials-damaged");
+                if (taskSlot.Task.Output.Name.Contains("Shelter"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-shelter-damaged");
+                if (taskSlot.Task.Output.Name.Contains("Storage"))
+                    spriteRenderer.sprite = Resources.Load<Sprite>(@"Sprites/UI/task-storage-damaged");
+            }
         }
         else
         {

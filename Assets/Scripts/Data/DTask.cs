@@ -20,6 +20,7 @@ public class DTask : ITurnUpdatable
     protected DResource input;
     protected bool taskEnabled;
     protected int numTurnsToComplete;
+    protected TaskController taskController;
 
 
     public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement, DResource dInput = null)
@@ -382,6 +383,19 @@ public class DTask : ITurnUpdatable
     }
 
     #region Properties
+
+    public TaskController TaskController
+    {
+        get
+        {
+            return taskController;
+        }
+        set
+        {
+             taskController = value;
+        }
+    }
+
     public float LevelDamaged
     {
         get

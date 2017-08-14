@@ -35,7 +35,7 @@ public class TaskController : MonoBehaviour {
         taskText.text = dTask.Name;
 
         if (dTask == dTask.Building.City.townHall.getIdleTask()|| dTask == dTask.Building.City.townHall.getExploreTask()) {
-			Resize();
+			//Resize();
 		}
 		
 	}
@@ -132,7 +132,7 @@ public class TaskController : MonoBehaviour {
         }
     }
 
-	private void Resize()
+	public void Resize()
 	{
 		if(listOfTraySingles.Count < dTask.MaxPeople)
 			AddSlot();
@@ -163,7 +163,30 @@ public class TaskController : MonoBehaviour {
 		    OrganizeSlot();
 
 	}
-	private void RemoveSlot()
+    public void AddSlot(DTaskSlot taskSlot)
+    {
+
+        // Find where in the tray we will position each single
+        float xOffset =
+        ((float)(listOfTraySingles.Count + 1) - Mathf.Floor((float)(dTask.MaxPeople) / 2.0f)) *
+            TaskTraySingle.WIDTH_CONST;
+
+        GameObject go = Instantiate(TaskTraySinglePrefab, this.transform);
+        Vector3 currentPosition = go.transform.position;
+        currentPosition.x += xOffset;
+        go.transform.position = currentPosition;
+
+        // Set the parent TaskController & task slot
+        go.GetComponent<TaskTraySingle>().taskController = this;
+        go.GetComponent<TaskTraySingle>().taskSlot = taskSlot;
+        taskSlot.TaskTraySlot = go.GetComponent<TaskTraySingle>();
+        go.GetComponent<TaskTraySingle>().UpdateSprite();
+
+        listOfTraySingles.Add(go.GetComponent<TaskTraySingle>());
+        OrganizeSlot();
+
+    }
+    private void RemoveSlot()
 	{
             GameObject slot = listOfTraySingles[listOfTraySingles.Count - 1].gameObject;
 
@@ -219,6 +242,7 @@ public class TaskController : MonoBehaviour {
             gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         this.dTask = dTask;
+        dTask.TaskController = this;
        
         GenerateTaskTrays();
  
