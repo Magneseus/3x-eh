@@ -535,8 +535,6 @@ public class DCity : ITurnUpdatable
             int index = UnityEngine.Random.Range(0, UnExploredBuildings.Count - 1);
             UnExploredBuildings[index].Discover();
         }
-        Debug.Log(explorationLevel - offsetPercentage * (explorableBuildings - UnExploredBuildings.Count));
-        Debug.Log(explorationLevel);
 
     }
 
