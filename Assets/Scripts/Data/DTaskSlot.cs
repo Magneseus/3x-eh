@@ -7,7 +7,7 @@ public class DTaskSlot : ITurnUpdatable
 {
     private DTask task;
     private DPerson person;
-	private TaskTraySingle taskTraySlot;
+	public TaskTraySingle taskTraySlot;
     private float structuralDamage;
     private float fungalDamage;
     private bool taskSlotEnabled;
@@ -100,7 +100,7 @@ public class DTaskSlot : ITurnUpdatable
          	person = dPerson;
 			if(dPerson.Task != null)
 				dPerson.Task.RemovePerson(dPerson);
-			
+
             dPerson.__TaskSlot(this);
             task.RaisePersonCount();
         }

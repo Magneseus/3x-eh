@@ -35,6 +35,7 @@ public class DCity : ITurnUpdatable
     private DateTime[] seasonStartDates = new DateTime[4];
     private DateTime[] deadOfWinterStartEnd = new DateTime[2];
     private bool isDeadOfWinter = false;
+    private int turnsOfFoodSurplus = 0;
 
     public static float health = 0.5f;
     public static int foodConsumption = 1;
@@ -95,6 +96,19 @@ public class DCity : ITurnUpdatable
     public void TurnUpdate(int numDaysPassed)
     {
         // Set shelter resource to zero, cannot accumulate shelter
+        if(resourceRates.ContainsKey(DResource.NameToID("Food")))
+        turnsOfFoodSurplus =  resourceRates[DResource.NameToID("Food")].Amount >= 1 ? turnsOfFoodSurplus + 1 : 0;
+        if (turnsOfFoodSurplus == 7)
+        {
+          NewPerson();
+        //   DPerson newP = new DPerson(this,null);
+        // MeepleController meepleController =  cityController.gameController.CreateMeepleController(townHall.getIdleTask().GetTaskSlot(townHall.getIdleTask().NumPeople).taskTraySlot, newP);
+        // newP.SetMeepleController(meepleController);
+        // people.Add(newP.ID,newP);
+        turnsOfFoodSurplus = 0;
+
+
+      }
         prevResources.Clear();
         foreach(var entry in resources)
         {
@@ -125,7 +139,12 @@ public class DCity : ITurnUpdatable
 
         age += numDaysPassed;
     }
-
+    public void NewPerson()
+    {
+        DPerson newP = new DPerson(this, null);
+        townHall.getIdleTask().AddPerson(newP);
+        Game.GameController.CreateMeepleController(newP.TaskSlot.TaskTraySlot, newP);
+    }
     // TODO: Account for infection in people
     public int ShelterConsumedPerTurn()
     {

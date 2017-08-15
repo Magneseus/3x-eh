@@ -18,7 +18,6 @@ public class GameController : MonoBehaviour
     private GameObject cityView;
 
     private bool buildingToggle = false;
-
     // Initialization
     void Start()
     {

@@ -26,7 +26,7 @@ public class DPerson : ITurnUpdatable
 
         city.AddPerson(this);
     }
-    
+
     public void TurnUpdate(int numDaysPassed)
     {
       // Random random = new Random();
