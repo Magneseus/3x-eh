@@ -63,7 +63,7 @@ public class DBuilding : ITurnUpdatable {
         if (autoSpawnTasks)
         {
             // Add an assess task by default
-            if (buildingController.dBuilding.ID == 0)
+            if (buildingName.Equals(0))
             {
                 this.idleTask = new DTask_Idle(this, "Idle");
                 this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
@@ -392,7 +392,7 @@ public class DBuilding : ITurnUpdatable {
             if (task.Name == "Idle")
                 dBuilding.idleTask = (DTask_Idle)(task);
             // else if (task.Name.Contains("Assess"))
-            else if (!(dBuilding.id == 0) && dBuilding.assessTask == null)
+            else if (!(dBuilding.Name.Equals("Town Hall")) && dBuilding.assessTask == null)
                 dBuilding.assessTask = new DTask_Assess(dBuilding, 0.5f, 1, "Assess");
             else if (task.Name == "Explore")
                 dBuilding.exploreTask = (DTask_Explore)(task);
