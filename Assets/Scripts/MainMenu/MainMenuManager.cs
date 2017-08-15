@@ -22,7 +22,7 @@ public class MainMenuManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(false, 3f);
+        loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(false, 1f);
         newGameBtn.interactable = false;
         loadBtn.interactable = false;
         optBtn.interactable = false;
