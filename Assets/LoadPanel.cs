@@ -32,17 +32,21 @@ public class LoadPanel : MonoBehaviour {
         }
         foreach(string s in fileNames)
         {
-           GameObject go = Instantiate(LoadObjectPrefab, this.transform) as GameObject;
-           Text t = go.GetComponentInChildren<Text>();
-           t.text = s;
-            Button b = go.GetComponentInChildren<Button>();
-            b.onClick.AddListener(delegate{ setFileName(s); });
-            loadButtons.Add(go);
+            if (!s.Contains("__Continue"))
+            {
+                GameObject go = Instantiate(LoadObjectPrefab, this.transform) as GameObject;
+                Text t = go.GetComponentInChildren<Text>();
+                t.text = s;
+                Button b = go.GetComponentInChildren<Button>();
+                b.onClick.AddListener(delegate { setFileName(s); });
+                loadButtons.Add(go);
+            }
         }
     }
     public void reloadFiles()
     {
-        displayFiles(gameController.listSavedGames());
+        if(gameController!=null)
+             displayFiles(gameController.listSavedGames());
     }
     void setFileName(string s)
     {

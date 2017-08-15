@@ -36,7 +36,7 @@ public class SettingManager : MonoBehaviour {
 	void Update () {
         if (isQuit)
         {
-            StartCoroutine(LevelSwitch());
+          //  StartCoroutine(LevelSwitch());
         }
 	}
 
