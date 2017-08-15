@@ -8,7 +8,7 @@
     "resources": [
       {
         "type": "Food",
-        "value": 50
+        "value": 20
       }
     ]
   },
@@ -21,7 +21,7 @@
     "resources": [
       {
         "type": "Food",
-        "value": 300
+        "value": 50
       }
     ]
   },
