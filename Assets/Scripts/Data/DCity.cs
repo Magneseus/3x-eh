@@ -305,7 +305,7 @@ public class DCity : ITurnUpdatable
         {
             buildings.Add(dBuilding.ID, dBuilding);
 
-            if (dBuilding.Name == "Town Hall")
+            if (dBuilding.Name.Equals("Town Hall"))
                 townHall = dBuilding;
         }
     }
@@ -513,12 +513,14 @@ public class DCity : ITurnUpdatable
 
     public void Explore(float exploreAmount)
     {
-        explorationLevel = Mathf.Clamp01(explorationLevel + exploreAmount);
+        
+        explorationLevel = explorationLevel + exploreAmount;
 
         float explorableBuildings = buildings.Count - 1.0f;
         float offsetPercentage = 1.0f / explorableBuildings;
 
         List<DBuilding> UnExploredBuildings = new List<DBuilding>();
+        
         foreach(DBuilding dBuilding in buildings.Values)
         {
             if (dBuilding != townHall)
@@ -527,11 +529,14 @@ public class DCity : ITurnUpdatable
                     UnExploredBuildings.Add(dBuilding);
                 }
         }
+        
         if (explorationLevel - offsetPercentage * (explorableBuildings - UnExploredBuildings.Count) >= offsetPercentage)
         {
             int index = UnityEngine.Random.Range(0, UnExploredBuildings.Count - 1);
             UnExploredBuildings[index].Discover();
         }
+        Debug.Log(explorationLevel - offsetPercentage * (explorableBuildings - UnExploredBuildings.Count));
+        Debug.Log(explorationLevel);
 
     }
 
