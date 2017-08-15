@@ -8,15 +8,11 @@ using SimpleJSON;
 public class DTask_Assess : DTask
 {
     private float assessAmount;
-    private float oAssessAmount;
-    private float falloff;
 
     public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName, 0.0f)
     {
       //TODO: make this a standard amount
         this.assessAmount = assessAmount;
-        oAssessAmount = assessAmount;
-        falloff = .9f;
 
         ForceClean();
         ForceFixed();
@@ -36,8 +32,6 @@ public class DTask_Assess : DTask
             {
                 float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
                 building.Assess(assessAmount * Constants.MERSON_INFECTION_TASK_MODIFIER);
-
-                assessAmount = Mathf.Max(assessAmount * falloff, oAssessAmount / 16);
             }
         }
     }
