@@ -104,7 +104,7 @@
                 },
             ],
             "position": {
-                "x": 0,
+                "x": 0.5,
                 "y": 0
             }
         },
@@ -112,7 +112,7 @@
             "name": "Frobisher Inn",
             "ID": 1,
             "cityName": "Iqaluit",
-			"type": "SMALL",
+			"type": "MEDIUM",
             "status": 0,
             "percentInfected": 0.46,
             "percentDamaged": 0.44,
@@ -143,8 +143,8 @@
                 }
             ],
             "position": {
-                "x": 5.60,
-                "y": -3.10
+                "x": 1,
+                "y": -0.5
             }
         },
         {
@@ -189,8 +189,8 @@
                 }
             ],
             "position": {
-                "x": -5,
-                "y": -1.80
+                "x": 0,
+                "y": -0.2
             }
         },
         {
@@ -235,8 +235,8 @@
                 }
             ],
             "position": {
-                "x": 3.70,
-                "y": -1
+                "x": 0.5,
+                "y": -2
             }
         },
 		{
@@ -281,58 +281,81 @@
                 }
             ],
             "position": {
-                "x": 4.70,
-                "y": -1
+                "x": 2,
+                "y": -0.2
             }
         },
 		{
-            "name": "Fishing Shack",
-            "ID": 5,
+            "name": "Nakasuk School",
+            "ID": 6,
             "cityName": "Iqaluit",
-			"type": "SMALL",
+			"type": "IQALUIT_NAKASUK",
             "status": 0,
             "percentInfected": 0,
             "percentDamaged": 0,
             "percentAssessed": 0,
             "tasks": [
 				{
-                    "ID": 6,
-                    "name": "Fishing",
-                    "buildingName": "Fishing Shack",
+                    "ID": 7,
+                    "name": "Shelter",
+                    "buildingName": "Nakasuk School",
                     "maxPeople": 2,
                     "numPeople": 0,
                     "fullAssessRequirement": 0.70,
                     "taskEnabled": true,
                     "resourceOutput": {
-                        "name": "Food",
-                        "ID": 2,
-                        "amount": 4
+                        "name": "Shelter",
+                        "ID": 0,
+                        "amount": 20
                     },
                     "taskSlots": [
                         {
-                            "taskName": "Fishing",
+                            "taskName": "Shelter",
                             "taskSlotEnabled": false,
                             "structuralDamage": 0.68,
                             "fungalDamage": 0.46,
                             "personID": null
                         },
                         {
-                            "taskName": "Fishing",
+                            "taskName": "Shelter",
                             "taskSlotEnabled": false,
                             "structuralDamage": 0.47,
                             "fungalDamage": 0.92,
                             "personID": null
                         }
                     ]
+                },
+				{
+                    "ID": 8,
+                    "name": "Scavenge Materials",
+                    "buildingName": "Nakasuk School",
+                    "maxPeople": 1,
+                    "numPeople": 0,
+                    "fullAssessRequirement": 0.70,
+                    "taskEnabled": true,
+                    "resourceOutput": {
+                        "name": "Materials",
+                        "ID": 4,
+                        "amount": 4
+                    },
+                    "taskSlots": [
+                        {
+                            "taskName": "Scavenge Materials",
+                            "taskSlotEnabled": false,
+                            "structuralDamage": 0.68,
+                            "fungalDamage": 0.46,
+                            "personID": null
+                        }
+                    ]
                 }
             ],
             "position": {
-                "x": 5.70,
-                "y": -1
+                "x": 3.70,
+                "y": 1
             }
-        }
+        },
 		{
-            "name": "Nakasuk School",
+            "name": "Nakasuk School2",
             "ID": 6,
             "cityName": "Iqaluit",
 			"type": "IQALUIT_NAKASUK",
@@ -344,10 +367,10 @@
 				
             ],
             "position": {
-                "x": 5.70,
-                "y": -1
+                "x": 4.70,
+                "y": 1
             }
-        }
+        },
     ],
     "resources": [
         {
