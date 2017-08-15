@@ -214,7 +214,7 @@
                     "resourceOutput": {
                         "name": "Food",
                         "ID": 2,
-                        "amount": 3
+                        "amount": 2
                     },
                     "taskSlots": [
                         {
@@ -260,7 +260,7 @@
                     "resourceOutput": {
                         "name": "Food",
                         "ID": 2,
-                        "amount": 2
+                        "amount": 1
                     },
                     "taskSlots": [
                         {
