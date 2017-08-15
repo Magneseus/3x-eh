@@ -89,7 +89,7 @@ public class SettingManager : MonoBehaviour {
 
         // Destroy the buildings
         gameController.destroyCityAndBuildings();
-
+        gameController.dGame.Reset();
         MainMenuManager mainMenuManager = GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").Find("MainMenuManager")
              .gameObject.GetComponent<MainMenuManager>();
         mainMenuManager.SwitchToMainMenu();

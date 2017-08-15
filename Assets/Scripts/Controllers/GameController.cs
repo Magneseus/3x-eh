@@ -149,7 +149,6 @@ public class GameController : MonoBehaviour
         {
             string[] newS = s.Split(Path.DirectorySeparatorChar);
             string name = newS[newS.Length-1];
-
             listSavedGames.Add(name.Split('.')[0]);
         }
 

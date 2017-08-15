@@ -166,6 +166,7 @@ public class DGame
 
         currentCity = null;
         currentTurnNumber = 0;
+        gameState = DGame._gameState.PLAY;
 }
 
     #region Properties
