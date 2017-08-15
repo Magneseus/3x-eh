@@ -33,3 +33,4 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Assets/Resources/Data/saved_games/__Continue.json
