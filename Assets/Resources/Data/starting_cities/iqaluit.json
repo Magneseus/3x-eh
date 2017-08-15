@@ -353,24 +353,7 @@
                 "x": 3.70,
                 "y": 1
             }
-        },
-		{
-            "name": "Nakasuk School2",
-            "ID": 6,
-            "cityName": "Iqaluit",
-			"type": "IQALUIT_NAKASUK",
-            "status": 0,
-            "percentInfected": 0,
-            "percentDamaged": 0,
-            "percentAssessed": 0,
-            "tasks": [
-				
-            ],
-            "position": {
-                "x": 4.70,
-                "y": 1
-            }
-        },
+        }
     ],
     "resources": [
         {
