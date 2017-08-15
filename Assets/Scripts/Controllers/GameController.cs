@@ -243,6 +243,7 @@ public class GameController : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
+        Destroy(cityView);
     }
 
     public void ToggleBuildingModals(bool toggle)

@@ -74,7 +74,6 @@ public class MainMenuManager : MonoBehaviour {
 
     public void SwitchToGame()
     {
-        GameObject.Find("GameController").GetComponent<GameController>().NewGame();
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
         GameObject.Find("Game").transform.Find("UI Canvas").gameObject.SetActive(true);
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
@@ -99,6 +98,10 @@ public class MainMenuManager : MonoBehaviour {
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+    public void NewGame()
+    {
+        GameObject.Find("GameController").GetComponent<GameController>().NewGame();
     }
 
     public void QuitGame()
