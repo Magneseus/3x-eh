@@ -136,7 +136,7 @@
                             "taskName": "Rooms",
                             "taskSlotEnabled": false,
                             "structuralDamage": 0.90,
-                            "fungalDamage": 0.92,
+                            "fungalDamage": 0.2,
                             "personID": null
                         }
                     ]
@@ -182,7 +182,7 @@
                             "taskName": "Salvage Fuel",
                             "taskSlotEnabled": false,
                             "structuralDamage": 0.47,
-                            "fungalDamage": 0.92,
+                            "fungalDamage": 0.42,
                             "personID": null
                         }
                     ]
@@ -214,14 +214,14 @@
                     "resourceOutput": {
                         "name": "Food",
                         "ID": 2,
-                        "amount": 50
+                        "amount": 3
                     },
                     "taskSlots": [
                         {
                             "taskName": "Fishing",
                             "taskSlotEnabled": false,
                             "structuralDamage": 0.68,
-                            "fungalDamage": 0.46,
+                            "fungalDamage": 0.00,
                             "personID": null
                         },
                         {
@@ -260,7 +260,7 @@
                     "resourceOutput": {
                         "name": "Food",
                         "ID": 2,
-                        "amount": 50
+                        "amount": 2
                     },
                     "taskSlots": [
                         {
@@ -274,7 +274,7 @@
                             "taskName": "Fishing",
                             "taskSlotEnabled": false,
                             "structuralDamage": 0.47,
-                            "fungalDamage": 0.92,
+                            "fungalDamage": 0.00,
                             "personID": null
                         }
                     ]
@@ -320,7 +320,7 @@
                             "taskName": "Shelter",
                             "taskSlotEnabled": false,
                             "structuralDamage": 0.47,
-                            "fungalDamage": 0.92,
+                            "fungalDamage": 0.10,
                             "personID": null
                         }
                     ]
