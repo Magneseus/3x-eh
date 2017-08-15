@@ -1,0 +1,64 @@
+{
+    "name": "Food Production",
+    "maxPeople": 2,
+    "numPeople": 0,
+    "taskEnabled": true,
+    "numTurns":1,
+    "resourceOutput": {
+        "name": "Food",
+        "ID": 2,
+        "amount": 3
+    },
+    "resourceInput": {
+        "name": "Food",
+        "ID": 2,
+        "amount": 3
+    },
+    "taskSlots": [
+        {
+            "taskName": "Food Production",
+            "taskSlotEnabled": false,
+            "structuralDamage": 0.263610541820526,
+            "fungalDamage": 0.515509903430939,
+            "personID": null
+        },
+        {
+            "taskName": "Food Production",
+            "taskSlotEnabled": false,
+            "structuralDamage": 0.0684000253677368,
+            "fungalDamage": 0.399473369121552,
+            "personID": null
+        }
+    ]
+},
+{
+    "name": "Material Production",
+    "maxPeople": 2,
+    "numPeople": 0,
+    "taskEnabled": true,
+    "numTurns":1,
+    "resourceOutput": {
+        "name": "Materials",
+        "amount": 3
+    },
+    "resourceInput": {
+        "name": "Food",
+        "amount": 3
+    },
+    "taskSlots": [
+        {
+            "taskName": "Materials Production",
+            "taskSlotEnabled": false,
+            "structuralDamage": 0.263610541820526,
+            "fungalDamage": 0.515509903430939,
+            "personID": null
+        },
+        {
+            "taskName": "Materials Production",
+            "taskSlotEnabled": false,
+            "structuralDamage": 0.0684000253677368,
+            "fungalDamage": 0.399473369121552,
+            "personID": null
+        }
+    ]
+},

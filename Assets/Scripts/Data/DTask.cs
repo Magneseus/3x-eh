@@ -52,8 +52,36 @@ public class DTask : ITurnUpdatable
         taskEnabled = true;
         dBuilding.AddTask(this);
     }
+    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement,int numTurns, DResource dInput = null )
+    {
+        slotList = new List<DTaskSlot>();
 
-    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task", 0.0f)
+        id = NEXT_ID++;
+        taskName = dName;
+        building = dBuilding;
+        output = dOutput;
+        input = dInput;
+        maxPeople = dMaxPeople;
+        numPeople = 0;
+        fullAssessRequirement = dFullAssessRequirement;
+        numTurnsToComplete = numTurns;
+
+        CalculateAssessmentLevels();
+
+        for (int i = 0; i < dMaxPeople; i++)
+        {
+            // Create all task slots
+            slotList.Add(new DTaskSlot(this));
+        }
+        if (taskName.Equals("Treat People"))
+        {
+            output = null;
+        }
+
+        taskEnabled = true;
+        dBuilding.AddTask(this);
+    }
+    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task", 0.0f,null)
     {
     }
 
@@ -339,7 +367,7 @@ public class DTask : ITurnUpdatable
                 DResource.LoadFromJSON(jsonNode["resourceOutput"]),
                 RandJSON.JSONInt(jsonNode["maxPeople"]),
                 jsonNode["name"],
-                RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]),
+                RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]),jsonNode["numTurns"],
                 DResource.LoadFromJSON(jsonNode["resourceInput"]));
         }
 
@@ -351,7 +379,14 @@ public class DTask : ITurnUpdatable
         else
         {
             // Load task info
-            returnTask.id = jsonNode["ID"].AsInt;
+            if(jsonNode["ID"] != null)
+            {
+              returnTask.id = jsonNode["ID"].AsInt;
+            }
+            else
+            {
+              returnTask.id = DTask.NEXT_ID;
+            }
 
             // Load person info
             returnTask.maxPeople = RandJSON.JSONInt(jsonNode["maxPeople"]);

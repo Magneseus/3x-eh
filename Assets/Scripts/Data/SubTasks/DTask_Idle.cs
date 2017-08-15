@@ -62,7 +62,7 @@ public class DTask_Idle : DTask {
 	private void RemoveSlot()
 	{
         maxPeople = numPeople + 1;
-      
+
 	    slotList.RemoveAt(slotList.Count - 1);
         taskController.Resize();
 

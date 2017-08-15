@@ -23,7 +23,7 @@ public class DTask_Explore : DTask
         foreach (DTaskSlot taskSlot in slotList)
         {
             taskSlot.TurnUpdate(numDaysPassed);
-                        
+
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
             {
@@ -63,28 +63,28 @@ public class DTask_Explore : DTask
     }
 
         public void AddPerson(DPerson dPerson, DTaskSlot taskSlot)
-     {		
-        if (numPeople >= maxPeople)		
-         {		
- 		
-             throw new TaskFullException(taskName);		
-         }		
-         else if (ContainsPerson(dPerson))		
-         {		
-            throw new PersonAlreadyAddedException(taskName);		
-         }		
-         else		
-         {		
-             if (taskSlot.Person == null && taskSlot.Enabled)		
-             {		
-                 if (dPerson.Task != null)		
-                     dPerson.RemoveTask();		
- 		
-                 taskSlot.AddPerson(dPerson);		
-                 Reszie();		
-                 return;		
-            }		
-         }		
+     {
+        if (numPeople >= maxPeople)
+         {
+
+             throw new TaskFullException(taskName);
+         }
+         else if (ContainsPerson(dPerson))
+         {
+            throw new PersonAlreadyAddedException(taskName);
+         }
+         else
+         {
+             if (taskSlot.Person == null && taskSlot.Enabled)
+             {
+                 if (dPerson.Task != null)
+                     dPerson.RemoveTask();
+
+                 taskSlot.AddPerson(dPerson);
+                 Reszie();
+                 return;
+            }
+         }
     }
     public override void RemovePerson(DPerson dPerson)
     {
@@ -119,7 +119,7 @@ public class DTask_Explore : DTask
     private void RemoveSlot()
     {
         maxPeople = numPeople + 1;
-       
+
             slotList.RemoveAt(slotList.Count - 1);
         taskController.Resize();
 

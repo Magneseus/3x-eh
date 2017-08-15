@@ -391,8 +391,9 @@ public class DBuilding : ITurnUpdatable {
 
             if (task.Name == "Idle")
                 dBuilding.idleTask = (DTask_Idle)(task);
-            else if (task.Name.Contains("Assess"))
-                dBuilding.assessTask = (DTask_Assess)(task);
+            // else if (task.Name.Contains("Assess"))
+            else if(jsonNode["name"]  !="Town Hall")
+                dBuilding.assessTask = new DTask_Assess(dBuilding,0.5f,1, "Assess");
             else if (task.Name == "Explore")
                 dBuilding.exploreTask = (DTask_Explore)(task);
         }
