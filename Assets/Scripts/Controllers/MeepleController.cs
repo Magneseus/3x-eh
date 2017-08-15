@@ -73,12 +73,15 @@ public class MeepleController : MonoBehaviour
     #region Drag Functions
     public void OnMouseDown()
     {
-        // Store where we originated
-        returnParent = this.transform.parent;
-        dragging = true;
-        this.transform.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-        if (parentTray != null)
-            parentTray.taskController.IncreaseMouseOverCount();
+        if ((dPerson.City.Game.GameState == DGame._gameState.PLAY))
+        {
+            // Store where we originated
+            returnParent = this.transform.parent;
+            dragging = true;
+            this.transform.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            if (parentTray != null)
+                parentTray.taskController.IncreaseMouseOverCount();
+        }
     }
 
     public void OnMouseDrag()
@@ -94,37 +97,40 @@ public class MeepleController : MonoBehaviour
 
     public void OnMouseUp()
     {
-        TaskTraySingle oldParentTray = parentTray;
+        
+            TaskTraySingle oldParentTray = parentTray;
         // DBuilding oldBuilding =
         // (this.dPerson.Building == null) ?
         // oldBuilding = null : oldBuilding = this.dPerson.Building;
-        if (collisions.Count == 0)
+        if (dragging)
         {
-            // Reset position
-            this.transform.parent = returnParent;
-            ResetLocalPosition();
-        }
-        else
-        {
-            // Find the closest collider and make that Tray the new parent
-            float minDist = float.MaxValue;
-            TaskTraySingle closestTray = null;
-            foreach (Collider2D col in collisions)
+            if (collisions.Count == 0)
             {
-                ColliderDistance2D colDist = boxCollider.Distance(col);
-                if (colDist.isValid && colDist.distance < minDist)
-                {
-                    minDist = colDist.distance;
-                    closestTray = col.GetComponent<TaskTraySingle>();
-                }
+                // Reset position
+                this.transform.parent = returnParent;
+                ResetLocalPosition();
             }
-            if (this.name.Contains("Panel"))
-                idlePanelMouseDown(closestTray);
             else
+            {
+                // Find the closest collider and make that Tray the new parent
+                float minDist = float.MaxValue;
+                TaskTraySingle closestTray = null;
+                foreach (Collider2D col in collisions)
+                {
+                    ColliderDistance2D colDist = boxCollider.Distance(col);
+                    if (colDist.isValid && colDist.distance < minDist)
+                    {
+                        minDist = colDist.distance;
+                        closestTray = col.GetComponent<TaskTraySingle>();
+                    }
+                }
+                if (this.name.Contains("Panel"))
+                    idlePanelMouseDown(closestTray);
+                else
 
-                 // Same tray reset to inital position
-                if (closestTray.taskSlot.Person == null && closestTray.taskSlot.Enabled
-                    && closestTray.taskController == oldParentTray.taskController)
+                    // Same tray reset to inital position
+                    if (closestTray.taskSlot.Person == null && closestTray.taskSlot.Enabled
+                        && closestTray.taskController == oldParentTray.taskController)
                 {
                     this.transform.parent = returnParent;
                     this.transform.localPosition = new Vector3(0, 0, -3);
@@ -152,6 +158,7 @@ public class MeepleController : MonoBehaviour
                     // oldBuilding.CalculateDamages();
 
                 }
+            }
         }
 
 

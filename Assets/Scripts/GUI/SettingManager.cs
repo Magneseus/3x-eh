@@ -44,12 +44,14 @@ public class SettingManager : MonoBehaviour {
     {
         settingPane.SetActive(true);
         mainPane.SetActive(true);
+        gameController.dGame.GameState = DGame._gameState.MENU;
 		GameObject.Find ("SfxLibrary").GetComponents<AudioSource>()[6].Play();
     }
 
     public void HideSettings()
     {
         settingPane.SetActive(false);
+        gameController.dGame.GameState = DGame._gameState.PLAY;
     }
 
     public void ShowConfirm()
