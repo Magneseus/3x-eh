@@ -38,6 +38,15 @@ public class FuelToShelter : MonoBehaviour
         {
             text.text = "Fuel Use: " + gameController.dGame.currentCity.FuelToShelterConversion;
         }
+        if(gameController.dGame.gameState == DGame._gameState.PLAY)
+        {
+            fuelRaiseButton.interactable = true;
+            fuelLowerButton.interactable = true;
+        } else
+        {
+            fuelRaiseButton.interactable = false;
+            fuelLowerButton.interactable = false;
+        }
     }
 
     public void FuelRaiseCallback()

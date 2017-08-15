@@ -18,7 +18,6 @@ public class GameController : MonoBehaviour
     private GameObject cityView;
 
     private bool buildingToggle = false;
-
     // Initialization
     void Start()
     {
@@ -199,8 +198,11 @@ public class GameController : MonoBehaviour
 
     public void EndTurnButtonCallback()
     {
-        dGame.EndTurnUpdate();
-		GameObject.Find ("SfxLibrary").GetComponents<AudioSource>()[2].Play();
+        if (dGame.GameState == DGame._gameState.PLAY)
+        {
+            dGame.EndTurnUpdate();
+            GameObject.Find("SfxLibrary").GetComponents<AudioSource>()[2].Play();
+        }
     }
     public void NewGame()
     {
