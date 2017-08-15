@@ -31,7 +31,6 @@ public class DTask_Explore : DTask
 
                 if (taskName == "Explore")
                 {
-                    Debug.Log("Exploring: " + exploreAmount * infectionModifier);
                     building.City.Explore(exploreAmount * infectionModifier);
                 }
                 else if (taskName == "Scavenge")

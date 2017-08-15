@@ -15,6 +15,7 @@ public class CamControl : MonoBehaviour {
 	void Start () {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        setMount(startMenuMount);
 	}
 	
 	// Update is called once per frame
