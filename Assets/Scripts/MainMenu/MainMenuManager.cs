@@ -74,6 +74,7 @@ public class MainMenuManager : MonoBehaviour {
 
     public void SwitchToGame()
     {
+        GameObject.Find("GameController").GetComponent<GameController>().NewGame();
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(true);
         GameObject.Find("Game").transform.Find("UI Canvas").gameObject.SetActive(true);
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);

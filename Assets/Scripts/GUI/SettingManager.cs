@@ -85,6 +85,9 @@ public class SettingManager : MonoBehaviour {
         // Save the "continue" game
         gameController.SaveGame(ContinueGame.continueFileName);
 
+        // Destroy the buildings
+        gameController.destroyCityAndBuildings();
+
         MainMenuManager mainMenuManager = GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").Find("MainMenuManager")
              .gameObject.GetComponent<MainMenuManager>();
         mainMenuManager.SwitchToMainMenu();
