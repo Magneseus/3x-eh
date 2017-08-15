@@ -36,7 +36,7 @@ public class SettingManager : MonoBehaviour {
 	void Update () {
         if (isQuit)
         {
-            StartCoroutine(LevelSwitch());
+          //  StartCoroutine(LevelSwitch());
         }
 	}
 
@@ -84,6 +84,9 @@ public class SettingManager : MonoBehaviour {
     {
         // Save the "continue" game
         gameController.SaveGame(ContinueGame.continueFileName);
+
+        // Destroy the buildings
+        gameController.destroyCityAndBuildings();
 
         MainMenuManager mainMenuManager = GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").Find("MainMenuManager")
              .gameObject.GetComponent<MainMenuManager>();

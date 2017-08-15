@@ -86,7 +86,7 @@ public class GameController : MonoBehaviour
 
         if (dGame.currentCity != null)
         {
-            
+
             // Spawn City UI
             cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
 
@@ -148,8 +148,10 @@ public class GameController : MonoBehaviour
 
         foreach(string s in Directory.GetFiles(pathToSavedGames, "*.json"))
         {
-            string newS = s.Split(Path.DirectorySeparatorChar)[1];
-            listSavedGames.Add(newS.Split('.')[0]);
+            string[] newS = s.Split(Path.DirectorySeparatorChar);
+            string name = newS[newS.Length-1];
+            Debug.Log(name);
+            listSavedGames.Add(name.Split('.')[0]);
         }
 
         return listSavedGames;
@@ -243,6 +245,7 @@ public class GameController : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
+        Destroy(cityView);
     }
 
     public void ToggleBuildingModals(bool toggle)

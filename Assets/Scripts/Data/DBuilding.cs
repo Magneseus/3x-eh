@@ -63,7 +63,7 @@ public class DBuilding : ITurnUpdatable {
         if (autoSpawnTasks)
         {
             // Add an assess task by default
-            if (buildingName.Equals(0))
+            if (buildingName.Equals("Town Hall"))
             {
                 this.idleTask = new DTask_Idle(this, "Idle");
                 this.exploreTask = new DTask_Explore(this, 0.1f, "Explore");
@@ -383,7 +383,8 @@ public class DBuilding : ITurnUpdatable {
         dBuilding.percentInfected = RandJSON.JSONFloat(jsonNode["percentInfected"]);
         dBuilding.percentDamaged = RandJSON.JSONFloat(jsonNode["percentDamaged"]);
         dBuilding.percentAssessed = RandJSON.JSONFloat(jsonNode["percentAssessed"]);
-
+        if(jsonNode["name"]  != "Town Hall")
+            dBuilding.assessTask = new DTask_Assess(dBuilding,0.5f,1, "Assess");
         // Load tasks
         foreach (JSONNode taskNode in jsonNode["tasks"].AsArray)
         {
@@ -392,8 +393,7 @@ public class DBuilding : ITurnUpdatable {
             if (task.Name == "Idle")
                 dBuilding.idleTask = (DTask_Idle)(task);
             // else if (task.Name.Contains("Assess"))
-            else if (!(dBuilding.Name.Equals("Town Hall")) && dBuilding.assessTask == null)
-                dBuilding.assessTask = new DTask_Assess(dBuilding, 0.5f, 1, "Assess");
+
             else if (task.Name == "Explore")
                 dBuilding.exploreTask = (DTask_Explore)(task);
         }

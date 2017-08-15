@@ -39,14 +39,15 @@ public class MainMenuManager : MonoBehaviour {
             switching = true;
             if (switching)
             {
-                loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(true, 1f);
+                if(waitForSeconds<5.0f)
+                  loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(true, 1f);
                 waitForSeconds -= Time.deltaTime;
                 if (waitForSeconds <= 0.0f)
                 {
                     switching = false;
                     waitForSeconds = 5.0f;
-                    SwitchToGame();
                     camControl.GetComponent<CamControl>().setMount(mainMenuMount);
+                    SwitchToGame();
                 }
             }
         }
@@ -81,12 +82,11 @@ public class MainMenuManager : MonoBehaviour {
     }
     public void SwitchToMainMenu()
     {
-        
+
         GameObject.Find("Game").transform.Find("Main Camera").gameObject.SetActive(false);
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(true);
         camControl.GetComponent<CamControl>().setMount(camControl.GetComponent<CamControl>().mainMenuMount);
         loadingSceneManager.GetComponent<LoadingSceneManager>().Fade(false, 3f);
-        camControl.GetComponent<CamControl>().setMount(camControl.GetComponent<CamControl>().mainMenuMount);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -98,6 +98,10 @@ public class MainMenuManager : MonoBehaviour {
         GameObject.Find("MainMenuSystem").transform.Find("MainMenuObject").gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+    public void NewGame()
+    {
+        GameObject.Find("GameController").GetComponent<GameController>().NewGame();
     }
 
     public void QuitGame()
