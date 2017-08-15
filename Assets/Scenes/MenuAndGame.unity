@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4464891, g: 0.49632698, b: 0.5747258, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1306,6 +1306,86 @@ Prefab:
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 224375372049146258, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224375372049146258, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224375372049146258, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 569
+      objectReference: {fileID: 0}
+    - target: {fileID: 224375372049146258, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224375372049146258, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 1138
+      objectReference: {fileID: 0}
+    - target: {fileID: 224644824521980214, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224644824521980214, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224644824521980214, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 569
+      objectReference: {fileID: 0}
+    - target: {fileID: 224644824521980214, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224644824521980214, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 1138
+      objectReference: {fileID: 0}
+    - target: {fileID: 224698842945227426, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224698842945227426, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224698842945227426, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 569
+      objectReference: {fileID: 0}
+    - target: {fileID: 224698842945227426, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224698842945227426, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 1138
+      objectReference: {fileID: 0}
+    - target: {fileID: 114244723865381434, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+        type: 2}
+      propertyPath: targetMount
+      value: 
+      objectReference: {fileID: 1025988231}
     m_RemovedComponents:
     - {fileID: 328774532416342318, guid: b3b4a5505e822ec4580a8c4916d1df8c, type: 2}
     - {fileID: 33868968175416400, guid: b3b4a5505e822ec4580a8c4916d1df8c, type: 2}
@@ -1460,6 +1540,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgmLibrary: {fileID: 345650484}
   sfxLibrary: {fileID: 1214106808}
+--- !u!4 &1025988231 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4175033733841876, guid: b3b4a5505e822ec4580a8c4916d1df8c,
+    type: 2}
+  m_PrefabInternal: {fileID: 402260916}
 --- !u!1 &1214106808 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1154005516875380, guid: f394c79802ea5ca45a53975618de32bf,
