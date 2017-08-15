@@ -47,7 +47,7 @@
                     "maxPeople": 3,
                     "numPeople": 2,
                     "fullAssessRequirement": 1,
-                    "taskEnabled": true,
+                    "taskEnabled": false,
                     "resourceOutput": null,
                     "taskSlots": [
                         {
@@ -101,29 +101,10 @@
                     ],
                     "specialTask": "explore",
                     "exploreAmount": 0.100000001490116
-                },
-                {
-                    "ID": 2,
-                    "name": "Assess Building",
-                    "buildingName": "Town Hall",
-                    "maxPeople": 1,
-                    "numPeople": 0,
-                    "fullAssessRequirement": 0,
-                    "taskEnabled": false,
-                    "resourceOutput": null,
-                    "taskSlots": [
-                        {
-                            "taskName": "Assess Building",
-                            "taskSlotEnabled": true,
-                            "structuralDamage": 0,
-                            "fungalDamage": 0,
-                            "personID": null
-                        }
-                    ],
-                    "specialTask": "assess",
-                    "assessAmount": 0.200000002980232
                 }
-            ],
+              ],
+
+
             "position": {
                 "x": 0,
                 "y": 0
@@ -139,27 +120,7 @@
             "percentDamaged": 0.449171662330627,
             "percentAssessed": 0,
             "tasks": [
-                {
-                    "ID": 3,
-                    "name": "Assess Building",
-                    "buildingName": "Apartment Building",
-                    "maxPeople": 1,
-                    "numPeople": 0,
-                    "fullAssessRequirement": 0,
-                    "taskEnabled": true,
-                    "resourceOutput": null,
-                    "taskSlots": [
-                        {
-                            "taskName": "Assess Building",
-                            "taskSlotEnabled": true,
-                            "structuralDamage": 0,
-                            "fungalDamage": 0,
-                            "personID": null
-                        }
-                    ],
-                    "specialTask": "assess",
-                    "assessAmount": 0.200000002980232
-                },
+
                 {
                     "ID": 4,
                     "name": "Apartment Super",
@@ -199,27 +160,7 @@
             "percentDamaged": 0.287700593471527,
             "percentAssessed": 0,
             "tasks": [
-                {
-                    "ID": 5,
-                    "name": "Assess Building",
-                    "buildingName": "Gas Station",
-                    "maxPeople": 1,
-                    "numPeople": 0,
-                    "fullAssessRequirement": 0,
-                    "taskEnabled": true,
-                    "resourceOutput": null,
-                    "taskSlots": [
-                        {
-                            "taskName": "Assess Building",
-                            "taskSlotEnabled": true,
-                            "structuralDamage": 0,
-                            "fungalDamage": 0,
-                            "personID": null
-                        }
-                    ],
-                    "specialTask": "assess",
-                    "assessAmount": 0.200000002980232
-                },
+
                 {
                     "ID": 6,
                     "name": "Fuel Pump",
@@ -266,27 +207,7 @@
             "percentDamaged": 0,
             "percentAssessed": 0,
             "tasks": [
-                {
-                    "ID": 7,
-                    "name": "Assess Building",
-                    "buildingName": "Library",
-                    "maxPeople": 1,
-                    "numPeople": 0,
-                    "fullAssessRequirement": 0,
-                    "taskEnabled": true,
-                    "resourceOutput": null,
-                    "taskSlots": [
-                        {
-                            "taskName": "Assess Building",
-                            "taskSlotEnabled": true,
-                            "structuralDamage": 0,
-                            "fungalDamage": 0,
-                            "personID": null
-                        }
-                    ],
-                    "specialTask": "assess",
-                    "assessAmount": 0.200000002980232
-                }
+
             ],
             "position": {
                 "x": 3.70000004768372,
@@ -303,27 +224,9 @@
             "percentDamaged": 0.22124807536602,
             "percentAssessed": 0,
             "tasks": [
-                {
-                    "ID": 8,
-                    "name": "Assess Building",
-                    "buildingName": "Grocery Store",
-                    "maxPeople": 1,
-                    "numPeople": 0,
-                    "fullAssessRequirement": 0,
-                    "taskEnabled": true,
-                    "resourceOutput": null,
-                    "taskSlots": [
-                        {
-                            "taskName": "Assess Building",
-                            "taskSlotEnabled": true,
-                            "structuralDamage": 0,
-                            "fungalDamage": 0,
-                            "personID": null
-                        }
-                    ],
-                    "specialTask": "assess",
-                    "assessAmount": 0.200000002980232
-                },
+
+
+
                 {
                     "ID": 9,
                     "name": "Food Production",
