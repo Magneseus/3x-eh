@@ -47,7 +47,7 @@
                     "maxPeople": 3,
                     "numPeople": 2,
                     "fullAssessRequirement": 1,
-                    "taskEnabled": true,
+                    "taskEnabled": false,
                     "resourceOutput": null,
                     "taskSlots": [
                         {
