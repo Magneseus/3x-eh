@@ -371,7 +371,7 @@ public class DBuilding : ITurnUpdatable {
     public static DBuilding LoadFromJSON(JSONNode jsonNode, DCity city, bool setPositionManually=false)
     {
         DBuilding dBuilding = new DBuilding(city, jsonNode["name"], null, false);
-
+        
         // Load basic info
         dBuilding.id = jsonNode["ID"].AsInt;
         string typeString = jsonNode["type"];
@@ -392,8 +392,8 @@ public class DBuilding : ITurnUpdatable {
             if (task.Name == "Idle")
                 dBuilding.idleTask = (DTask_Idle)(task);
             // else if (task.Name.Contains("Assess"))
-            else if(jsonNode["ID"]  !="0")
-                dBuilding.assessTask = new DTask_Assess(dBuilding,0.5f,1, "Assess");
+            else if (!(dBuilding.id == 0))
+                dBuilding.assessTask = new DTask_Assess(dBuilding, 0.5f, 1, "Assess");
             else if (task.Name == "Explore")
                 dBuilding.exploreTask = (DTask_Explore)(task);
         }
