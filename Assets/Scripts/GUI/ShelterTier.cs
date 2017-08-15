@@ -38,6 +38,16 @@ public class ShelterTier : MonoBehaviour
         {
             text.text = "Shelter Tier: " + gameController.dGame.currentCity.ShelterTier + " (+" + gameController.dGame.currentCity.FuelToShelterConversion + ")";
         }
+        if (gameController.dGame.gameState == DGame._gameState.PLAY)
+        {
+            tierRaiseButton.interactable = true;
+            tierLowerButton.interactable = true;
+        }
+        else
+        {
+            tierRaiseButton.interactable = false;
+            tierLowerButton.interactable = false;
+        }
     }
 
     public void TierRaiseCallback()
