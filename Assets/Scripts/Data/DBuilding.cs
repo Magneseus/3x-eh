@@ -383,7 +383,7 @@ public class DBuilding : ITurnUpdatable {
         dBuilding.percentInfected = RandJSON.JSONFloat(jsonNode["percentInfected"]);
         dBuilding.percentDamaged = RandJSON.JSONFloat(jsonNode["percentDamaged"]);
         dBuilding.percentAssessed = RandJSON.JSONFloat(jsonNode["percentAssessed"]);
-        if(jsonNode["name"]  != "Town Hall")
+        if(jsonNode["name"]  != "Town Hall" && dBuilding.assessTask == null)
             dBuilding.assessTask = new DTask_Assess(dBuilding,0.5f,1, "Assess");
         // Load tasks
         foreach (JSONNode taskNode in jsonNode["tasks"].AsArray)
