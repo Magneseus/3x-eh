@@ -128,7 +128,7 @@ public class GameController : MonoBehaviour
 
         var json = File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json");
         cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
-        DCity newCity = DCity.LoadFromJSON(JSON.Parse(json), dGame, true);
+        DCity newCity = DCity.LoadFromJSON(JSON.Parse(json), dGame, false);
 
         dGame.AddCity(newCity);
         dGame.SelectCity(cityName);
