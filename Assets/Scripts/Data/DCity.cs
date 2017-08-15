@@ -286,7 +286,7 @@ public class DCity : ITurnUpdatable
         {
             buildings.Add(dBuilding.ID, dBuilding);
 
-            if (dBuilding.Name == "Town Hall")
+            if (dBuilding.ID == 0)
                 townHall = dBuilding;
         }
     }
@@ -773,7 +773,7 @@ public class DCity : ITurnUpdatable
         {
             DBuilding loadedBuilding = DBuilding.LoadFromJSON(building, dCity, randomBuildingPlacement);
 
-            if (loadedBuilding.Name.Equals("Town Hall"))
+            if (loadedBuilding.ID == 0)
             {
                 dCity.townHall = loadedBuilding;
             }
