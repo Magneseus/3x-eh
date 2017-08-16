@@ -108,14 +108,13 @@ public class TimeManager : MonoBehaviour {
         //bgm.volume = 0.2f;
         this.GetComponent<AudioSource>().Play();
 
-        /* UNCOMMENT THIS TO BRING BACK THE End turn transition!
+        // UNCOMMENT THIS TO BRING BACK THE End turn transition!
         switchImage.enabled = true;
         switchText.enabled = true;
         isSwitchIn = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         startNextTurn = true;
-        */
     }
     /*
 	public void IncrementResources()
@@ -217,11 +216,11 @@ public class TimeManager : MonoBehaviour {
 
     IEnumerator SwitchIn(){
 		Debug.Log ("SwitchIn is called");
-		loadingSceneManager.GetComponent<LoadingSceneManager> ().Fade (true, 1f);
+		loadingSceneManager.GetComponent<LoadingSceneManager> ().Fade (true, 1.5f);
 		//Debug.Log ("123456");
 
         //speed up to 1 second
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(1.5f);
 
 		isSwitchIn = false;
 		isSwitchOut = true;
@@ -230,9 +229,9 @@ public class TimeManager : MonoBehaviour {
 
 	IEnumerator SwitchOut(){
 		Debug.Log ("SwitchOut is called");
-		loadingSceneManager.GetComponent<LoadingSceneManager> ().Fade (false, 1f);
+		loadingSceneManager.GetComponent<LoadingSceneManager> ().Fade (false, 0.5f);
         //speed up to 1 second
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
 
 		if (functionLimiter == false){
 			ResetSwitch ();
