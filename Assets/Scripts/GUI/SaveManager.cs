@@ -28,7 +28,7 @@ public class SaveManager : MonoBehaviour {
         }
         else
         {
-            gameControl.SaveGame(saveName.text + " - " + gameControl.listSavedGames().Count + ".json");
+            gameControl.SaveGame(saveName.text + ".json");
         }
 
     }
