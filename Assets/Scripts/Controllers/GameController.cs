@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using SimpleJSON;
 using System.IO;
 
@@ -117,8 +116,8 @@ public class GameController : MonoBehaviour
         {
             deleteGameFile += ".json";
         }
-        FileUtil.DeleteFileOrDirectory(pathToSavedGames + Path.DirectorySeparatorChar + deleteGameFile);
-        FileUtil.DeleteFileOrDirectory(pathToSavedGames + Path.DirectorySeparatorChar + deleteGameFile.Replace(".json",".meta"));
+        File.Delete(pathToSavedGames + Path.DirectorySeparatorChar + deleteGameFile);
+        File.Delete(pathToSavedGames + Path.DirectorySeparatorChar + deleteGameFile.Replace(".json",".meta"));
     }
 
     public void SelectCity(string cityName)
