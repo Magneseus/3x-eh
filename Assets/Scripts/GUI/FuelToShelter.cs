@@ -38,6 +38,15 @@ public class FuelToShelter : MonoBehaviour
         {
             text.text = "Fuel Use: " + gameController.dGame.currentCity.FuelToShelterConversion;
         }
+        if(gameController.dGame.gameState == DGame._gameState.PLAY)
+        {
+            fuelRaiseButton.interactable = true;
+            fuelLowerButton.interactable = true;
+        } else
+        {
+            fuelRaiseButton.interactable = false;
+            fuelLowerButton.interactable = false;
+        }
     }
 
     public void FuelRaiseCallback()
@@ -45,6 +54,7 @@ public class FuelToShelter : MonoBehaviour
         if (gameController.dGame.currentCity != null)
         {
             gameController.dGame.currentCity.RaiseFuelConversion();
+			GameObject.Find ("SfxLibrary").GetComponents<AudioSource>() [5].Play ();
         }
     }
 
@@ -53,6 +63,7 @@ public class FuelToShelter : MonoBehaviour
         if (gameController.dGame.currentCity != null)
         {
             gameController.dGame.currentCity.LowerFuelConversion();
+			GameObject.Find ("SfxLibrary").GetComponents<AudioSource>() [4].Play ();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using SimpleJSON;
 
 public class DTask_Assess : DTask
 {
@@ -10,6 +11,7 @@ public class DTask_Assess : DTask
 
     public DTask_Assess(DBuilding dBuilding, float assessAmount, int dMaxPeople, string dName) : base(dBuilding, null, dMaxPeople, dName, 0.0f)
     {
+      //TODO: make this a standard amount
         this.assessAmount = assessAmount;
 
         ForceClean();
@@ -28,10 +30,20 @@ public class DTask_Assess : DTask
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
             {
-                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;                                
+                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
                 building.Assess(assessAmount * Constants.MERSON_INFECTION_TASK_MODIFIER);
             }
         }
+    }
+
+    public override JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = base.SaveToJSON();
+
+        returnNode.Add("specialTask", new JSONString("assess"));
+        returnNode.Add("assessAmount", new JSONNumber(assessAmount));
+
+        return returnNode;
     }
 
     #region Accessors

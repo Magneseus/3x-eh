@@ -68,13 +68,12 @@ public static class DSeasons
 
     public static bool EndDeadOfWinter(ref DateTime[] deadOfWinter, DateTime currentDate)
     {
-            deadOfWinter[0].AddYears(1);
-            if (currentDate > deadOfWinter[1])
-            {
-                deadOfWinter[1].AddYears(1);
-                return false;
-            }
+        if (currentDate > deadOfWinter[1])
+        {
+            deadOfWinter[1].AddYears(1);
             return true;
+        }
+        return false;
     }
 
     public static DateTime SetNextSeasonDate(DateTime currentStartDate)

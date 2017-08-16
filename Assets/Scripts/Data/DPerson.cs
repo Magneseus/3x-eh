@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
-// using System;
-public class DPerson : TurnUpdatable
+
+public class DPerson : ITurnUpdatable
 {
     private static int NEXT_ID = 0;
     private MeepleController meepleController;
@@ -66,9 +67,9 @@ public class DPerson : TurnUpdatable
 		if(taskSlot != null)
 			Task.RemovePerson(this);
 		if(dTaskSlot.Task==city.townHall.getIdleTask())
-			((DTask_Idle)dTaskSlot.Task).AddPerson(this, dTaskSlot);
-        else if (dTaskSlot.Task.Name.Equals("Explore"))
-            ((DTask_Explore)dTaskSlot.Task).AddPerson(this, dTaskSlot);
+			((DTask_Idle)dTaskSlot.Task).AddPerson(this);
+        else if (dTaskSlot.Task == city.townHall.getExploreTask())
+            ((DTask_Explore)dTaskSlot.Task).AddPerson(this,dTaskSlot);
         else
         	dTaskSlot.AddPerson(this);
     }
@@ -102,6 +103,17 @@ public class DPerson : TurnUpdatable
         meepleController.SetParentTrayAndTransfrom(taskSlot.TaskTraySlot);
     }
 
+    public void LockMeeple()
+    {
+        if (meepleController != null && meepleController.boxCollider != null)
+            meepleController.boxCollider.enabled = false;
+    }
+
+    public void UnlockMeeple()
+    {
+        if (meepleController != null && meepleController.boxCollider != null)
+            meepleController.boxCollider.enabled = true;
+    }
 
 
     #endregion
@@ -134,22 +146,13 @@ public class DPerson : TurnUpdatable
 
     public int Infection
     {
-        get
-        {   
-            if(city.Season == DSeasons._season.WINTER)
-            {
-                return Constants.MERSON_INFECTION_MIN;
-            }
-            else if(city.Season == DSeasons._season.SUMMER)
-            {
-                return infectionLevel;
-            }
-            else
-            {
-                return Mathf.Min(infectionLevel, Constants.MERSON_INFECTION_MIN + Constants.MERSON_SPRING_FALL_INFECTION_MODIFIER);
-            }
-        }
+        get { return Mathf.Min(infectionLevel, Constants.MERSON_SEASON_INFECTION_MAX[(int)city.Season]); }
         set { infectionLevel = Mathf.Clamp(value, Constants.MERSON_INFECTION_MIN, Constants.MERSON_INFECTION_MAX); }
+    }
+
+    public int InfectionActual
+    {
+        get { return infectionLevel; }
     }
 
     public bool IsDead
@@ -157,5 +160,52 @@ public class DPerson : TurnUpdatable
         get { return isDead; }
     }
 
+    public bool IsLocked
+    {
+        get { return taskSlot != null && taskSlot.IsLocked; }
+    }
+
+    public void SetMeepleController(MeepleController mc)
+    {
+        this.meepleController = mc;
+
+        // Check lock
+        if (IsLocked)
+            LockMeeple();
+    }
+    public MeepleController MeepleController
+    {
+        get { return meepleController; }
+
+    }
+
+
     #endregion
+
+    public JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = new JSONObject();
+
+        // Save person info
+        returnNode.Add("ID", new JSONNumber(id));
+        returnNode.Add("infectionLevel", new JSONNumber(infectionLevel));
+        returnNode.Add("isDead", new JSONBool(isDead));
+
+        // Save task info
+        returnNode.Add("taskID", new JSONNumber(taskSlot.Task.ID));
+
+        return returnNode;
+    }
+
+    public static DPerson LoadFromJSON(JSONNode jsonNode, DCity city)
+    {
+        DPerson returnPerson = new DPerson(city, null);
+
+        // Load person info
+        returnPerson.id = jsonNode["ID"];
+        returnPerson.infectionLevel = RandJSON.JSONInt(jsonNode["infectionLevel"]);
+        returnPerson.isDead = jsonNode["isDead"];
+
+        return returnPerson;
+    }
 }

@@ -1,0 +1,60 @@
+[
+  {
+    "id": 0,
+    "priority": 1,
+    "turnsToActivate": 1,
+    "promptText": "Oh shit, you found some tacos!\nYou got 50 food.",
+    "activationCondition": "exploring",
+    "resources": [
+      {
+        "type": "Food",
+        "value": 20
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "priority": 1,
+    "turnsToActivate": 3,
+    "promptText": "The team has returned from the wreck, a cargo ship full of canned food that's been keeping Iqaluit fed these past months. This latest haul is larger than usual. The team explains this was the last of it. It should last a while, but we'll need a new source of food before long. You gain XXX food, and the returning team is available to work other jobs.\nYou got 300 food.",
+    "activationCondition": "Iqaluit",
+    "resources": [
+      {
+        "type": "Food",
+        "value": 50
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "turnsToActivate": 5,
+    "promptText": "Anxious chatter has been spreading around town. There's plenty of food, but for how long? And what next?",
+    "activationCondition": "Iqaluit",
+    "resources": []
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "turnsToActivate": 8,
+    "promptText": "Concern is growing over finding food. Some families are debating leaving for the mainland, others want to establish contact with other settlements, and some think searching farther for more ships is the answer.",
+    "activationCondition": "Iqaluit",
+    "resources": []
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "turnsToActivate": 10,
+    "promptText": "Migrants arrive in Iqaluit travelling from the west. While settling in one woman mentions they came through Cape Dorset. The people there recently established contact with Salluit on the mainland.",
+    "activationCondition": "Iqaluit",
+    "resources": []
+  },
+  {
+    "id": 5,
+    "priority": 1,
+    "turnsToActivate": 13,
+    "promptText": "A man who previously left by boat for the mainland has just returned. He says he found a stable settlement at Quaqtaq. Talking to the people there, they are willing to help us with food, but lack the manpower to build, and operate a big enough boat.",
+    "activationCondition": "Iqaluit",
+    "resources": []
+  }
+]

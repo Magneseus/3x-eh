@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using SimpleJSON;
 using UnityEngine;
 
-public class DTask : TurnUpdatable
+public class DTask : ITurnUpdatable
 {
-
     private static int NEXT_ID = 0;
 
     protected int id;
@@ -17,10 +17,13 @@ public class DTask : TurnUpdatable
 
     protected float fullAssessRequirement;
     protected DResource output;
+    protected DResource input;
     protected bool taskEnabled;
+    protected int numTurnsToComplete;
+    protected TaskController taskController;
 
 
-    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement)
+    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement, DResource dInput = null)
     {
         slotList = new List<DTaskSlot>();
 
@@ -28,9 +31,11 @@ public class DTask : TurnUpdatable
         taskName = dName;
         building = dBuilding;
         output = dOutput;
+        input = dInput;
         maxPeople = dMaxPeople;
         numPeople = 0;
         fullAssessRequirement = dFullAssessRequirement;
+        numTurnsToComplete = 0;
 
         CalculateAssessmentLevels();
 
@@ -47,8 +52,36 @@ public class DTask : TurnUpdatable
         taskEnabled = true;
         dBuilding.AddTask(this);
     }
+    public DTask(DBuilding dBuilding, DResource dOutput, int dMaxPeople, string dName, float dFullAssessRequirement,int numTurns, DResource dInput = null )
+    {
+        slotList = new List<DTaskSlot>();
 
-    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task", 0.0f)
+        id = NEXT_ID++;
+        taskName = dName;
+        building = dBuilding;
+        output = dOutput;
+        input = dInput;
+        maxPeople = dMaxPeople;
+        numPeople = 0;
+        fullAssessRequirement = dFullAssessRequirement;
+        numTurnsToComplete = numTurns;
+
+        CalculateAssessmentLevels();
+
+        for (int i = 0; i < dMaxPeople; i++)
+        {
+            // Create all task slots
+            slotList.Add(new DTaskSlot(this));
+        }
+        if (taskName.Equals("Treat People"))
+        {
+            output = null;
+        }
+
+        taskEnabled = true;
+        dBuilding.AddTask(this);
+    }
+    public DTask(DBuilding dBuilding, DResource dOutput) : this(dBuilding, dOutput, 4, "default_task", 0.0f,null)
     {
     }
 
@@ -62,16 +95,42 @@ public class DTask : TurnUpdatable
 
             if (taskSlot.IsFunctioning())
             {
-                float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
-                building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier))); 
-                if(taskName.Equals("Treat People"))
-                {
-                    RandomalyTreatPeople();
-                }               
+                bool canOutputResource = true;
 
+                // Check slot lock
+                if (!(taskSlot.NumTurnsPassed >= numTurnsToComplete))
+                    canOutputResource = false;
+
+                // Process resource consumption
+                if (canOutputResource && input != null)
+                {
+                    if (building.City.GetResource(input.Name).Amount >= input.Amount)
+                        ConsumeResources();
+                    else
+                        canOutputResource = false;
+                }
+
+                // Resource production
+                if (canOutputResource)
+                    ProduceResources(taskSlot);
             }
 
         }
+    }
+
+    private void ProduceResources(DTaskSlot taskSlot)
+    {
+        float modifier = taskSlot.Person.Infection == Constants.MERSON_INFECTION_MIN ? 1 : Constants.MERSON_INFECTION_TASK_MODIFIER;
+        building.OutputResource(DResource.Create(output, Mathf.RoundToInt(output.Amount * modifier)));
+        if (taskName.Equals("Treat People"))
+        {
+            RandomalyTreatPeople();
+        }
+    }
+
+    private void ConsumeResources()
+    {
+        building.InputResource(input);
     }
 
     public void StructureDeteriorates()
@@ -92,11 +151,11 @@ public class DTask : TurnUpdatable
     {
         if (numPeople >= maxPeople)
         {
-			
+
             throw new TaskFullException(taskName);
         }
         else if (ContainsPerson(dPerson))
-	    {
+        {
             throw new PersonAlreadyAddedException(taskName);
         }
         else
@@ -105,7 +164,7 @@ public class DTask : TurnUpdatable
             {
                 if (taskSlot.Person == null && taskSlot.Enabled)
                 {
-					if(dPerson.Task != null)
+                    if (dPerson.Task != null)
                         dPerson.RemoveTask();
 
                     taskSlot.AddPerson(dPerson);
@@ -115,14 +174,14 @@ public class DTask : TurnUpdatable
         }
     }
 
-	public virtual void RemovePerson(DPerson dPerson)
+    public virtual void RemovePerson(DPerson dPerson)
     {
         foreach (DTaskSlot taskSlot in slotList)
         {
             if (taskSlot.Person == dPerson)
             {
                 taskSlot.RemovePerson();
-			
+
                 return;
             }
         }
@@ -156,6 +215,18 @@ public class DTask : TurnUpdatable
     public void EnableTask()
     {
         taskEnabled = true;
+    }
+
+    public DPerson lastPerson()
+    {
+        DPerson last = null;
+        foreach (DTaskSlot slot in slotList)
+        {
+            if (slot.Person != null)
+                last = slot.Person;
+
+        }
+        return last;
     }
 
     public void DisableTask()
@@ -200,7 +271,7 @@ public class DTask : TurnUpdatable
 
         for (int i = 0; i < slotList.Count; i++)
         {
-            if (i <= numEnabled-1)
+            if (i <= numEnabled - 1)
             {
                 slotList[i].Enabled = true;
             }
@@ -221,7 +292,145 @@ public class DTask : TurnUpdatable
         }
     }
 
+    public virtual JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = new JSONObject();
+
+        // Save Task info
+        returnNode.Add("ID", new JSONNumber(id));
+        returnNode.Add("name", new JSONString(taskName));
+        returnNode.Add("buildingName", new JSONString(building.Name));
+
+        // Save person info
+        returnNode.Add("maxPeople", new JSONNumber(maxPeople));
+        returnNode.Add("numPeople", new JSONNumber(numPeople));
+
+        // Save output info
+        returnNode.Add("fullAssessRequirement", new JSONNumber(fullAssessRequirement));
+        returnNode.Add("taskEnabled", new JSONBool(taskEnabled));
+        returnNode.Add("numTurnsToComplete", new JSONNumber(numTurnsToComplete));
+
+        // Resource output
+        if (output != null)
+            returnNode.Add("resourceOutput", output.SaveToJSON());
+        else
+            returnNode.Add("resourceOutput", new JSONNull());
+
+        // Resource input
+        if (input != null)
+            returnNode.Add("resourceInput", input.SaveToJSON());
+        else
+            returnNode.Add("resourceInput", new JSONNull());
+
+        // Save task slot list
+        JSONArray jsonSlotList = new JSONArray();
+        foreach (var taskSlot in slotList)
+        {
+            jsonSlotList.Add(taskSlot.SaveToJSON());
+        }
+        returnNode.Add("taskSlots", jsonSlotList);
+
+        return returnNode;
+    }
+
+    public static DTask LoadFromJSON(JSONNode jsonNode, DBuilding building)
+    {
+        DTask returnTask = null;
+
+        // Check for special task cases
+        if (jsonNode["resourceOutput"].IsNull)
+        {
+            if (jsonNode["specialTask"] == "assess")
+            {
+                returnTask = new DTask_Assess(
+                    building,
+                    RandJSON.JSONFloat(jsonNode["assessAmount"]),
+                    RandJSON.JSONInt(jsonNode["maxPeople"]),
+                    jsonNode["name"]);
+            }
+            else if (jsonNode["specialTask"] == "explore")
+            {
+                returnTask = new DTask_Explore(
+                    building,
+                    RandJSON.JSONFloat(jsonNode["exploreAmount"]),
+                    jsonNode["name"]);
+            }
+            else if (jsonNode["specialTask"] == "idle")
+            {
+                returnTask = new DTask_Idle(building, jsonNode["name"]);
+            }
+        }
+        else
+        {
+            returnTask = new DTask(
+                building,
+                DResource.LoadFromJSON(jsonNode["resourceOutput"]),
+                RandJSON.JSONInt(jsonNode["maxPeople"]),
+                jsonNode["name"],
+                RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]),jsonNode["numTurns"],
+                DResource.LoadFromJSON(jsonNode["resourceInput"]));
+        }
+
+        // Set the other vars
+        if (returnTask == null)
+        {
+            throw new NullTaskException("Task failed to load from JSON: " + jsonNode["name"]);
+        }
+        else
+        {
+            // Load task info
+            if(jsonNode["ID"] != null)
+            {
+              returnTask.id = jsonNode["ID"].AsInt;
+            }
+            else
+            {
+              returnTask.id = DTask.NEXT_ID;
+            }
+
+            // Load person info
+            returnTask.maxPeople = RandJSON.JSONInt(jsonNode["maxPeople"]);
+
+            // Save output info
+            returnTask.fullAssessRequirement = RandJSON.JSONFloat(jsonNode["fullAssessRequirement"]);
+            returnTask.taskEnabled = jsonNode["taskEnabled"].AsBool;
+            returnTask.NumTurnsToComplete = RandJSON.JSONInt(jsonNode["numTurnsToComplete"], 0);
+
+            // Load the task slots
+            returnTask.slotList = new List<DTaskSlot>();
+            foreach (JSONNode taskSlotJSON in jsonNode["taskSlots"].AsArray)
+            {
+                returnTask.SlotList.Add(DTaskSlot.LoadFromJSON(taskSlotJSON, returnTask));
+
+
+            }
+
+            // Verify that the number of people is correct
+            if (returnTask.numPeople  != jsonNode["numPeople"].AsInt)
+            {
+              // Debug.Log (returnTask.numPeople+ ":" + jsonNode["numPeople"]);
+
+                // throw new TaskLoadException("Num people does not match.");
+            }
+        }
+
+        return returnTask;
+    }
+
     #region Properties
+
+    public TaskController TaskController
+    {
+        get
+        {
+            return taskController;
+        }
+        set
+        {
+             taskController = value;
+        }
+    }
+
     public float LevelDamaged
     {
         get
@@ -288,6 +497,11 @@ public class DTask : TurnUpdatable
         get { return output; }
     }
 
+    public DResource Input
+    {
+        get { return input; }
+    }
+
     public DBuilding Building
     {
         get { return building; }
@@ -299,8 +513,15 @@ public class DTask : TurnUpdatable
     }
     public List<DTaskSlot> SlotList
     {
-      get {return slotList;}
+        get { return slotList; }
     }
+
+    public int NumTurnsToComplete
+    {
+        get { return numTurnsToComplete; }
+        set { numTurnsToComplete = value; }
+    }
+
     #endregion
 }
 
@@ -322,6 +543,25 @@ public class TaskFullException : System.Exception
     }
 
     protected TaskFullException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
+}
+
+public class TaskLoadException : System.Exception
+{
+    public TaskLoadException()
+    {
+    }
+
+    public TaskLoadException(string message) : base(message)
+    {
+    }
+
+    public TaskLoadException(string message, System.Exception innerException) : base(message, innerException)
+    {
+    }
+
+    protected TaskLoadException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 }

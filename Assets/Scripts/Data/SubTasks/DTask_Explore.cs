@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using SimpleJSON;
 
 
 public class DTask_Explore : DTask
@@ -22,7 +23,7 @@ public class DTask_Explore : DTask
         foreach (DTaskSlot taskSlot in slotList)
         {
             taskSlot.TurnUpdate(numDaysPassed);
-                        
+
             // TODO: Make this into a exponential scale or something
             if (taskSlot.IsFunctioning())
             {
@@ -61,31 +62,30 @@ public class DTask_Explore : DTask
         }
     }
 
-    public void AddPerson(DPerson dPerson, DTaskSlot taskSlot)
-    {
+        public void AddPerson(DPerson dPerson, DTaskSlot taskSlot)
+     {
         if (numPeople >= maxPeople)
-        {
+         {
 
-            throw new TaskFullException(taskName);
-        }
-        else if (ContainsPerson(dPerson))
-        {
+             throw new TaskFullException(taskName);
+         }
+         else if (ContainsPerson(dPerson))
+         {
             throw new PersonAlreadyAddedException(taskName);
-        }
-        else
-        {
-            if (taskSlot.Person == null && taskSlot.Enabled)
-            {
-                if (dPerson.Task != null)
-                    dPerson.RemoveTask();
+         }
+         else
+         {
+             if (taskSlot.Person == null && taskSlot.Enabled)
+             {
+                 if (dPerson.Task != null)
+                     dPerson.RemoveTask();
 
-                taskSlot.AddPerson(dPerson);
-                Reszie();
-                return;
+                 taskSlot.AddPerson(dPerson);
+                 Reszie();
+                 return;
             }
-        }
+         }
     }
-
     public override void RemovePerson(DPerson dPerson)
     {
         base.RemovePerson(dPerson);
@@ -109,18 +109,29 @@ public class DTask_Explore : DTask
 
     private void AddSlot()
     {
-        maxPeople++;
+        maxPeople = numPeople + 1;
         slotList.Add(new DTaskSlot(this));
         ForceClean();
         ForceFixed();
+        taskController.Resize();
     }
 
     private void RemoveSlot()
     {
-        maxPeople--;
-        if (slotList[slotList.Count - 1].Person == null)
-        {
+        maxPeople = numPeople + 1;
+
             slotList.RemoveAt(slotList.Count - 1);
-        }
+        taskController.Resize();
+
+    }
+
+    public override JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = base.SaveToJSON();
+
+        returnNode.Add("specialTask", new JSONString("explore"));
+        returnNode.Add("exploreAmount", new JSONNumber(exploreAmount));
+
+        return returnNode;
     }
 }

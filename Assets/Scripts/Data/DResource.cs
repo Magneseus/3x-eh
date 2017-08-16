@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
 
-public class DResource : TurnUpdatable
+public class DResource : ITurnUpdatable
 {
     private static int resourceIDCounter = 0;
     private static Dictionary<string, int> resourceNameToIDMap = new Dictionary<string, int>();
@@ -75,6 +76,8 @@ public class DResource : TurnUpdatable
 
     }
 
+    #region Properties
+
     public int ID
     {
         get { return resourceID; }
@@ -90,7 +93,76 @@ public class DResource : TurnUpdatable
         get { return resourceAmount; }
         set { resourceAmount = Math.Max(0, value); }
     }
+
+    #endregion
+
+    public static JSONNode SaveResourceIDMapToJSON()
+    {
+        JSONNode returnNode = new JSONArray();
+
+        // Save all the currently created resources (the master list)
+        foreach (var kvp in resourceNameToIDMap)
+        {
+            JSONNode resourceEntry = new JSONObject();
+            resourceEntry.Add("name", new JSONString(kvp.Key));
+            resourceEntry.Add("ID", new JSONNumber(kvp.Value.ToString()));
+
+            returnNode.Add(resourceEntry);
+        }
+
+        return returnNode;
+    }
+
+    public JSONNode SaveToJSON()
+    {
+        JSONNode returnNode = new JSONObject();
+
+        returnNode.Add("name", new JSONString(resourceName));
+        returnNode.Add("ID", new JSONNumber(resourceID));
+        returnNode.Add("amount", new JSONNumber(resourceAmount));
+
+        return returnNode;
+    }
+
+    public static void LoadResourceIDMapFromJSON(JSONNode jsonNode)
+    {
+        Dictionary<string, int> resourceMap = new Dictionary<string, int>();
+
+        // Load all the currently created resources (the master list)
+        foreach (JSONNode resource in jsonNode.AsArray)
+        {
+            resourceMap.Add(resource["name"], resource["ID"].AsInt);
+        }
+
+        resourceNameToIDMap = resourceMap;
+    }
+
+    public static DResource LoadFromJSON(JSONNode jsonNode)
+    {
+        if (jsonNode == null)
+            return null;
+
+        DResource loadedResource = Create(
+            jsonNode["name"],
+            RandJSON.JSONInt(jsonNode["amount"]));
+
+        /* TODO: Fix this properly
+        if (loadedResource.ID != jsonNode["ID"].AsInt)
+        {
+            throw new ResourceDictionaryMismatchException(
+                string.Format("Resource ({1}) has saved ID ({2}), but ID should be ({3}).",
+                    jsonNode["name"],
+                    loadedResource.ID,
+                    jsonNode["ID"])
+                );
+        }
+        */
+
+        return loadedResource;
+    }
 }
+
+#region Exceptions
 
 /*****************************
  * 
@@ -113,3 +185,22 @@ public class ResourceNameNotFoundException : Exception
     {
     }
 }
+
+public class ResourceDictionaryMismatchException : Exception
+{
+    public ResourceDictionaryMismatchException()
+    {
+    }
+
+    public ResourceDictionaryMismatchException(string message)
+    : base(message)
+    {
+    }
+
+    public ResourceDictionaryMismatchException(string message, Exception inner)
+    : base(message, inner)
+    {
+    }
+}
+
+#endregion

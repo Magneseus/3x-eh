@@ -1,0 +1,44 @@
+[
+  {
+    "id": 0,
+    "priority": 1,
+    "turnsToActivate": 2,
+    "promptText": "A wolverine is raising her pups in your taco pantry. Do you attempt to remove her?",
+    "activationCondition": "true",
+    "outcomes": [
+      {
+        "type": "resource",
+        "value": [ "Food", -25 ]
+      },
+      {
+        "type": "cityHealth",
+        "value": [ "multiply", 0.9 ]
+      }
+    ],
+    "outcomesText": [
+      "Her pups will remember the tacos fondly. Your people will not.",
+      "Jared was only slightly maimed removing the wolverine."
+    ]
+  },
+  {
+    "id": 1,
+    "priority": 1,
+    "turnsToActivate": 14,
+    "promptText": "As your food dwindles there's no sign of another miraculous cargo ship. We can no longer wait for food to come to us. We must choose. Cape Dorset has offered to make a larger boat to Salluit if we supply them with food until it's done. Or we can build a boat ourselves to trade with Quaqtuq.",
+    "activationCondition": "Iqaluit",
+    "outcomes": [
+      {
+        "type": "resource",
+        "value": [ "Food", -25 ]
+      },
+      {
+        "type": "resource",
+        "value": [ "Materials", -25 ]
+      }
+    ],
+    "outcomesText": [
+      "Supplying Cape Dorset with food will be a challenge, but keeps us freed up to work on other projects.",
+      "People have been assigned to work on the boat, and materials will be routed to them."
+    ]
+  }
+]

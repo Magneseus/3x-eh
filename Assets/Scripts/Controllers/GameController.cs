@@ -13,16 +13,22 @@ public class GameController : MonoBehaviour
     public GameObject CityViewUIPrefab;
 
     private GameObject countryView;
+    private CountryMap countryMap;
     private GameObject cityView;
 
+    private bool buildingToggle = false;
     // Initialization
     void Start()
     {
-        dGame = new DGame();
+        dGame = new DGame(this);
+
+        // Re-enable the cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
         // Start off at the country view
         countryView = Instantiate(CountryViewUIPrefab, UICanvas.transform);
-        CountryMap countryMap = countryView.GetComponent<CountryMap>();
+        countryMap = countryView.GetComponent<CountryMap>();
 
         // Get all cities
         foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
@@ -31,10 +37,13 @@ public class GameController : MonoBehaviour
             {
                 var cityJSON = JSON.Parse(File.ReadAllText(file));
 
+                // Add city to list of available cities for the game
+                dGame.availableCities.Add(cityJSON["name"]);
+
                 List<string> edges = new List<string>();
-                for(int i=0; i< cityJSON["edges"].AsArray.Count; i++)
+                for(int i=0; i< cityJSON["linked_cities"].AsArray.Count; i++)
                 {
-                   edges.Add((cityJSON["edges"].AsArray[i]));
+                   edges.Add((cityJSON["linked_cities"].AsArray[i]));
                 }
                 countryMap.SpawnCityNode(
                     cityJSON["name"],
@@ -48,125 +57,239 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            ToggleBuildingModals(!buildingToggle);
+            buildingToggle = !buildingToggle;
+        }
+    }
 
+    public void LoadGame(string savedGameFile, string pathToSavedGames=Constants.SAVE_JSON_PATH)
+    {
+        pathToSavedGames = Application.dataPath + pathToSavedGames;
+
+        destroyCityAndBuildings();
+        Destroy(cityView);
+        var json = File.ReadAllText(pathToSavedGames + @"/" + savedGameFile);
+        dGame = DGame.LoadFromJSON(JSON.Parse(json), this);
+
+        if (dGame.currentCity != null)
+        {
+
+            // Spawn City UI
+            cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
+
+            // Disable Country View
+            countryView.SetActive(false);
+        }
+        else
+        {
+            ReturnToMap(true);
+        }
+    }
+
+    public void SaveGame(string savedGameFile, string pathToSavedGames = Constants.SAVE_JSON_PATH)
+    {
+        pathToSavedGames = Application.dataPath + pathToSavedGames;
+
+        // Add the .json extension if not present
+        if (!savedGameFile.EndsWith(".json"))
+        {
+            savedGameFile += ".json";
+        }
+
+        var json = dGame.SaveToJSON();
+        File.WriteAllText(pathToSavedGames + @"/" + savedGameFile, json.ToString());
+    }
+
+    public void DeleteGame(string deleteGameFile, string pathToSavedGames = Constants.SAVE_JSON_PATH)
+    {
+        pathToSavedGames = Application.dataPath + pathToSavedGames;
+
+        // Add the .json extension if not present
+        if (!deleteGameFile.EndsWith(".json"))
+        {
+            deleteGameFile += ".json";
+        }
+        File.Delete(pathToSavedGames + Path.DirectorySeparatorChar + deleteGameFile);
+        File.Delete(pathToSavedGames + Path.DirectorySeparatorChar + deleteGameFile.Replace(".json",".meta"));
     }
 
     public void SelectCity(string cityName)
     {
-        CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
+        //CreateCity(Constants.CITY_JSON_PATH, File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json"));
+
+        var json = File.ReadAllText(Constants.CITY_JSON_PATH + @"/" + cityName.ToLower() + ".json");
+        cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
+        DCity newCity = DCity.LoadFromJSON(JSON.Parse(json), dGame, false);
+
+        dGame.AddCity(newCity);
         dGame.SelectCity(cityName);
 
+
         // Spawn City UI
-        cityView = Instantiate(CityViewUIPrefab, UICanvas.transform);
+
 
         // Disable Country View
         countryView.SetActive(false);
     }
 
-    public void EndTurnButtonCallback()
+    public List<string> listSavedGames(string pathToSavedGames = Constants.SAVE_JSON_PATH)
     {
-        dGame.EndTurnUpdate();
+        pathToSavedGames = Application.dataPath + pathToSavedGames;
+
+        List<string> listSavedGames = new List<string>();
+        // Debug.Log();
+
+        foreach(string s in Directory.GetFiles(pathToSavedGames, "*.json"))
+        {
+            string[] newS = s.Split(Path.DirectorySeparatorChar);
+            string name = newS[newS.Length-1];
+            listSavedGames.Add(name.Split('.')[0]);
+        }
+
+        return listSavedGames;
     }
 
-    public CityController CreateCity(string prefabPath, string json)
+    public void ReturnToMap(bool destroyCityView=false)
     {
-        var cityJson = JSON.Parse(json);
-        CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH);
-        cityController.ConnectToDataEngine(dGame, cityJson["name"]);
-
-        // Load in all the possible locations for buildings
-        List<Vector2> possibleBuildingLocations = new List<Vector2>();
-        foreach (JSONNode buildingLoc in cityJson["building_locations"].AsArray)
+        if (destroyCityView)
         {
-            // Get the random positions available
-            float xPos = buildingLoc["x"].AsFloat;
-            float yPos = buildingLoc["y"].AsFloat;
+            Destroy(cityView);
 
-            possibleBuildingLocations.Add(new Vector2(xPos, yPos));
-        }
+            // Destroy game objects
+            var children = new List<GameObject>();
+            foreach (Transform child in transform) children.Add(child.gameObject);
+            children.ForEach(child => Destroy(child));
 
-        // Load in all buildings for the city
-        foreach(JSONNode building in cityJson["buildings"].AsArray)
-        {
-            //TODO: Check if building has a set position?
+            // Disable all cities
+            countryMap.DisableAllNodes();
 
-            Vector2 location = new Vector2(0, 0);
-
-            // Temporary fix for townhall placement
-            if (!building["name"].Equals("Town Hall"))
+            if (dGame.currentCity != null)
             {
-                // Pull a random building location from the list
-                int randIndex = Mathf.RoundToInt(Random.Range(0, possibleBuildingLocations.Count - 1));
-                location = possibleBuildingLocations[randIndex];
-                possibleBuildingLocations.RemoveAt(randIndex);
+                // Enable cities connected to completed city
+                List<string> linkedCities = new List<string>();
+                foreach (var cityName in dGame.currentCity.LinkedCityKeys)
+                {
+                    // If we haven't previously completed this city
+                    if (!dGame.Cities.ContainsKey(cityName))
+                        linkedCities.Add(cityName);
+                }
+
+                countryMap.SetCitiesEnabled(linkedCities, true);
+            }
+            else
+            {
+                // Only show available cities
+                countryMap.SetCitiesEnabled(dGame.availableCities, true);
             }
 
-            BuildingController bControl = CreateBuilding(cityJson["name"], building["name"], new Vector3(location.x, location.y, 1));
-			if(building["name"].Equals("Town Hall"))
-				bControl.dBuilding.Assess(1.0f);
-            // Load in all the tasks for this building
-            foreach (JSONNode task in building["tasks"].AsArray)
+            // Reset the turn counter
+            dGame.TurnNumber = 0;
+        }
+
+        countryView.SetActive(true);
+    }
+
+    public void EndTurnButtonCallback()
+    {
+        if (dGame.GameState == DGame._gameState.PLAY)
+        {
+            dGame.EndTurnUpdate();
+            GameObject.Find("SfxLibrary").GetComponents<AudioSource>()[2].Play();
+        }
+    }
+    public void NewGame()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (cityView != null)
+        {
+            destroyCityAndBuildings();
+            Destroy(cityView);
+            dGame.Reset();
+        }
+        countryView.SetActive(true);
+
+
+
+        foreach (string file in System.IO.Directory.GetFiles(Constants.CITY_JSON_PATH))
+        {
+            if (Path.GetExtension(file) == ".json")
             {
-				
-                // TODO: Check for "special" tasks, like assess/explore/etc.
-                string taskName = task["name"];
-                int maxPeople = task["maxPeople"];
-                float fullAssessmentRequirement = task["fullAssess"];
+                var cityJSON = JSON.Parse(File.ReadAllText(file));
 
-                // Load in the resource output for this task
-                DResource taskResource = DResource.Create(
-                    task["resource"]["name"],
-                    task["resource"]["amount"]);
+                List<string> edges = new List<string>();
+                for (int i = 0; i < cityJSON["linked_cities"].AsArray.Count; i++)
+                {
+                    edges.Add((cityJSON["linked_cities"].AsArray[i]));
+                }
+                countryMap.SpawnCityNode(
+                    cityJSON["name"],
+                    new Vector3(cityJSON["position"]["x"], cityJSON["position"]["y"], -1),
+                    edges);
 
-                DTask newTask = new DTask(
-                    bControl.dBuilding,
-                    taskResource,
-                    maxPeople,
-                    taskName,
-                    fullAssessmentRequirement);
-                // Generate the task controller and attach it
-                TaskController newTaskController = AttachTaskController(newTask, bControl);
             }
         }
+        countryMap.SpawnEdges();
+    }
 
-        foreach(JSONNode resource in cityJson["resources"].AsArray)
+
+    public void destroyCityAndBuildings()
+    {
+        foreach (Transform t in this.transform)
         {
-            DResource r = DResource.Create(resource["name"], resource["amount"]);
-            cityController.dCity.AddResource(r);
+            Destroy(t.gameObject);
         }
+        Destroy(cityView);
+    }
 
-        // MAP OF CANADA STUFF
-        List<string> edges = new List<string>();
-        foreach (JSONNode edge in cityJson["edges"].AsArray) edges.Add(edge);
-        cityController.dCity.setEdges(edges);
+    public void ToggleBuildingModals(bool toggle)
+    {
+        // Toggle all building controllers
+        var children = new List<BuildingController>();
+        foreach (Transform child in transform)
+        {
+            BuildingController bc = child.gameObject.GetComponent<BuildingController>();
+            if (bc != null)
+                children.Add(bc);
+        }
+        children.ForEach(child => child.ToggleBuildingModal(toggle));
+    }
 
-        //TODO: Remove this
-        CreateMeeple(cityJson["name"]);
+    #region Controller Spawners
+
+    public CityController CreateCityController(DCity city)
+    {
+        CityController cityController = InstantiatePrefab<CityController>(Constants.CITY_PREFAB_PATH, this.transform);
+        cityController.ConnectToDataEngine(dGame, city);
 
         return cityController;
     }
 
-    public BuildingController CreateBuilding(string cityName, string buildingName, Vector3 position)
+    public BuildingController CreateBuildingController(DBuilding building, Vector3 position)
     {
-        BuildingController buildingController = InstantiatePrefab<BuildingController>(Constants.BUILDING_PREFAB_PATH);
-        buildingController.ConnectToDataEngine(dGame, cityName, buildingName);
+        string prefab_path = DBuilding.RandomBuildingPrefabPath(building.BuildType);
+        BuildingController buildingController = InstantiatePrefab<BuildingController>(prefab_path, this.transform);
+        buildingController.ConnectToDataEngine(building);
 
+        // Set position
         buildingController.transform.position = position;
 
         // Generate all predefined tasks
         foreach (var kvp in buildingController.dBuilding.Tasks)
-		{
+        {
             TaskController newTaskController = AttachTaskController(kvp.Value, buildingController);
         }
 
         return buildingController;
     }
 
-    // TODO: Spawn in "empty building"
-    public MeepleController CreateMeeple(string cityName)
+    public MeepleController CreateMeepleController(TaskTraySingle taskTray, DPerson person)
     {
-        MeepleController meepleController = InstantiatePrefab<MeepleController>(Constants.MEEPLE_PREFAB_PATH);
-        meepleController.ConnectToDataEngine(dGame, cityName);
+        MeepleController meepleController = InstantiatePrefab<MeepleController>(Constants.MEEPLE_PREFAB_PATH, taskTray.transform);
+        meepleController.ConnectToDataEngine(taskTray, person);
 
         return meepleController;
     }
@@ -182,6 +305,8 @@ public class GameController : MonoBehaviour
 
         return taskController;
     }
+
+    #endregion
 
     private T InstantiatePrefab<T>(string prefabPath)
     {

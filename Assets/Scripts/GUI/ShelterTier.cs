@@ -38,6 +38,16 @@ public class ShelterTier : MonoBehaviour
         {
             text.text = "Shelter Tier: " + gameController.dGame.currentCity.ShelterTier + " (+" + gameController.dGame.currentCity.FuelToShelterConversion + ")";
         }
+        if (gameController.dGame.gameState == DGame._gameState.PLAY)
+        {
+            tierRaiseButton.interactable = true;
+            tierLowerButton.interactable = true;
+        }
+        else
+        {
+            tierRaiseButton.interactable = false;
+            tierLowerButton.interactable = false;
+        }
     }
 
     public void TierRaiseCallback()
@@ -45,6 +55,7 @@ public class ShelterTier : MonoBehaviour
         if (gameController.dGame.currentCity != null)
         {
             gameController.dGame.currentCity.RaiseShelterTier();
+			GameObject.Find ("SfxLibrary").GetComponents<AudioSource>() [5].Play ();
         }
     }
 
@@ -53,6 +64,7 @@ public class ShelterTier : MonoBehaviour
         if (gameController.dGame.currentCity != null)
         {
             gameController.dGame.currentCity.LowerShelterTier();
+			GameObject.Find ("SfxLibrary").GetComponents<AudioSource>() [4].Play ();
         }
     }
 }

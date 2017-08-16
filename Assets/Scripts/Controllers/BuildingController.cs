@@ -32,6 +32,18 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
     }
 
+    public void ToggleBuildingModal(bool toggle)
+    {
+        if (toggle)
+        {
+            IncreaseMouseOverCount();
+        }
+        else
+        {
+            DecreaseMouseOverCount();
+        }
+    }
+
     #region MouseOver Functions
 
     public void OnMouseEnter()
@@ -47,19 +59,20 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
     public void IncreaseMouseOverCount()
     {
         MouseOverCount++;
+        if ((dBuilding.City.Game.GameState == DGame._gameState.PLAY))
+            if (MouseOverCount == 1)
+            {
+         
+        
 
-        if (MouseOverCount == 1)
-        {
+                //Relating to building info text on hover
+                Vector3 textPos =  this.transform.position;
+                textPos.x += 0.5f;
+                transform.Find("BuildingInfo").transform.position = textPos;
+                transform.Find("BuildingInfo").GetComponent<TextMesh>().text = string.Format("Status: {0}\nAssessed: {1}\nDamaged: {2}\nInfected: {3}", dBuilding.StatusAsString, dBuilding.LevelAssessed, dBuilding.LevelDamaged , dBuilding.LevelInfected);
 
-
-            //Relating to building info text on hover
-            Vector3 textPos =  this.transform.position;
-            textPos.x += 0.5f;
-            transform.Find("BuildingInfo").transform.position = textPos;
-            transform.Find("BuildingInfo").GetComponent<TextMesh>().text = string.Format("Status: {0}\nAssessed: {1}\nDamaged: {2}\nInfected: {3}", dBuilding.StatusAsString, dBuilding.LevelAssessed, dBuilding.LevelDamaged , dBuilding.LevelInfected);
-
-            SetTaskControllerVisibility(true);
-        }
+                SetTaskControllerVisibility(true);
+            }
     }
 
     public void DecreaseMouseOverCount()
@@ -68,9 +81,11 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
 
         if (MouseOverCount == 0)
         {
-          // deletes building info text
-          transform.Find("BuildingInfo").GetComponent<TextMesh>().text = "";
-            StartCoroutine("MouseOffBuildingTimer");
+            // deletes building info text
+            transform.Find("BuildingInfo").GetComponent<TextMesh>().text = "";
+
+            if (isActiveAndEnabled)
+                StartCoroutine("MouseOffBuildingTimer");
         }
     }
 
@@ -154,6 +169,12 @@ public class BuildingController : MonoBehaviour {//, IPointerEnterHandler, IPoin
     internal void ConnectToDataEngine(DGame dGame, string cityName, string buildingName)
     {
         dBuilding = new DBuilding(dGame.Cities[cityName], buildingName, this);
+    }
+
+    public void ConnectToDataEngine(DBuilding dBuilding)
+    {
+        this.dBuilding = dBuilding;
+        dBuilding.SetBuildingController(this);
     }
 
 }
