@@ -77,6 +77,8 @@ public class GameController : MonoBehaviour
 
     public void LoadGame(string savedGameFile, string pathToSavedGames=Constants.SAVE_JSON_PATH)
     {
+        pathToSavedGames = Application.dataPath + pathToSavedGames;
+
         destroyCityAndBuildings();
         Destroy(cityView);
         var json = File.ReadAllText(pathToSavedGames + @"/" + savedGameFile);
@@ -99,6 +101,8 @@ public class GameController : MonoBehaviour
 
     public void SaveGame(string savedGameFile, string pathToSavedGames = Constants.SAVE_JSON_PATH)
     {
+        pathToSavedGames = Application.dataPath + pathToSavedGames;
+
         // Add the .json extension if not present
         if (!savedGameFile.EndsWith(".json"))
         {
@@ -111,6 +115,8 @@ public class GameController : MonoBehaviour
 
     public void DeleteGame(string deleteGameFile, string pathToSavedGames = Constants.SAVE_JSON_PATH)
     {
+        pathToSavedGames = Application.dataPath + pathToSavedGames;
+
         // Add the .json extension if not present
         if (!deleteGameFile.EndsWith(".json"))
         {
@@ -141,6 +147,8 @@ public class GameController : MonoBehaviour
 
     public List<string> listSavedGames(string pathToSavedGames = Constants.SAVE_JSON_PATH)
     {
+        pathToSavedGames = Application.dataPath + pathToSavedGames;
+
         List<string> listSavedGames = new List<string>();
         // Debug.Log();
 

@@ -35,8 +35,8 @@ public static class Constants {
     public static string TASK_TRAY_SINGLE_PREFAB_PATH = @"Prefabs/Tasks/TaskTraySingle";
     public static string MEEPLE_PREFAB_PATH = @"Prefabs/MeepleController";
     
-    public static string CITY_JSON_PATH = @"Assets/Resources/Data/starting_cities";
-    public const string SAVE_JSON_PATH = @"Assets/Resources/Data/saved_games";
+    public static string CITY_JSON_PATH = Application.dataPath + @"/Resources/Data/starting_cities";
+    public const string SAVE_JSON_PATH = @"/Resources/Data/saved_games";
     #endregion
 
     public enum BUILDING_TYPE
@@ -68,8 +68,8 @@ public static class Constants {
         MOD_RESOURCE
     };
 
-    public static string EVT_CHOICE_EVENTS_PATH = @"Assets/Resources/Data/Events/choice-events.json";
-    public static string EVT_MOD_RESOURCE_EVENTS_PATH = @"Assets/Resources/Data/Events/modify-resource-events.json";
+    public static string EVT_CHOICE_EVENTS_PATH = Application.dataPath + @"/Resources/Data/Events/choice-events.json";
+    public static string EVT_MOD_RESOURCE_EVENTS_PATH = Application.dataPath + @"/Resources/Data/Events/modify-resource-events.json";
 
 
     
