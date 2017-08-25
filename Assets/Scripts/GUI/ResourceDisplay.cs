@@ -23,7 +23,7 @@ public class ResourceDisplay : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        date.text = gameController.dGame.currentDateString;
+        date.text = DateSeasonString();
         dCity = gameController.dGame.currentCity;
 
         if (dCity != null)
@@ -35,5 +35,12 @@ public class ResourceDisplay : MonoBehaviour {
             Medicine.text = "Medicine: " + dCity.GetResource("Medicine").Amount;
             Shelter.text = "Shelter: " + dCity.GetResource("Shelter").Amount + " (-" + dCity.ShelterConsumedPerTurn() + ")";
         }
+    }
+
+    public string DateSeasonString()
+    {
+        string result = gameController.dGame.currentDateString;
+        result += "   " + Constants.SEASON_DISPLAY_NAMES[(int)gameController.dGame.currentCity.Season];
+        return result;
     }
 }

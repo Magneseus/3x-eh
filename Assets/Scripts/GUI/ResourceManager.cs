@@ -23,7 +23,7 @@ public class ResourceManager : MonoBehaviour {
 	void Update () {
 
         dCity = gameController.dGame.currentCity;
-        date.text = gameController.dGame.currentDateString;
+        date.text = DateSeasonString();
 
         if (dCity == null) return;
         resources[0].text = resNames[0] + " : " + dCity.People.Count;
@@ -40,4 +40,10 @@ public class ResourceManager : MonoBehaviour {
 
     }
 
+    public string DateSeasonString()
+    {
+        string result = gameController.dGame.currentDateString;
+        result += "   " + Constants.SEASON_DISPLAY_NAMES[(int)gameController.dGame.currentCity.Season];
+        return result;
+    }
 }

@@ -60,6 +60,7 @@ public static class Constants {
     public const string IQALUIT_CITY_NAME = "Iqaluit";
     public const string OTTAWA_CITY_NAME = "Ottawa";
     public const string VANCOUVER_CITY_NAME = "Vancouver";
+    public static readonly string[] SEASON_DISPLAY_NAMES = {"Spring", "Summer", "Fall", "Winter"};
     #endregion
 
     public enum EVT_TYPE
