@@ -17,16 +17,18 @@ public class CityController : MonoBehaviour {
 	void Update () {
 
 	}
-public void assignGameController(GameController game)
-{
-  this.gameController = game;
-}
+
+    public void assignGameController(GameController game)
+    {
+      this.gameController = game;
+    }
+
     internal void ConnectToDataEngine(DGame dGame, string cityName)
     {
-        Sprite sp = Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + cityName);
-        GetComponent<SpriteRenderer>().sprite = sp;
         dCity = new DCity(cityName, this, dGame.DefaultSeasonStartDates, dGame.CurrentDate);
         dGame.Cities.Add(cityName, dCity);
+
+        Sprite sp = UpdateSprite();
 
         //resize
         GetComponent<SpriteRenderer>().transform.localScale = new Vector3(Screen.width / (sp.bounds.size.x * 100), Screen.height / (sp.bounds.size.y * 100), 1);
@@ -34,11 +36,20 @@ public void assignGameController(GameController game)
 
     public void ConnectToDataEngine(DGame dGame, DCity dCity)
     {
-        Sprite sp = Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + dCity.Name);
-        GetComponent<SpriteRenderer>().sprite = sp;
         this.dCity = dCity;
+
+        Sprite sp = UpdateSprite();
 
         //resize
         GetComponent<SpriteRenderer>().transform.localScale = new Vector3(Screen.width / (sp.bounds.size.x * 100), Screen.height / (sp.bounds.size.y * 100), 1);
+    }
+
+    public Sprite UpdateSprite()
+    {
+        string cityName = dCity.Name;
+        string seasonSuffix = "_" + Constants.SEASON_DISPLAY_NAMES[(int)dCity.Season].ToLower();
+        Sprite sp = Resources.Load<Sprite>(Constants.CITY_SPRITE_PATH + cityName + seasonSuffix);
+        GetComponent<SpriteRenderer>().sprite = sp;
+        return sp;
     }
 }

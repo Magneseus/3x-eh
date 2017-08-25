@@ -17,25 +17,32 @@ public class SoundController : MonoBehaviour {
 		if (Input.GetMouseButton(0)){
 			sfxLibrary.GetComponents<AudioSource>()[0].Play();
 		}
-		if (GameObject.Find("City(Clone)") != null){
-			if (GameObject.Find("City(Clone)").GetComponent<SpriteRenderer>().sprite.name == "ottawa"){
-				if (GameObject.Find("BGMAudio") != null){
-					GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().clip = bgmLibrary.GetComponents<AudioSource>()[0].clip;
-					//GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().Play ();
-				}
-			}
-			if (GameObject.Find("City(Clone)").GetComponent<SpriteRenderer>().sprite.name == "iqaluit"){
-				if (GameObject.Find("BGMAudio") != null){
-					GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().clip = bgmLibrary.GetComponents<AudioSource>()[1].clip;
-					//GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().Play ();
-				}
-			}
-			if (GameObject.Find("City(Clone)").GetComponent<SpriteRenderer>().sprite.name == "vancouver"){
-				if (GameObject.Find("BGMAudio") != null){
-					GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().clip = bgmLibrary.GetComponents<AudioSource>()[2].clip;
-					//GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().Play ();
-				}
-			}
-		}
-	}
+        if (GameObject.Find("City(Clone)") != null)
+        {
+            if (GameObject.FindObjectOfType<GameController>().dGame.currentCity.Name == "ottawa")
+            {
+                if (GameObject.Find("BGMAudio") != null)
+                {
+                    GameObject.Find("BGMAudio").GetComponent<AudioSource>().clip = bgmLibrary.GetComponents<AudioSource>()[0].clip;
+                    //GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().Play ();
+                }
+            }
+            if (GameObject.FindObjectOfType<GameController>().dGame.currentCity.Name == "iqaluit")
+            {
+                if (GameObject.Find("BGMAudio") != null)
+                {
+                    GameObject.Find("BGMAudio").GetComponent<AudioSource>().clip = bgmLibrary.GetComponents<AudioSource>()[1].clip;
+                    //GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().Play ();
+                }
+            }
+            if (GameObject.FindObjectOfType<GameController>().dGame.currentCity.Name == "vancouver")
+            {
+                if (GameObject.Find("BGMAudio") != null)
+                {
+                    GameObject.Find("BGMAudio").GetComponent<AudioSource>().clip = bgmLibrary.GetComponents<AudioSource>()[2].clip;
+                    //GameObject.Find ("BGMAudio").GetComponent<AudioSource> ().Play ();
+                }
+            }
+        }
+    }
 }

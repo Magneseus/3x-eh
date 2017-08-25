@@ -9,7 +9,7 @@ public static class Constants {
     #region Paths
     public static string OTTAWA_PREFAB_PATH = @"Prefabs/Cities/Ottawa";
     public static string CITY_PREFAB_PATH = @"Prefabs/Cities/City";
-    public static string CITY_SPRITE_PATH = @"Sprites/";
+    public static string CITY_SPRITE_PATH = @"Sprites/Maps/";
 
     public static string BUILDING_PREFAB_PATH = @"Prefabs/Buildings/Building";
     public static string BUILDING_PREFAB_PATH_MED_00 = @"Prefabs/Buildings/Building_Med_00";

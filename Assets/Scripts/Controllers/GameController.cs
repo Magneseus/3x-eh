@@ -196,6 +196,7 @@ public class GameController : MonoBehaviour
         if (dGame.GameState == DGame._gameState.PLAY)
         {
             dGame.EndTurnUpdate();
+            GetComponentInChildren<CityController>().UpdateSprite();
             GameObject.Find("SfxLibrary").GetComponents<AudioSource>()[2].Play();
         }
     }
